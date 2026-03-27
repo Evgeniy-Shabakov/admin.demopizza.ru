@@ -5,6 +5,7 @@ useHead({
 
 const router = useRouter()
 const { countries, loading, fetchCountries, deleteCountry } = useCountries()
+const { success: showSuccess } = useToast()
 const showDeleteModal = ref(false)
 const countryToDelete = ref(null)
 
@@ -24,6 +25,7 @@ const confirmDelete = (country) => {
 const handleDelete = async () => {
   if (countryToDelete.value) {
     await deleteCountry(countryToDelete.value.id)
+    showSuccess('Страна успешно удалена')
     showDeleteModal.value = false
     countryToDelete.value = null
   }
