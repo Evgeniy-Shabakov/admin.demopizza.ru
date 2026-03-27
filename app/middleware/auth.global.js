@@ -1,10 +1,11 @@
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware((to, from) => {
   if (to.path === '/login') return
   
-  const token = useCookie('employeeAccessToken')
-  const refreshToken = useCookie('employeeRefreshToken')
-  
-  if (!token.value && !refreshToken.value) {
+  const isAuthenticated = useState('isAuthenticated')
+
+  if (!isAuthenticated) {
     return navigateTo('/login')
   }
+  
+  isAuthenticated.value = true
 })

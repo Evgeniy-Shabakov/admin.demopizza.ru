@@ -1,5 +1,3 @@
-import { useConfig } from '~/config/config.js'
-
 const getErrorMessage = (operation) => {
   const errorMessages = {
     fetchCountries: 'Ошибка при получении списка стран',
@@ -12,17 +10,17 @@ const getErrorMessage = (operation) => {
 }
 
 const getErrorDetails = (e) => {
-  const status = e.statusCode || e.response?.status
-  const data = e.data || e.response?.data
+  const status = e.response?.status
+  const data = e.response?.data
   if (!data && !status) return null
   return data ? JSON.stringify(data, null, 2) : null
 }
 
-const getStatusCode = (e) => e.statusCode || e.response?.status || null
+const getStatusCode = (e) => e.response?.status || null
 
 export function useCountries() {
-  const { API_BASE_URL } = useConfig()
   const { error: showError } = useToast()
+  const api = useApi()
   const countries = ref([])
   const loading = ref(false)
   const error = ref(null)
@@ -31,8 +29,8 @@ export function useCountries() {
     loading.value = true
     error.value = null
     try {
-      const response = await $fetch(`${API_BASE_URL}/countries`)
-      countries.value = response.data
+      const response = await api.get('/countries')
+      countries.value = response.data.data
     } catch (e) {
       error.value = getErrorMessage('fetchCountries')
       showError({ message: getErrorMessage('fetchCountries'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
@@ -45,8 +43,8 @@ export function useCountries() {
     loading.value = true
     error.value = null
     try {
-      const response = await $fetch(`${API_BASE_URL}/countries/${id}`)
-      return response.data
+      const response = await api.get(`/countries/${id}`)
+      return response.data.data
     } catch (e) {
       error.value = getErrorMessage('getCountry')
       showError({ message: getErrorMessage('getCountry'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
@@ -60,10 +58,7 @@ export function useCountries() {
     loading.value = true
     error.value = null
     try {
-      await $fetch(`${API_BASE_URL}/countries`, {
-        method: 'POST',
-        body: { name }
-      })
+      await api.post('/countries', { name })
       await fetchCountries()
       return true
     } catch (e) {
@@ -79,10 +74,7 @@ export function useCountries() {
     loading.value = true
     error.value = null
     try {
-      await $fetch(`${API_BASE_URL}/countries/${id}`, {
-        method: 'PUT',
-        body: { name }
-      })
+      await api.put(`/countries/${id}`, { name })
       await fetchCountries()
       return true
     } catch (e) {
@@ -98,9 +90,7 @@ export function useCountries() {
     loading.value = true
     error.value = null
     try {
-      await $fetch(`${API_BASE_URL}/countries/${id}`, {
-        method: 'DELETE'
-      })
+      await api.delete(`/countries/${id}`)
       await fetchCountries()
       return true
     } catch (e) {

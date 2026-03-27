@@ -1,5 +1,5 @@
 export function useTheme() {
-  const theme = useState('theme', () => 'light')
+  const theme = useState('theme', () => 'dark')
 
   const initTheme = () => {
     if (import.meta.client) {
