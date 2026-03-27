@@ -84,9 +84,17 @@ const handleRowClick = (id) => {
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 select-text">{{ country.createdAt }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 select-text">{{ country.updatedAt }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm select-text" @click.stop>
-                <NuxtLink :to="`/countries/${country.id}`" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 mr-3">Просмотр</NuxtLink>
-                <NuxtLink :to="`/countries/${country.id}/edit`" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-3">Редактировать</NuxtLink>
-                <button @click="confirmDelete(country)" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">Удалить</button>
+                <div class="flex items-center justify-end gap-2">
+                  <button @click="viewCountry(country.id)" class="px-3 py-1.5 text-sm bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 cursor-pointer">
+                    Просмотр
+                  </button>
+                  <NuxtLink :to="`/countries/${country.id}/edit`" class="px-3 py-1.5 text-sm bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer">
+                    Редакт.
+                  </NuxtLink>
+                  <button @click="confirmDelete(country)" class="px-3 py-1.5 text-sm bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 cursor-pointer">
+                    Удалить
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -109,13 +117,13 @@ const handleRowClick = (id) => {
             <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">Обновлено: {{ country.updatedAt }}</p>
           </div>
           <div class="px-4 pb-4 flex gap-2" @click.stop>
-            <NuxtLink :to="`/countries/${country.id}`" class="flex-1 px-3 py-2 text-center text-sm bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900">
+            <NuxtLink :to="`/countries/${country.id}`" class="flex-1 px-3 py-2 text-center text-sm bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 cursor-pointer">
               Просмотр
             </NuxtLink>
-            <NuxtLink :to="`/countries/${country.id}/edit`" class="flex-1 px-3 py-2 text-center text-sm bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900">
+            <NuxtLink :to="`/countries/${country.id}/edit`" class="flex-1 px-3 py-2 text-center text-sm bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer">
               Редакт.
             </NuxtLink>
-            <button @click="confirmDelete(country)" class="flex-1 px-3 py-2 text-center text-sm bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900">
+            <button @click="confirmDelete(country)" class="flex-1 px-3 py-2 text-center text-sm bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 cursor-pointer">
               Удалить
             </button>
           </div>
@@ -142,10 +150,10 @@ const handleRowClick = (id) => {
               Вы уверены, что хотите удалить <strong>{{ countryToDelete?.name }}</strong>? Это действие нельзя отменить.
             </p>
             <div class="flex gap-3">
-              <button @click="cancelDelete" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+              <button @click="cancelDelete" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer">
                 Отмена
               </button>
-              <button @click="handleDelete" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+              <button @click="handleDelete" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer">
                 Удалить
               </button>
             </div>

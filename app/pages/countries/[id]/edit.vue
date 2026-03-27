@@ -4,9 +4,9 @@ useHead({
 })
 
 const route = useRoute()
-const router = useRouter()
 const countryId = route.params.id
 const { getCountry, updateCountry, loading } = useCountries()
+const { success: showSuccess } = useToast()
 
 const form = ref({
   name: ''
@@ -22,9 +22,9 @@ onMounted(async () => {
 })
 
 const saveCountry = async () => {
-  const success = await updateCountry(Number(countryId), form.value.name)
-  if (success) {
-    router.push(`/countries/${countryId}`)
+  const isSaved = await updateCountry(Number(countryId), form.value.name)
+  if (isSaved) {
+    showSuccess('Страна успешно отредактирована')
   }
 }
 </script>
@@ -47,11 +47,11 @@ const saveCountry = async () => {
           <button 
             type="submit" 
             :disabled="loading"
-            class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg transition-colors"
+            class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg transition-colors cursor-pointer"
           >
             {{ loading ? 'Сохранение...' : 'Сохранить' }}
           </button>
-          <NuxtLink :to="`/countries/${countryId}`" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors">
+           <NuxtLink :to="`/countries/${countryId}`" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer">
             Отмена
           </NuxtLink>
         </div>

@@ -6,8 +6,6 @@ const isSidebarOpen = ref(false)
 const menuItems = [
   { name: 'Главная', path: '/', icon: 'home' },
   { name: 'Страны', path: '/countries', icon: 'globe' },
-  { name: 'Пользователи', path: '/users', icon: 'users' },
-  { name: 'Настройки', path: '/settings', icon: 'settings' },
 ]
 
 onMounted(() => {

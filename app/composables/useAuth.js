@@ -1,5 +1,5 @@
 export function useAuth() {
-  const { setAuthenticated } = useAuthState()
+  const { setAuthenticated, setEmployee } = useAuthState()
   const api = useApi()
   
   const formError = useState('formError', () => null)
@@ -8,11 +8,12 @@ export function useAuth() {
     formError.value = null
     
     try {
-      await api.post('/auth/login/employee', {
+      const response = await api.post('/auth/login/employee', {
         phone,
         password
       })
       
+      setEmployee(response.data.data?.employee || response.data)
       setAuthenticated(true)
       
       return { success: true }
@@ -35,6 +36,7 @@ export function useAuth() {
       console.error('Logout error:', e)
     }
     
+    setEmployee(null)
     setAuthenticated(false)
     navigateTo('/login')
   }

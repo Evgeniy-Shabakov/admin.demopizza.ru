@@ -52,15 +52,31 @@ const onSubmit = async () => {
    }
 }
 
-onMounted(() => {
+onMounted(async () => {
    initTheme()
    
    if (import.meta.client) {
-     const token = useCookie('employeeAccessToken')
-     const refreshToken = useCookie('employeeRefreshToken')
-     if (token.value || refreshToken.value) {
-       navigateTo('/')
-     }
+      const token = useCookie('employeeAccessToken')
+      const refreshToken = useCookie('employeeRefreshToken')
+      if (token.value || refreshToken.value) {
+         try {
+            const api = useApi()
+            const response = await api.get('/auth/jwt-payload/employee')
+            const { setAuthenticated, setEmployee } = useAuthState()
+            const jwtPayload = response.data.data.jwtPayload
+            const employee = {
+               id: jwtPayload.id,
+               phone: jwtPayload.phone,
+               employeeRoles: jwtPayload.employeeRoles
+            }
+            setEmployee(employee)
+            setAuthenticated(true)
+            await navigateTo('/')
+            return
+         } catch (e) {
+            console.error('Token validation failed:', e)
+         }
+      }
    }
 })
 </script>
@@ -74,15 +90,17 @@ onMounted(() => {
             </h1>
 
             <form @submit.prevent="onSubmit">
-               <div class="mb-4">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                     Номер телефона
-                  </label>
-                  <UiPhoneInput v-model="phone"
-                                @update:countryCode="countryCode = $event" />
-                  <p v-if="errors.phone"
-                     class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
-               </div>
+                <div class="mb-4">
+                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Номер телефона
+                   </label>
+                   <div class="w-full">
+                      <UiPhoneInput v-model="phone"
+                                    @update:countryCode="countryCode = $event" />
+                   </div>
+                   <p v-if="errors.phone"
+                      class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
+                </div>
 
                <div class="mb-6">
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -95,7 +113,7 @@ onMounted(() => {
                             class="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
                      <button type="button"
                              @click="showPassword = !showPassword"
-                             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
                         <svg v-if="showPassword"
                              class="w-5 h-5"
                              fill="none"
@@ -132,7 +150,7 @@ onMounted(() => {
 
                <button type="submit"
                        :disabled="loading"
-                       class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                       class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer">
                   {{ loading ? 'Вход...' : 'Войти' }}
                </button>
 

@@ -62,12 +62,12 @@ const getFullPhone = () => {
 </script>
 
 <template>
-  <div class="flex">
+  <div class="flex w-full">
     
       <select
         :value="selectedCountry.code"
         @change="onCountryChange"
-        class="py-2 pl-2 pr-6 border border-r-0 border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer"
+        class="py-2 pl-2 pr-6 border border-r-0 border-gray-300 dark:border-gray-600 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-white text-sm appearance-none cursor-pointer w-24 sm:w-28 flex-shrink-0"
       >
         <option v-for="country in countryCodes" :key="country.code" :value="country.code">
           {{ country.name }} {{ country.code }}
@@ -81,7 +81,7 @@ const getFullPhone = () => {
       :value="modelValue"
       @input="onInput"
       :placeholder="placeholder"
-      class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+      class="flex-1 min-w-0 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm sm:text-base"
     />
   </div>
 </template>

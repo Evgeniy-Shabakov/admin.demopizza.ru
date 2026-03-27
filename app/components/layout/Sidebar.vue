@@ -7,6 +7,7 @@ defineProps({
 const emit = defineEmits(['toggle', 'close'])
 
 const route = useRoute()
+const { logout } = useAuth()
 
 const handleMenuClick = () => {
    emit('close')
@@ -20,7 +21,7 @@ const handleMenuClick = () => {
    ]">
 
         <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700">
-           <UiUserData/>
+            <UiEmployeeData/>
         </div>
 
       <nav class="p-4 space-y-2">
@@ -29,11 +30,11 @@ const handleMenuClick = () => {
                    :to="item.path"
                    @click="handleMenuClick"
                    :class="[
-                     'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                     'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer',
                      route.path === item.path || (item.path !== '/admin' && route.path.startsWith(item.path + '/'))
                         ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  ]">
+                   ]">
             <svg v-if="item.icon === 'home'"
                  class="w-5 h-5"
                  fill="none"
@@ -82,8 +83,8 @@ const handleMenuClick = () => {
           </NuxtLink>
        </nav>
 
-       <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
-         <UiToggleTheme />
-       </div>
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <UiToggleTheme />
+        </div>
     </aside>
 </template>

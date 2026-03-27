@@ -1,4 +1,4 @@
-export function useToast() {
+export const useToast = () => {
   const toasts = useState('toasts', () => [])
 
   let toastId = 0
@@ -29,6 +29,7 @@ export function useToast() {
     addToast(toastData, 'error', 0)
   }
   const info = (message) => addToast(message, 'info')
+  const showToast = (message, type = 'info') => addToast(message, type)
 
   return {
     toasts: readonly(toasts),
@@ -36,6 +37,7 @@ export function useToast() {
     removeToast,
     success,
     error,
-    info
+    info,
+    showToast
   }
 }
