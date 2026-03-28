@@ -33,15 +33,7 @@ const saveCountry = async () => {
   <div class="space-y-6 max-w-2xl">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <form @submit.prevent="saveCountry" class="space-y-6">
-        <div>
-          <label class="block text-sm font-medium mb-2">Название страны *</label>
-          <input
-            v-model="form.name"
-            type="text"
-            required
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          />
-        </div>
+        <FormsCountryForm v-model="form" />
 
         <div class="flex gap-4 pt-4">
           <button 

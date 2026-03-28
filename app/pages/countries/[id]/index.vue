@@ -21,47 +21,7 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="country" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-      <form class="space-y-6">
-        <div>
-          <label class="block text-sm font-medium mb-2">ID</label>
-          <input
-            :value="country.id"
-            type="text"
-            disabled
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-2">Название страны</label>
-          <input
-            :value="country.name"
-            type="text"
-            disabled
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-2">Создано</label>
-          <input
-            :value="country.createdAt"
-            type="text"
-            disabled
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-2">Обновлено</label>
-          <input
-            :value="country.updatedAt"
-            type="text"
-            disabled
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-          />
-        </div>
-      </form>
+      <FormsCountryForm :country="country" disabled :show-details="true" />
     </div>
 
     <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center">

@@ -2,7 +2,6 @@
 import { getRoleName } from '~/constants/roles'
 
 const { employee } = useAuthState()
-const { logout } = useAuth()
 
 const formatPhone = (phone) => {
   if (!phone) return ''

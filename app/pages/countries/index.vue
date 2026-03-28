@@ -151,31 +151,15 @@ const handleRowClick = (id) => {
       </div>
     </div>
 
-    <Teleport to="body">
-      <div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto" @click.self="cancelDelete">
-        <div class="flex min-h-screen items-center justify-center p-4">
-          <div class="fixed inset-0 bg-black/50 transition-opacity" @click="cancelDelete"></div>
-          <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6 transform transition-all">
-            <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 dark:bg-red-900/50 rounded-full">
-              <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-center mb-2">Удалить страну</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-center mb-6">
-              Вы уверены, что хотите удалить <strong>{{ countryToDelete?.name }}</strong>? Это действие нельзя отменить.
-            </p>
-            <div class="flex gap-3">
-              <button @click="cancelDelete" class="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer">
-                Отмена
-              </button>
-              <button @click="handleDelete" class="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors cursor-pointer">
-                Удалить
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <FormsConfirmModal
+      :show="showDeleteModal"
+      title="Удалить страну"
+      confirm-text="Удалить"
+      type="danger"
+      @confirm="handleDelete"
+      @cancel="cancelDelete"
+    >
+      Вы уверены, что хотите удалить <strong>{{ countryToDelete?.name }}</strong>? Это действие нельзя отменить.
+    </FormsConfirmModal>
   </div>
 </template>
