@@ -110,20 +110,15 @@ const handleRowClick = (id) => {
         </table>
       </div>
 
-      <div class="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+          <div class="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
         <div 
           v-for="country in countries" 
           :key="country.id" 
           class="hover:bg-gray-50 dark:hover:bg-gray-700/50"
         >
           <div class="p-4" @click="viewCountry(country.id)">
-            <div class="flex items-center justify-between mb-2">
-              <div>
-                <p class="font-medium">{{ country.name }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">ID: {{ country.id }}</p>
-              </div>
-            </div>
-            <p class="text-xs text-gray-400 dark:text-gray-500 mb-3">Обновлено: {{ country.updatedAt }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">ID: {{ country.id }}</p>
+            <p class="font-medium">{{ country.name }}</p>
           </div>
           <div class="px-4 pb-4 flex gap-2" @click.stop>
             <NuxtLink :to="`/countries/${country.id}`" class="p-2 bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 cursor-pointer" title="Просмотр">
