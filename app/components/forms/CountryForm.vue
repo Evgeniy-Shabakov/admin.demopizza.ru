@@ -39,6 +39,8 @@ const form = defineModel({
         type="text"
         :disabled="disabled"
         required
+        minlength="2"
+        maxlength="100"
         placeholder="Введите название страны"
         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
       />
