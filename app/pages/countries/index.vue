@@ -151,7 +151,7 @@ const handleRowClick = (id) => {
       </div>
     </div>
 
-    <FormsConfirmModal
+    <UiConfirmModal
       :show="showDeleteModal"
       title="Удалить страну"
       confirm-text="Удалить"
@@ -160,6 +160,6 @@ const handleRowClick = (id) => {
       @cancel="cancelDelete"
     >
       Вы уверены, что хотите удалить <strong>{{ countryToDelete?.name }}</strong>? Это действие нельзя отменить.
-    </FormsConfirmModal>
+    </UiConfirmModal>
   </div>
 </template>
