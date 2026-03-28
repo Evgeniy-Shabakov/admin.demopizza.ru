@@ -25,7 +25,7 @@ const emit = defineEmits(['confirm', 'cancel'])
   <Teleport to="body">
     <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0" @click="emit('cancel')"></div>
-      <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-6 transform transition-all scale-100">
+      <div class="relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow-2xl max-w-sm w-full p-6 transform transition-all scale-100">
         <button 
           @click="emit('cancel')"
           class="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-pointer"
@@ -56,7 +56,7 @@ const emit = defineEmits(['confirm', 'cancel'])
         <div class="flex gap-3">
           <button 
             @click="emit('cancel')" 
-            class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl transition-colors cursor-pointer"
+            class="flex-1 px-4 py-2.5 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-100 font-medium rounded-xl transition-colors cursor-pointer"
           >
             {{ cancelText }}
           </button>
