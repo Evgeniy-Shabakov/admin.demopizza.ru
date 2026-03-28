@@ -24,8 +24,10 @@ const confirmDelete = (country) => {
 
 const handleDelete = async () => {
   if (countryToDelete.value) {
-    await deleteCountry(countryToDelete.value.id)
-    showSuccess('Страна успешно удалена')
+    const result = await deleteCountry(countryToDelete.value.id)
+    if (result) {
+      showSuccess('Страна успешно удалена')
+    }
     showDeleteModal.value = false
     countryToDelete.value = null
   }
