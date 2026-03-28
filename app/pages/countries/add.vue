@@ -11,6 +11,7 @@ const form = ref({
 })
 
 const formRef = ref(null)
+const validationError = ref(null)
 
 const handleSaveAndAdd = async () => {
   if (formRef.value?.reportValidity()) {
@@ -19,14 +20,18 @@ const handleSaveAndAdd = async () => {
 }
 
 const saveCountry = async (navigateToList = false) => {
-  const isCreated = await createCountry(form.value.name)
-  if (isCreated) {
+  validationError.value = null
+  const result = await createCountry(form.value.name)
+  if (result.success) {
     showSuccess('Страна успешно добавлена')
+    validationError.value = null
     if (navigateToList) {
       navigateTo('/countries')
     } else {
       form.value.name = ''
     }
+  } else if (result.validationError) {
+    validationError.value = result.validationError
   }
 }
 </script>
@@ -35,7 +40,7 @@ const saveCountry = async (navigateToList = false) => {
   <div class="space-y-6 max-w-2xl">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <form ref="formRef" @submit.prevent="saveCountry(true)" class="space-y-6">
-        <FormsCountryForm v-model="form" />
+        <FormsCountryForm v-model="form" :validation-error="validationError" />
 
         <div class="flex flex-wrap gap-4 pt-4">
           <button 

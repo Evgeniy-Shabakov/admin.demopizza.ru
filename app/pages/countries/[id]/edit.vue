@@ -13,6 +13,7 @@ const form = ref({
 })
 
 const country = ref(null)
+const validationError = ref(null)
 
 onMounted(async () => {
   country.value = await getCountry(Number(countryId))
@@ -22,9 +23,13 @@ onMounted(async () => {
 })
 
 const saveCountry = async () => {
-  const isSaved = await updateCountry(Number(countryId), form.value.name)
-  if (isSaved) {
+  validationError.value = null
+  const result = await updateCountry(Number(countryId), form.value.name)
+  if (result.success) {
     showSuccess('Страна успешно отредактирована')
+    validationError.value = null
+  } else if (result.validationError) {
+    validationError.value = result.validationError
   }
 }
 </script>
@@ -33,7 +38,7 @@ const saveCountry = async () => {
   <div class="space-y-6 max-w-2xl">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <form @submit.prevent="saveCountry" class="space-y-6">
-        <FormsCountryForm v-model="form" />
+        <FormsCountryForm v-model="form" :validation-error="validationError" />
 
         <div class="flex gap-4 pt-4">
           <button 

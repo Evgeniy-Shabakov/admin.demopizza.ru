@@ -16,6 +16,25 @@ const getErrorDetails = (e) => {
   return data ? JSON.stringify(data, null, 2) : null
 }
 
+const getValidationMessage = (e) => {
+  const data = e.response?.data
+  if (!data) return null
+  
+  if (data.message) {
+    return data.message
+  }
+  
+  if (data.errors) {
+    const errors = data.errors
+    const firstKey = Object.keys(errors)[0]
+    if (firstKey && errors[firstKey]) {
+      return Array.isArray(errors[firstKey]) ? errors[firstKey][0] : errors[firstKey]
+    }
+  }
+  
+  return null
+}
+
 const getStatusCode = (e) => e.response?.status || null
 
 export function useCountries() {
@@ -60,11 +79,12 @@ export function useCountries() {
     try {
       await api.post('/countries', { name })
       await fetchCountries()
-      return true
+      return { success: true }
     } catch (e) {
-      error.value = getErrorMessage('createCountry')
+      const validationMsg = getValidationMessage(e)
+      error.value = validationMsg || getErrorMessage('createCountry')
       showError({ message: getErrorMessage('createCountry'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
-      return false
+      return { success: false, validationError: validationMsg }
     } finally {
       loading.value = false
     }
@@ -76,11 +96,12 @@ export function useCountries() {
     try {
       await api.put(`/countries/${id}`, { name })
       await fetchCountries()
-      return true
+      return { success: true }
     } catch (e) {
-      error.value = getErrorMessage('updateCountry')
+      const validationMsg = getValidationMessage(e)
+      error.value = validationMsg || getErrorMessage('updateCountry')
       showError({ message: getErrorMessage('updateCountry'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
-      return false
+      return { success: false, validationError: validationMsg }
     } finally {
       loading.value = false
     }
