@@ -1,5 +1,6 @@
 <script setup>
 const route = useRoute()
+const router = useRouter()
 const pageTitle = useState('pageTitle', () => 'Главная')
 const headerActions = useState('headerActions', () => [])
 
@@ -15,23 +16,23 @@ watch(() => route.path, (path) => {
    if (path === '/') {
       pageTitle.value = titles['/']
       headerActions.value = []
-   } else if (path === '/countries/add') {
-      pageTitle.value = titles['/countries/add']
-      headerActions.value = [
-         { to: '/countries', label: 'Назад', icon: 'back' }
-      ]
-   } else if (path.match(/^\/countries\/\d+$/)) {
-      pageTitle.value = titles['/countries/:id']
-      const id = route.params.id
-      headerActions.value = [
-         { to: '/countries', label: 'Назад', icon: 'back' },
-         { to: `/countries/${id}/edit`, label: 'Редактировать', icon: 'edit' }
-      ]
-   } else if (path.match(/^\/countries\/\d+\/edit$/)) {
-      pageTitle.value = titles['/countries/:id/edit']
-      headerActions.value = [
-         { to: '/countries', label: 'Назад', icon: 'back' }
-      ]
+    } else if (path === '/countries/add') {
+       pageTitle.value = titles['/countries/add']
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true }
+       ]
+    } else if (path.match(/^\/countries\/\d+$/)) {
+       pageTitle.value = titles['/countries/:id']
+       const id = route.params.id
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true },
+          { to: `/countries/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+       ]
+    } else if (path.match(/^\/countries\/\d+\/edit$/)) {
+       pageTitle.value = titles['/countries/:id/edit']
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true }
+       ]
    } else if (path.startsWith('/countries')) {
       pageTitle.value = titles['/countries']
       headerActions.value = [
@@ -62,8 +63,8 @@ defineEmits(['toggleSidebar'])
                         d="M4 6h16M4 12h16M4 18h16" />
                </svg>
             </button>
-            <NuxtLink v-if="headerActions.length && headerActions[0].icon === 'back' && !headerActions[0].to.startsWith('/')"
-                      :to="headerActions[0].to"
+            <button v-if="headerActions.length && headerActions[0].icon === 'back' && headerActions[0].back"
+                      @click="router.back()"
                       class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                <svg class="w-5 h-5"
                     fill="none"
@@ -74,7 +75,7 @@ defineEmits(['toggleSidebar'])
                        stroke-width="2"
                        d="M15 19l-7-7 7-7" />
                </svg>
-            </NuxtLink>
+            </button>
             <NuxtLink v-else-if="headerActions.length && headerActions[0].icon === 'back'"
                       :to="headerActions[0].to"
                       class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
@@ -82,10 +83,10 @@ defineEmits(['toggleSidebar'])
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24">
-                  <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7" />
+                 <path stroke-linecap="round"
+                       stroke-linejoin="round"
+                       stroke-width="2"
+                       d="M15 19l-7-7 7-7" />
                </svg>
             </NuxtLink>
 
