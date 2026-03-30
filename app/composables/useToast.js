@@ -1,10 +1,9 @@
 export const useToast = () => {
   const toasts = useState('toasts', () => [])
-
-  let toastId = 0
+  const toastId = useState('toastId', () => 0)
 
   const addToast = (message, type = 'info', duration = 4000) => {
-    const id = ++toastId
+    const id = ++toastId.value
     const toast = typeof message === 'string' 
       ? { message, details: null } 
       : message
