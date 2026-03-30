@@ -14,6 +14,10 @@ const titles = {
    '/cities/add': 'Добавить город',
    '/cities/:id': 'Просмотр города',
    '/cities/:id/edit': 'Редактирование города',
+   '/restaurant-schedules': 'Графики работы',
+   '/restaurant-schedules/add': 'Добавить график',
+   '/restaurant-schedules/:id': 'Просмотр графика',
+   '/restaurant-schedules/:id/edit': 'Редактирование графика',
 }
 
 watch(() => route.path, (path) => {
@@ -59,10 +63,32 @@ watch(() => route.path, (path) => {
        headerActions.value = [
           { label: 'Назад', icon: 'back', back: true }
        ]
-    } else if (path.startsWith('/cities')) {
+     } else if (path.startsWith('/cities')) {
        pageTitle.value = titles['/cities']
        headerActions.value = [
           { to: '/cities/add', label: 'Добавить', icon: 'add', primary: true }
+       ]
+     } else if (path === '/restaurant-schedules/add') {
+       pageTitle.value = titles['/restaurant-schedules/add']
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true }
+       ]
+     } else if (path.match(/^\/restaurant-schedules\/\d+$/)) {
+       pageTitle.value = titles['/restaurant-schedules/:id']
+       const id = route.params.id
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true },
+          { to: `/restaurant-schedules/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+       ]
+     } else if (path.match(/^\/restaurant-schedules\/\d+\/edit$/)) {
+       pageTitle.value = titles['/restaurant-schedules/:id/edit']
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true }
+       ]
+     } else if (path.startsWith('/restaurant-schedules')) {
+       pageTitle.value = titles['/restaurant-schedules']
+       headerActions.value = [
+          { to: '/restaurant-schedules/add', label: 'Добавить', icon: 'add', primary: true }
        ]
     } else {
       pageTitle.value = titles['/']

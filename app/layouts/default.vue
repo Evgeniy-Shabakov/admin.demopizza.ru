@@ -7,6 +7,7 @@ const menuItems = [
   { name: 'Главная', path: '/', icon: 'home' },
   { name: 'Страны', path: '/countries', icon: 'globe' },
   { name: 'Города', path: '/cities', icon: 'city' },
+  { name: 'Графики работы', path: '/restaurant-schedules', icon: 'clock' },
 ]
 
 onMounted(() => {

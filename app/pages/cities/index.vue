@@ -84,7 +84,7 @@ const getCountryName = (countryId) => {
               <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Карта</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Создано</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Обновлено</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Действия</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider sticky right-0">Действия</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -107,7 +107,7 @@ const getCountryName = (countryId) => {
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 select-text">{{ city.createdAt }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 select-text">{{ city.updatedAt }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm select-text">
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm select-text sticky right-0 bg-white dark:bg-gray-800">
                 <UiActionListButtons
                   :view-link="`/cities/${city.id}`"
                   :edit-link="`/cities/${city.id}/edit`"
