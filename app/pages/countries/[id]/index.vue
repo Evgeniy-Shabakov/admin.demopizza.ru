@@ -20,12 +20,12 @@ onMounted(async () => {
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
     </div>
 
-    <div v-else-if="country" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <BaseCard v-else-if="country">
       <FormsCountryForm :country="country" disabled :show-details="true" />
-    </div>
+    </BaseCard>
 
-    <div v-else class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center">
-      <p class="text-gray-500 dark:text-gray-400">Страна не найдена</p>
-    </div>
+    <BaseCard v-else>
+      <p class="text-gray-500 dark:text-gray-400 text-center">Страна не найдена</p>
+    </BaseCard>
   </div>
 </template>

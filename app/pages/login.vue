@@ -84,80 +84,78 @@ onMounted(async () => {
 <template>
    <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div class="w-full max-w-md">
-         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+         <BaseCard class="p-8">
             <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
                Вход в систему
             </h1>
 
             <form @submit.prevent="onSubmit">
-                <div class="mb-4">
-                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Номер телефона
-                   </label>
-                   <div class="w-full">
-                      <UiPhoneInput v-model="phone"
-                                    @update:countryCode="countryCode = $event" />
-                   </div>
-                   <p v-if="errors.phone"
-                      class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
-                </div>
-
-               <div class="mb-6">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                     Пароль
-                  </label>
-                  <div class="relative">
-                     <input v-model="password"
-                            :type="showPassword ? 'text' : 'password'"
-                            placeholder="Введите пароль"
-                            class="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
-                     <button type="button"
-                             @click="showPassword = !showPassword"
-                             class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
-                        <svg v-if="showPassword"
-                             class="w-5 h-5"
-                             fill="none"
-                             stroke="currentColor"
-                             viewBox="0 0 24 24">
-                           <path stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 stroke-width="2"
-                                 d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
-                           <path stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 stroke-width="2"
-                                 d="M1 1l22 22" />
-                        </svg>
-                        <svg v-else
-                             class="w-5 h-5"
-                             fill="none"
-                             stroke="currentColor"
-                             viewBox="0 0 24 24">
-                           <path stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 stroke-width="2"
-                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                           <path stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 stroke-width="2"
-                                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                     </button>
+               <div class="mb-4">
+                  <BaseLabel for="phone">Номер телефона</BaseLabel>
+                  <div class="w-full">
+                     <UiPhoneInput v-model="phone"
+                                   @update:countryCode="countryCode = $event" />
                   </div>
-                  <p v-if="errors.password"
-                     class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
+                  <p v-if="errors.phone"
+                     class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
                </div>
 
-               <button type="submit"
-                       :disabled="loading"
-                       class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer">
+               <div class="mb-6">
+                  <BaseLabel for="password">Пароль</BaseLabel>
+                  <BaseInput
+                     id="password"
+                     v-model="password"
+                     :type="showPassword ? 'text' : 'password'"
+                     placeholder="Введите пароль"
+                     :error="errors.password"
+                  >
+                     <template #append>
+                        <button type="button"
+                                @click="showPassword = !showPassword"
+                                class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
+                           <svg v-if="showPassword"
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24">
+                              <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                              <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M1 1l22 22" />
+                           </svg>
+                           <svg v-else
+                                class="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24">
+                              <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                           </svg>
+                        </button>
+                     </template>
+                  </BaseInput>
+               </div>
+
+               <BaseButton type="submit"
+                           :loading="loading"
+                           class="w-full">
                   {{ loading ? 'Вход...' : 'Войти' }}
-               </button>
+               </BaseButton>
 
                <p v-if="formError"
                   class="text-red-500 text-sm mt-4 text-center">{{ formError }}</p>
             </form>
-         </div>
+         </BaseCard>
       </div>
    </div>
 </template>

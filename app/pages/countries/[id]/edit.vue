@@ -36,23 +36,19 @@ const saveCountry = async () => {
 
 <template>
   <div class="space-y-6 max-w-2xl">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <BaseCard>
       <form @submit.prevent="saveCountry" class="space-y-6">
         <FormsCountryForm v-model="form" :validation-error="validationError" />
 
         <div class="flex gap-4 pt-4">
-          <button 
-            type="submit" 
-            :disabled="loading"
-            class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg transition-colors cursor-pointer"
-          >
-            {{ loading ? 'Сохранение...' : 'Сохранить' }}
-          </button>
-           <NuxtLink :to="`/countries/${countryId}`" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer">
+          <BaseButton type="submit" :loading="loading">
+            Сохранить
+          </BaseButton>
+          <NuxtLink :to="`/countries/${countryId}`" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer">
             Отмена
           </NuxtLink>
         </div>
       </form>
-    </div>
+    </BaseCard>
   </div>
 </template>

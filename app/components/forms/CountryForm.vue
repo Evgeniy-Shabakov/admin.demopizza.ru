@@ -16,26 +16,27 @@ const form = defineModel({
 <template>
   <div class="space-y-6">
     <div v-if="showDetails && country">
-      <label class="block text-sm font-medium mb-2">ID</label>
-      <input
-        :value="country?.id"
+      <BaseLabel for="country-id">ID</BaseLabel>
+      <BaseInput
+        id="country-id"
+        :model-value="country?.id"
         type="text"
         disabled
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
       />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-2">Название страны *</label>
-      <input
+      <BaseLabel for="country-name" required>Название страны</BaseLabel>
+      <BaseInput
         v-if="disabled && country"
-        :value="country.name"
+        id="country-name"
+        :model-value="country.name"
         type="text"
         disabled
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
       />
-      <input
+      <BaseInput
         v-else
+        id="country-name"
         v-model="form.name"
         type="text"
         :disabled="disabled"
@@ -43,32 +44,28 @@ const form = defineModel({
         minlength="2"
         maxlength="100"
         placeholder="Введите название страны"
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        :error="validationError"
       />
     </div>
 
     <div v-if="showDetails && country">
-      <label class="block text-sm font-medium mb-2">Создано</label>
-      <input
-        :value="country.createdAt"
+      <BaseLabel for="country-created">Создано</BaseLabel>
+      <BaseInput
+        id="country-created"
+        :model-value="country.createdAt"
         type="text"
         disabled
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
       />
     </div>
 
     <div v-if="showDetails && country">
-      <label class="block text-sm font-medium mb-2">Обновлено</label>
-      <input
-        :value="country.updatedAt"
+      <BaseLabel for="country-updated">Обновлено</BaseLabel>
+      <BaseInput
+        id="country-updated"
+        :model-value="country.updatedAt"
         type="text"
         disabled
-        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
       />
     </div>
-
-    <p v-if="validationError" class="text-sm text-red-500 -mb-6">
-      {{ validationError }}
-    </p>
   </div>
 </template>

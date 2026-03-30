@@ -8,7 +8,7 @@ useHead({
   <div class="space-y-6">
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <BaseCard>
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-gray-500 dark:text-gray-400">Всего пользователей</p>
@@ -21,9 +21,9 @@ useHead({
           </div>
         </div>
         <p class="text-sm text-green-600 dark:text-green-400 mt-4">+12% за прошлый месяц</p>
-      </div>
+      </BaseCard>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <BaseCard>
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-gray-500 dark:text-gray-400">Доход</p>
@@ -36,9 +36,9 @@ useHead({
           </div>
         </div>
         <p class="text-sm text-green-600 dark:text-green-400 mt-4">+8% за прошлый месяц</p>
-      </div>
+      </BaseCard>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <BaseCard>
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-gray-500 dark:text-gray-400">Заказы</p>
@@ -51,9 +51,9 @@ useHead({
           </div>
         </div>
         <p class="text-sm text-red-600 dark:text-red-400 mt-4">-3% за прошлый месяц</p>
-      </div>
+      </BaseCard>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <BaseCard>
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-gray-500 dark:text-gray-400">Товары</p>
@@ -66,11 +66,11 @@ useHead({
           </div>
         </div>
         <p class="text-sm text-green-600 dark:text-green-400 mt-4">+5% за прошлый месяц</p>
-      </div>
+      </BaseCard>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <BaseCard>
         <h3 class="text-lg font-semibold mb-4">Последняя активность</h3>
         <div class="space-y-4">
           <div v-for="i in 5" :key="i" class="flex items-center gap-4">
@@ -83,9 +83,9 @@ useHead({
             </div>
           </div>
         </div>
-      </div>
+      </BaseCard>
 
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <BaseCard>
         <h3 class="text-lg font-semibold mb-4">Быстрая статистика</h3>
         <div class="space-y-4">
           <div>
@@ -116,7 +116,7 @@ useHead({
             </div>
           </div>
         </div>
-      </div>
+      </BaseCard>
     </div>
   </div>
 </template>
