@@ -108,18 +108,15 @@ export function useCountries() {
   }
 
   const deleteCountry = async (id) => {
-    loading.value = true
     error.value = null
     try {
       await api.delete(`/countries/${id}`)
-      await fetchCountries()
+      countries.value = countries.value.filter(c => c.id !== id)
       return true
     } catch (e) {
       error.value = getErrorMessage('deleteCountry')
       showError({ message: getErrorMessage('deleteCountry'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
       return false
-    } finally {
-      loading.value = false
     }
   }
 
