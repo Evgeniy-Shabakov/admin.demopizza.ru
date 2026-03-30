@@ -79,6 +79,7 @@ const getCountryName = (countryId) => {
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Название</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Страна</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Карта</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Создано</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Обновлено</th>
               <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Действия</th>
@@ -94,6 +95,18 @@ const getCountryName = (countryId) => {
               <td class="px-6 py-4 whitespace-nowrap text-sm select-text">{{ city.id }}</td>
               <td class="px-6 py-4 whitespace-nowrap font-medium select-text">{{ city.name }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm select-text">{{ getCountryName(city.countryId) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-center select-text">
+                <span v-if="city.mapIframe" class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30">
+                  <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span v-else class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </span>
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 select-text">{{ city.createdAt }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 select-text">{{ city.updatedAt }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm select-text">
@@ -115,7 +128,14 @@ const getCountryName = (countryId) => {
           class="hover:bg-gray-50 dark:hover:bg-gray-700/50"
         >
           <div class="p-4" @click="viewCity(city.id)">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">ID: {{ city.id }}</p>
+            <div class="flex items-center gap-2 mb-1">
+              <p class="text-xs text-gray-500 dark:text-gray-400">ID: {{ city.id }}</p>
+              <span v-if="city.mapIframe" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30">
+                <svg class="w-3 h-3 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            </div>
             <p class="font-medium">{{ city.name }}</p>
             <p class="text-sm text-gray-500 dark:text-gray-400">{{ getCountryName(city.countryId) }}</p>
           </div>
