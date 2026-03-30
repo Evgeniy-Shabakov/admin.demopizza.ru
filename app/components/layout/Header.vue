@@ -10,6 +10,10 @@ const titles = {
    '/countries/add': 'Добавить страну',
    '/countries/:id': 'Просмотр страны',
    '/countries/:id/edit': 'Редактирование страны',
+   '/cities': 'Города',
+   '/cities/add': 'Добавить город',
+   '/cities/:id': 'Просмотр города',
+   '/cities/:id/edit': 'Редактирование города',
 }
 
 watch(() => route.path, (path) => {
@@ -34,11 +38,33 @@ watch(() => route.path, (path) => {
           { label: 'Назад', icon: 'back', back: true }
        ]
    } else if (path.startsWith('/countries')) {
-      pageTitle.value = titles['/countries']
-      headerActions.value = [
-         { to: '/countries/add', label: 'Добавить', icon: 'add', primary: true }
-      ]
-   } else {
+       pageTitle.value = titles['/countries']
+       headerActions.value = [
+          { to: '/countries/add', label: 'Добавить', icon: 'add', primary: true }
+       ]
+    } else if (path === '/cities/add') {
+       pageTitle.value = titles['/cities/add']
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true }
+       ]
+    } else if (path.match(/^\/cities\/\d+$/)) {
+       pageTitle.value = titles['/cities/:id']
+       const id = route.params.id
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true },
+          { to: `/cities/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+       ]
+    } else if (path.match(/^\/cities\/\d+\/edit$/)) {
+       pageTitle.value = titles['/cities/:id/edit']
+       headerActions.value = [
+          { label: 'Назад', icon: 'back', back: true }
+       ]
+    } else if (path.startsWith('/cities')) {
+       pageTitle.value = titles['/cities']
+       headerActions.value = [
+          { to: '/cities/add', label: 'Добавить', icon: 'add', primary: true }
+       ]
+    } else {
       pageTitle.value = titles['/']
       headerActions.value = []
    }
