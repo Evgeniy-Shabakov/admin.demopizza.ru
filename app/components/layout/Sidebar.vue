@@ -33,8 +33,8 @@ const handleMenuClick = () => {
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
              </svg>
            </button>
-           <button @click="emit('close')"
-                   class="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <button @click="emit('close')"
+                    class="ml-auto lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
              </svg>
@@ -138,7 +138,18 @@ const handleMenuClick = () => {
           <UiToggleTheme />
         </div>
         <div :class="isCollapsed ? 'lg:flex' : 'lg:hidden'" class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 justify-center">
-          <UiToggleTheme />
+          <button @click="logout"
+                  class="flex items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer">
+            <svg class="w-5 h-5"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
         </div>
     </aside>
 </template>
