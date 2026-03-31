@@ -11,6 +11,7 @@ const menuItems = [
   { name: 'Графики работы', path: '/restaurant-schedules', icon: 'clock' },
   { name: 'Рестораны', path: '/restaurants', icon: 'restaurant' },
   { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
+  { name: 'Категории', path: '/categories', icon: 'tag' },
 ]
 
 onMounted(() => {
