@@ -20,6 +20,80 @@ const form = defineModel({
     isActive: true
   })
 })
+
+const geojsonFeatures = ref([])
+const selectedFeatureIndex = ref(null)
+const fileInput = ref(null)
+
+const featureOptions = computed(() => {
+  return geojsonFeatures.value
+    .filter(feature => feature.geometry?.type === 'Polygon')
+    .map((feature, filteredIndex) => {
+      const originalIndex = geojsonFeatures.value.indexOf(feature)
+      const properties = feature.properties || {}
+      const name = properties.description || `Зона ${filteredIndex + 1}`
+      return {
+        originalIndex,
+        filteredIndex,
+        name,
+        feature
+      }
+    })
+})
+
+const selectedFilteredIndex = computed(() => {
+  if (selectedFeatureIndex.value === null) return null
+  const option = featureOptions.value.find(opt => opt.originalIndex === selectedFeatureIndex.value)
+  return option?.filteredIndex ?? null
+})
+
+const handleFileUpload = (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    try {
+      const geojson = JSON.parse(e.target.result)
+      if (geojson.type === 'FeatureCollection' && Array.isArray(geojson.features)) {
+        geojsonFeatures.value = geojson.features
+        selectedFeatureIndex.value = null
+        form.value.geojsonFeature = ''
+      } else if (geojson.type === 'Feature') {
+        geojsonFeatures.value = [geojson]
+        selectedFeatureIndex.value = 0
+        form.value.geojsonFeature = JSON.stringify(geojson, null, 2)
+      } else {
+        geojsonFeatures.value = []
+        form.value.geojsonFeature = ''
+      }
+    } catch (error) {
+      console.error('Ошибка парсинга GeoJSON:', error)
+      geojsonFeatures.value = []
+    }
+  }
+  reader.readAsText(file)
+}
+
+const handleFeatureSelect = (event) => {
+  const selectedOption = featureOptions.value.find(opt => opt.filteredIndex === Number(event.target.value))
+  if (!selectedOption) {
+    selectedFeatureIndex.value = null
+    form.value.geojsonFeature = ''
+  } else {
+    selectedFeatureIndex.value = selectedOption.originalIndex
+    form.value.geojsonFeature = JSON.stringify(selectedOption.feature, null, 2)
+  }
+}
+
+const clearGeoJson = () => {
+  geojsonFeatures.value = []
+  selectedFeatureIndex.value = null
+  form.value.geojsonFeature = ''
+  if (fileInput.value) {
+    fileInput.value.value = ''
+  }
+}
 </script>
 
 <template>
@@ -184,21 +258,53 @@ const form = defineModel({
     </div>
 
     <div>
-      <BaseLabel for="delivery-zone-geojson">GeoJSON Feature</BaseLabel>
+      <BaseLabel>GeoJSON Feature</BaseLabel>
+      
+      <div v-if="!disabled && !showDetails" class="space-y-3">
+        <div class="flex items-center gap-4">
+          <label class="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-lg cursor-pointer transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <span>Загрузить GeoJSON</span>
+            <input 
+              ref="fileInput"
+              type="file" 
+              accept=".json,.geojson"
+              class="hidden"
+              @change="handleFileUpload"
+            />
+          </label>
+          
+          <button 
+            v-if="geojsonFeatures.length > 0"
+            type="button"
+            @click="clearGeoJson"
+            class="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            Очистить
+          </button>
+        </div>
+
+        <div v-if="featureOptions.length > 0">
+          <select
+            :value="selectedFilteredIndex ?? ''"
+            @change="handleFeatureSelect"
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          >
+            <option value="">Выберите зону доставки</option>
+            <option v-for="option in featureOptions" :key="option.filteredIndex" :value="option.filteredIndex">
+              {{ option.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
       <BaseTextarea
-        v-if="disabled && deliveryZone"
-        id="delivery-zone-geojson"
-        :model-value="deliveryZone.geojsonFeature"
+        :model-value="disabled && deliveryZone ? deliveryZone.geojsonFeature : form.geojsonFeature"
         disabled
         :rows="4"
-      />
-      <BaseTextarea
-        v-else
-        id="delivery-zone-geojson"
-        v-model="form.geojsonFeature"
-        :disabled="disabled"
-        placeholder='{"type": "Feature", "geometry": {...}}'
-        :rows="4"
+        class="mt-3"
       />
     </div>
 
