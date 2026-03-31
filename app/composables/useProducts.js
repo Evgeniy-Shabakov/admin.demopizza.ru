@@ -43,11 +43,15 @@ export function useProducts() {
   const products = ref([])
   const loading = ref(false)
   const error = ref(null)
+  const { sortedCategories, fetchCategories, categories: categoriesStore } = useCategories()
 
   const fetchProducts = async () => {
     loading.value = true
     error.value = null
     try {
+      if (!categoriesStore.value.length) {
+        await fetchCategories()
+      }
       const response = await api.get('/products?include=category')
       products.value = response.data.data
     } catch (e) {
@@ -165,33 +169,61 @@ export function useProducts() {
   }
 
   const sortedProducts = computed(() => {
-    const positioned = products.value.filter(p => p.positionInCategory !== null && p.positionInCategory !== undefined)
-    const unpositioned = products.value.filter(p => p.positionInCategory === null || p.positionInCategory === undefined)
+    const categoryOrder = sortedCategories.value.map(c => c.id)
     
-    const maxPosition = positioned.length > 0 
-      ? Math.max(...positioned.map(p => p.positionInCategory)) 
-      : 0
+    const productsByCategory = {}
+    products.value.forEach(p => {
+      const catId = p.categoryId
+      if (!productsByCategory[catId]) {
+        productsByCategory[catId] = []
+      }
+      productsByCategory[catId].push(p)
+    })
     
-    const result = new Array(Math.max(maxPosition, 0)).fill(null)
+    const sortItemsByPosition = (items) => {
+      const positioned = items.filter(p => p.positionInCategory !== null && p.positionInCategory !== undefined)
+      const unpositioned = items.filter(p => p.positionInCategory === null || p.positionInCategory === undefined)
+      
+      const maxPosition = positioned.length > 0 
+        ? Math.max(...positioned.map(p => p.positionInCategory)) 
+        : 0
+      
+      const result = new Array(Math.max(maxPosition, 0)).fill(null)
+      
+      positioned.forEach(p => {
+        if (p.positionInCategory > 0 && p.positionInCategory <= result.length) {
+          result[p.positionInCategory - 1] = p
+        }
+      })
+      
+      let unposIndex = 0
+      for (let i = 0; i < result.length && unposIndex < unpositioned.length; i++) {
+        if (result[i] === null) {
+          result[i] = unpositioned[unposIndex]
+          unposIndex++
+        }
+      }
+      
+      while (unposIndex < unpositioned.length) {
+        result.push(unpositioned[unposIndex])
+        unposIndex++
+      }
+      
+      return result
+    }
     
-    positioned.forEach(p => {
-      if (p.positionInCategory > 0 && p.positionInCategory <= result.length) {
-        result[p.positionInCategory - 1] = p
+    const result = []
+    
+    categoryOrder.forEach(catId => {
+      if (productsByCategory[catId]) {
+        result.push(...sortItemsByPosition(productsByCategory[catId]))
+        delete productsByCategory[catId]
       }
     })
     
-    let unposIndex = 0
-    for (let i = 0; i < result.length && unposIndex < unpositioned.length; i++) {
-      if (result[i] === null) {
-        result[i] = unpositioned[unposIndex]
-        unposIndex++
-      }
-    }
-    
-    while (unposIndex < unpositioned.length) {
-      result.push(unpositioned[unposIndex])
-      unposIndex++
-    }
+    Object.values(productsByCategory).forEach(categoryProducts => {
+      result.push(...sortItemsByPosition(categoryProducts))
+    })
     
     return result
   })
