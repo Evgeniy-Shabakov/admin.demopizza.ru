@@ -18,6 +18,10 @@ const titles = {
    '/categories/add': 'Добавить категорию',
    '/categories/:id': 'Просмотр категории',
    '/categories/:id/edit': 'Редактирование категории',
+   '/products': 'Товары',
+   '/products/add': 'Добавить товар',
+   '/products/:id': 'Просмотр товара',
+   '/products/:id/edit': 'Редактирование товара',
    '/restaurant-schedules': 'Графики работы',
    '/restaurant-schedules/add': 'Добавить график',
    '/restaurant-schedules/:id': 'Просмотр графика',
@@ -98,10 +102,32 @@ watch(() => route.path, (path) => {
            { label: 'Назад', icon: 'back', back: true }
         ]
       } else if (path.startsWith('/categories')) {
-        pageTitle.value = titles['/categories']
-        headerActions.value = [
-           { to: '/categories/add', label: 'Добавить', icon: 'add', primary: true }
-        ]
+         pageTitle.value = titles['/categories']
+         headerActions.value = [
+            { to: '/categories/add', label: 'Добавить', icon: 'add', primary: true }
+         ]
+      } else if (path === '/products/add') {
+         pageTitle.value = titles['/products/add']
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true }
+         ]
+      } else if (path.match(/^\/products\/\d+$/)) {
+         pageTitle.value = titles['/products/:id']
+         const id = route.params.id
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true },
+            { to: `/products/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+         ]
+      } else if (path.match(/^\/products\/\d+\/edit$/)) {
+         pageTitle.value = titles['/products/:id/edit']
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true }
+         ]
+      } else if (path.startsWith('/products')) {
+         pageTitle.value = titles['/products']
+         headerActions.value = [
+            { to: '/products/add', label: 'Добавить', icon: 'add', primary: true }
+         ]
       } else if (path === '/restaurant-schedules/add') {
        pageTitle.value = titles['/restaurant-schedules/add']
        headerActions.value = [
