@@ -2,6 +2,7 @@
 const { initTheme } = useTheme()
 const route = useRoute()
 const isSidebarOpen = ref(false)
+const isSidebarCollapsed = ref(false)
 
 const menuItems = [
   { name: 'Главная', path: '/', icon: 'home' },
@@ -18,6 +19,10 @@ const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
 }
 
+const toggleSidebarCollapse = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value
+}
+
 const closeSidebar = () => {
   isSidebarOpen.value = false
 }
@@ -28,8 +33,10 @@ const closeSidebar = () => {
     <LayoutSidebar 
       :menu-items="menuItems" 
       :is-open="isSidebarOpen"
+      :is-collapsed="isSidebarCollapsed"
       @toggle="toggleSidebar"
       @close="closeSidebar"
+      @toggle-collapse="toggleSidebarCollapse"
     />
     
     <div 
@@ -38,7 +45,7 @@ const closeSidebar = () => {
       @click="closeSidebar"
     ></div>
     
-    <div class="lg:pl-64 min-h-screen flex flex-col">
+    <div :class="isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'" class="min-h-screen flex flex-col">
       <LayoutHeader 
         @toggle-sidebar="toggleSidebar"
       />
