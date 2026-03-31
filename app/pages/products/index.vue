@@ -25,7 +25,7 @@ const handleDelete = async (item) => {
 const columns = [
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Название', bold: true },
-  { key: 'categoryName', label: 'Категория' },
+  { key: 'category.name', label: 'Категория' },
   { key: 'priceDefault', label: 'Цена', render: (item) => item.priceDefault ? `${item.priceDefault} ₽` : '—' },
   { key: 'bonusCoinsDefault', label: 'Бонусы', render: (item) => item.bonusCoinsDefault || '—' },
   { key: 'isActive', label: 'Активен', render: (item) => item.isActive ? 'Да' : 'Нет' },

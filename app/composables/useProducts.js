@@ -48,7 +48,7 @@ export function useProducts() {
     loading.value = true
     error.value = null
     try {
-      const response = await api.get('/products')
+      const response = await api.get('/products?include=category')
       products.value = response.data.data
     } catch (e) {
       error.value = getErrorMessage('fetchProducts')
