@@ -152,10 +152,10 @@ const getMobileValue = (item, column) => {
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">ID: {{ item.id }}</p>
             <template v-for="column in columns.filter(c => c.showInMobile !== false)" :key="column.key">
               <p v-if="column.mobileLabel" class="text-xs text-gray-500 dark:text-gray-400">
-                {{ getMobileValue(item, column) }}
+                <span v-html="getMobileValue(item, column)"></span>
               </p>
               <p v-else-if="!column.key.startsWith('actions') && !column.key.startsWith('id')" class="font-medium">
-                {{ getMobileValue(item, column) }}
+                <span v-html="getMobileValue(item, column)"></span>
               </p>
             </template>
           </div>
