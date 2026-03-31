@@ -18,6 +18,10 @@ const titles = {
    '/restaurant-schedules/add': 'Добавить график',
    '/restaurant-schedules/:id': 'Просмотр графика',
    '/restaurant-schedules/:id/edit': 'Редактирование графика',
+   '/restaurants': 'Рестораны',
+   '/restaurants/add': 'Добавить ресторан',
+   '/restaurants/:id': 'Просмотр ресторана',
+   '/restaurants/:id/edit': 'Редактирование ресторана',
 }
 
 watch(() => route.path, (path) => {
@@ -85,12 +89,34 @@ watch(() => route.path, (path) => {
        headerActions.value = [
           { label: 'Назад', icon: 'back', back: true }
        ]
-     } else if (path.startsWith('/restaurant-schedules')) {
-       pageTitle.value = titles['/restaurant-schedules']
-       headerActions.value = [
-          { to: '/restaurant-schedules/add', label: 'Добавить', icon: 'add', primary: true }
-       ]
-    } else {
+      } else if (path.startsWith('/restaurant-schedules')) {
+        pageTitle.value = titles['/restaurant-schedules']
+        headerActions.value = [
+           { to: '/restaurant-schedules/add', label: 'Добавить', icon: 'add', primary: true }
+        ]
+     } else if (path === '/restaurants/add') {
+        pageTitle.value = titles['/restaurants/add']
+        headerActions.value = [
+           { label: 'Назад', icon: 'back', back: true }
+        ]
+     } else if (path.match(/^\/restaurants\/\d+$/)) {
+        pageTitle.value = titles['/restaurants/:id']
+        const id = route.params.id
+        headerActions.value = [
+           { label: 'Назад', icon: 'back', back: true },
+           { to: `/restaurants/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+        ]
+     } else if (path.match(/^\/restaurants\/\d+\/edit$/)) {
+        pageTitle.value = titles['/restaurants/:id/edit']
+        headerActions.value = [
+           { label: 'Назад', icon: 'back', back: true }
+        ]
+     } else if (path.startsWith('/restaurants')) {
+        pageTitle.value = titles['/restaurants']
+        headerActions.value = [
+           { to: '/restaurants/add', label: 'Добавить', icon: 'add', primary: true }
+        ]
+     } else {
       pageTitle.value = titles['/']
       headerActions.value = []
    }

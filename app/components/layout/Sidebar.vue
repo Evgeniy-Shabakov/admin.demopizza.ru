@@ -93,17 +93,23 @@ const handleMenuClick = () => {
                        stroke-width="2"
                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
-              <svg v-else-if="item.icon === 'clock'"
-                   class="w-5 h-5"
-                   fill="none"
-                   stroke="currentColor"
-                   viewBox="0 0 24 24">
-                 <path stroke-linecap="round"
-                       stroke-linejoin="round"
-                       stroke-width="2"
-                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <svg v-else-if="item.icon === 'settings'"
+               <svg v-else-if="item.icon === 'clock'"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                  <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+               </svg>
+               <svg v-else-if="item.icon === 'restaurant'"
+                    class="w-5 h-5"
+                    viewBox="0 0 24 24"
+                    fill="currentColor">
+                  <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>
+               </svg>
+               <svg v-else-if="item.icon === 'settings'"
                   class="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
