@@ -48,7 +48,7 @@ export function useRestaurants() {
     loading.value = true
     error.value = null
     try {
-      const response = await api.get('/restaurants')
+      const response = await api.get('/restaurants?include=address')
       restaurants.value = response.data.data
     } catch (e) {
       error.value = getErrorMessage('fetchRestaurants')
@@ -62,7 +62,7 @@ export function useRestaurants() {
     loading.value = true
     error.value = null
     try {
-      const response = await api.get(`/restaurants/${id}`)
+      const response = await api.get(`/restaurants/${id}?include=address`)
       return response.data.data
     } catch (e) {
       error.value = getErrorMessage('getRestaurant')
