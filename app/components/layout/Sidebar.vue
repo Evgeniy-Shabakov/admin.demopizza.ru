@@ -22,12 +22,13 @@ const handleMenuClick = () => {
    isCollapsed ? 'lg:w-20' : ''
 ]">
 
-       <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-700">
+        <div :class="isCollapsed ? 'lg:justify-center lg:px-0' : 'justify-between lg:px-4'" class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
            <div :class="isCollapsed ? 'lg:hidden' : ''">
              <UiEmployeeData/>
            </div>
-           <button @click="emit('toggle-collapse')"
-                   class="hidden lg:flex p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <button @click="emit('toggle-collapse')"
+                    :class="isCollapsed ? 'lg:w-full lg:justify-center' : ''"
+                    class="hidden lg:flex p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
              <svg class="w-5 h-5 transition-transform" :class="isCollapsed ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
              </svg>
@@ -136,7 +137,7 @@ const handleMenuClick = () => {
           </button>
           <UiToggleTheme />
         </div>
-        <div :class="isCollapsed ? 'lg:flex' : 'lg:hidden'" class="hidden absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 justify-center">
+        <div :class="isCollapsed ? 'lg:flex' : 'lg:hidden'" class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 justify-center">
           <UiToggleTheme />
         </div>
     </aside>
