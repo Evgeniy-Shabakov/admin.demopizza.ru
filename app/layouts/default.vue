@@ -45,7 +45,7 @@ const closeSidebar = () => {
       @click="closeSidebar"
     ></div>
     
-    <div :class="isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'" class="min-h-screen flex flex-col">
+    <div :class="isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'" class="min-h-screen flex flex-col transition-all duration-300">
       <LayoutHeader 
         @toggle-sidebar="toggleSidebar"
       />
