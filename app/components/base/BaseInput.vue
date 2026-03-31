@@ -12,10 +12,20 @@ defineProps({
   id: String,
   name: String,
   required: Boolean,
-  autocomplete: String
+  autocomplete: String,
+  size: {
+    type: String,
+    default: 'md'
+  }
 })
 
 defineEmits(['update:modelValue'])
+
+const sizeClasses = {
+  sm: 'px-2 py-1 text-sm',
+  md: 'px-4 py-2',
+  lg: 'px-4 py-3'
+}
 </script>
 
 <template>
@@ -32,7 +42,8 @@ defineEmits(['update:modelValue'])
         :required="required"
         :autocomplete="autocomplete"
         :class="[
-          'w-full px-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
+          'w-full rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
+          sizeClasses[size] || sizeClasses.md,
           error
             ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100 placeholder-red-400/70'
             : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500',
