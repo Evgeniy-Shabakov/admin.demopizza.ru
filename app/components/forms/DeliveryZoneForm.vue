@@ -1,12 +1,32 @@
 <script setup>
-defineProps({
+const props = defineProps({
   deliveryZone: Object,
   disabled: Boolean,
   showDetails: Boolean,
   cities: Array,
   restaurants: Array,
-  validationError: String
+  validationError: String,
+  geojsonFeatures: {
+    type: Array,
+    default: () => []
+  },
+  selectedFeatureIndex: {
+    type: Number,
+    default: null
+  },
+  featureOptions: {
+    type: Array,
+    default: () => []
+  },
+  selectedFilteredIndex: {
+    type: Number,
+    default: null
+  }
 })
+
+const emit = defineEmits(['handleFileUpload', 'clearGeoJson', 'update:selectedFeatureIndex'])
+
+const fileInput = ref(null)
 
 const form = defineModel({
   default: () => ({
@@ -21,75 +41,28 @@ const form = defineModel({
   })
 })
 
-const geojsonFeatures = ref([])
-const selectedFeatureIndex = ref(null)
-const fileInput = ref(null)
-
-const featureOptions = computed(() => {
-  return geojsonFeatures.value
-    .filter(feature => feature.geometry?.type === 'Polygon')
-    .map((feature, filteredIndex) => {
-      const originalIndex = geojsonFeatures.value.indexOf(feature)
-      const properties = feature.properties || {}
-      const name = properties.description || `Зона ${filteredIndex + 1}`
-      return {
-        originalIndex,
-        filteredIndex,
-        name,
-        feature
+const localSelectedFilteredIndex = computed({
+  get: () => props.selectedFilteredIndex,
+  set: (value) => {
+    if (value === '' || value === null) {
+      emit('update:selectedFeatureIndex', null)
+      form.value.geojsonFeature = ''
+    } else {
+      const selectedOption = props.featureOptions.find(opt => opt.filteredIndex === Number(value))
+      if (selectedOption) {
+        emit('update:selectedFeatureIndex', selectedOption.originalIndex)
+        form.value.geojsonFeature = JSON.stringify(selectedOption.feature, null, 2)
       }
-    })
-})
-
-const selectedFilteredIndex = computed(() => {
-  if (selectedFeatureIndex.value === null) return null
-  const option = featureOptions.value.find(opt => opt.originalIndex === selectedFeatureIndex.value)
-  return option?.filteredIndex ?? null
+    }
+  }
 })
 
 const handleFileUpload = (event) => {
-  const file = event.target.files?.[0]
-  if (!file) return
-
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    try {
-      const geojson = JSON.parse(e.target.result)
-      if (geojson.type === 'FeatureCollection' && Array.isArray(geojson.features)) {
-        geojsonFeatures.value = geojson.features
-        selectedFeatureIndex.value = null
-        form.value.geojsonFeature = ''
-      } else if (geojson.type === 'Feature') {
-        geojsonFeatures.value = [geojson]
-        selectedFeatureIndex.value = 0
-        form.value.geojsonFeature = JSON.stringify(geojson, null, 2)
-      } else {
-        geojsonFeatures.value = []
-        form.value.geojsonFeature = ''
-      }
-    } catch (error) {
-      console.error('Ошибка парсинга GeoJSON:', error)
-      geojsonFeatures.value = []
-    }
-  }
-  reader.readAsText(file)
-}
-
-const handleFeatureSelect = (event) => {
-  const selectedOption = featureOptions.value.find(opt => opt.filteredIndex === Number(event.target.value))
-  if (!selectedOption) {
-    selectedFeatureIndex.value = null
-    form.value.geojsonFeature = ''
-  } else {
-    selectedFeatureIndex.value = selectedOption.originalIndex
-    form.value.geojsonFeature = JSON.stringify(selectedOption.feature, null, 2)
-  }
+  emit('handleFileUpload', event)
 }
 
 const clearGeoJson = () => {
-  geojsonFeatures.value = []
-  selectedFeatureIndex.value = null
-  form.value.geojsonFeature = ''
+  emit('clearGeoJson')
   if (fileInput.value) {
     fileInput.value.value = ''
   }
@@ -150,7 +123,7 @@ const clearGeoJson = () => {
           required
           :class="[
             'w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
-            !form.cityId && validationError 
+            validationError && validationError.includes('город')
               ? 'border-red-500 dark:border-red-400' 
               : 'border-gray-300 dark:border-gray-600'
           ]"
@@ -160,6 +133,9 @@ const clearGeoJson = () => {
             {{ city.name }}
           </option>
         </select>
+        <p v-if="validationError && validationError.includes('город')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+          Выберите город
+        </p>
       </div>
     </div>
 
@@ -185,7 +161,7 @@ const clearGeoJson = () => {
           required
           :class="[
             'w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
-            !form.restaurantId && validationError 
+            validationError && validationError.includes('ресторан')
               ? 'border-red-500 dark:border-red-400' 
               : 'border-gray-300 dark:border-gray-600'
           ]"
@@ -195,12 +171,15 @@ const clearGeoJson = () => {
             {{ restaurant.name }}
           </option>
         </select>
+        <p v-if="validationError && validationError.includes('ресторан')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+          Выберите ресторан
+        </p>
       </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
-        <BaseLabel for="delivery-zone-min-order">Мин. сумма заказа</BaseLabel>
+        <BaseLabel for="delivery-zone-min-order" required>Мин. сумма заказа</BaseLabel>
         <BaseInput
           v-if="disabled && deliveryZone"
           id="delivery-zone-min-order"
@@ -214,12 +193,21 @@ const clearGeoJson = () => {
           v-model="form.minOrderValueForDelivery"
           type="number"
           :disabled="disabled"
+          required
+          :class="[
+            !form.minOrderValueForDelivery && form.minOrderValueForDelivery !== 0 && validationError
+              ? 'border-red-500 dark:border-red-400'
+              : ''
+          ]"
           placeholder="0"
         />
+        <p v-if="validationError && validationError.includes('минимальную')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+          Введите минимальную сумму заказа
+        </p>
       </div>
 
       <div>
-        <BaseLabel for="delivery-zone-price">Стоимость доставки</BaseLabel>
+        <BaseLabel for="delivery-zone-price" required>Стоимость доставки</BaseLabel>
         <BaseInput
           v-if="disabled && deliveryZone"
           id="delivery-zone-price"
@@ -233,8 +221,17 @@ const clearGeoJson = () => {
           v-model="form.deliveryPrice"
           type="number"
           :disabled="disabled"
+          required
+          :class="[
+            validationError && validationError.includes('стоимость')
+              ? 'border-red-500 dark:border-red-400'
+              : 'border-gray-300 dark:border-gray-600'
+          ]"
           placeholder="0"
         />
+        <p v-if="validationError && validationError.includes('стоимость')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+          Введите стоимость доставки
+        </p>
       </div>
 
       <div>
@@ -259,6 +256,9 @@ const clearGeoJson = () => {
 
     <div>
       <BaseLabel>GeoJSON Feature</BaseLabel>
+      <p class="mt-1 mb-2 text-sm text-gray-500 dark:text-gray-400">
+        Карта создаётся с помощью <a href="https://yandex.ru/map-constructor" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline">конструктора Яндекс Карт</a>
+      </p>
       
       <div v-if="!disabled && !showDetails" class="space-y-3">
         <div class="flex items-center gap-4">
@@ -268,7 +268,7 @@ const clearGeoJson = () => {
             </svg>
             <span>Загрузить GeoJSON</span>
             <input 
-              ref="fileInput"
+              :ref="el => { fileInput = el }"
               type="file" 
               accept=".json,.geojson"
               class="hidden"
@@ -288,15 +288,26 @@ const clearGeoJson = () => {
 
         <div v-if="featureOptions.length > 0">
           <select
-            :value="selectedFilteredIndex ?? ''"
-            @change="handleFeatureSelect"
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            v-model="localSelectedFilteredIndex"
+            required
+            :class="[
+              'w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
+              !form.geojsonFeature && validationError 
+                ? 'border-red-500 dark:border-red-400' 
+                : 'border-gray-300 dark:border-gray-600'
+            ]"
           >
             <option value="">Выберите зону доставки</option>
             <option v-for="option in featureOptions" :key="option.filteredIndex" :value="option.filteredIndex">
               {{ option.name }}
             </option>
           </select>
+          <p v-if="!form.geojsonFeature && validationError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+            Выберите зону доставки
+          </p>
+        </div>
+        <div v-else-if="!disabled && !showDetails && geojsonFeatures.length === 0" class="text-sm text-gray-500 dark:text-gray-400">
+          Загрузите файл GeoJSON для выбора зоны доставки
         </div>
       </div>
 

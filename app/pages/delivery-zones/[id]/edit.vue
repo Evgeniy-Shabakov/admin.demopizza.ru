@@ -24,6 +24,69 @@ const form = ref({
 const deliveryZone = ref(null)
 const validationError = ref(null)
 
+const geojsonFeatures = ref([])
+const selectedFeatureIndex = ref(null)
+
+const featureOptions = computed(() => {
+  return geojsonFeatures.value
+    .filter(feature => feature.geometry?.type === 'Polygon')
+    .map((feature, filteredIndex) => {
+      const originalIndex = geojsonFeatures.value.indexOf(feature)
+      const properties = feature.properties || {}
+      const name = properties.description || `Зона ${filteredIndex + 1}`
+      return {
+        originalIndex,
+        filteredIndex,
+        name,
+        feature
+      }
+    })
+})
+
+const selectedFilteredIndex = computed(() => {
+  if (selectedFeatureIndex.value === null) return null
+  const option = featureOptions.value.find(opt => opt.originalIndex === selectedFeatureIndex.value)
+  return option?.filteredIndex ?? null
+})
+
+const handleFileUpload = (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    try {
+      const geojson = JSON.parse(e.target.result)
+      if (geojson.type === 'FeatureCollection' && Array.isArray(geojson.features)) {
+        geojsonFeatures.value = geojson.features
+        selectedFeatureIndex.value = null
+        form.value.geojsonFeature = ''
+      } else if (geojson.type === 'Feature') {
+        geojsonFeatures.value = [geojson]
+        selectedFeatureIndex.value = 0
+        form.value.geojsonFeature = JSON.stringify(geojson, null, 2)
+      } else {
+        geojsonFeatures.value = []
+        form.value.geojsonFeature = ''
+      }
+    } catch (error) {
+      console.error('Ошибка парсинга GeoJSON:', error)
+      geojsonFeatures.value = []
+    }
+  }
+  reader.readAsText(file)
+}
+
+const updateSelectedFeature = (index) => {
+  selectedFeatureIndex.value = index
+}
+
+const clearGeoJson = () => {
+  geojsonFeatures.value = []
+  selectedFeatureIndex.value = null
+  form.value.geojsonFeature = ''
+}
+
 onMounted(async () => {
   await Promise.all([
     fetchCities(),
@@ -42,7 +105,31 @@ onMounted(async () => {
   }
 })
 
+const validateForm = () => {
+  if (!form.value.cityId) {
+    return { valid: false, message: 'Выберите город' }
+  }
+  if (!form.value.restaurantId) {
+    return { valid: false, message: 'Выберите ресторан' }
+  }
+  if (form.value.minOrderValueForDelivery === null || form.value.minOrderValueForDelivery === undefined || form.value.minOrderValueForDelivery === '') {
+    return { valid: false, message: 'Введите минимальную сумму заказа' }
+  }
+  if (form.value.deliveryPrice === null || form.value.deliveryPrice === undefined || form.value.deliveryPrice === '') {
+    return { valid: false, message: 'Введите стоимость доставки' }
+  }
+  if (!form.value.geojsonFeature) {
+    return { valid: false, message: 'Выберите зону доставки' }
+  }
+  return { valid: true }
+}
+
 const saveDeliveryZone = async () => {
+  const validation = validateForm()
+  if (!validation.valid) {
+    validationError.value = validation.message
+    return
+  }
   validationError.value = null
   const result = await updateDeliveryZone(Number(deliveryZoneId), {
     name: form.value.name,
@@ -72,6 +159,14 @@ const saveDeliveryZone = async () => {
           :cities="cities" 
           :restaurants="restaurants" 
           :validation-error="validationError"
+          :show-details="false"
+          :geojson-features="geojsonFeatures"
+          :selected-feature-index="selectedFeatureIndex"
+          :feature-options="featureOptions"
+          :selected-filtered-index="selectedFilteredIndex"
+          @handle-file-upload="handleFileUpload"
+          @update:selected-feature-index="updateSelectedFeature"
+          @clear-geo-json="clearGeoJson"
         />
 
         <div class="flex gap-4 pt-4">
