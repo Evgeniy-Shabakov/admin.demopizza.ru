@@ -32,16 +32,16 @@ const getImageUrl = (imagePath) => {
 const columns = [
    { key: 'id', label: 'ID' },
    {
-      key: 'image', label: 'Изображение', align: 'center', render: (item) => {
+      key: 'image', label: 'Изображение', align: 'center', mobileLabel: 'Изображение', render: (item) => {
          const url = getImageUrl(item.imagePath)
          return url ? `<div class="flex justify-center"><img src="${url}" class="w-12 h-12 object-cover rounded" /></div>` : '<span class="text-gray-400">—</span>'
       }
    },
    { key: 'name', label: 'Название', bold: true },
-   { key: 'category.name', label: 'Категория' },
-   { key: 'priceDefault', label: 'Цена', render: (item) => item.priceDefault ? `${item.priceDefault} ₽` : '—' },
-   { key: 'bonusCoinsDefault', label: 'Бонусы', render: (item) => item.bonusCoinsDefault || '—' },
-   { key: 'isActive', label: 'Активен', align: 'center', render: (item) => item.isActive
+   { key: 'category.name', label: 'Категория', mobileLabel: 'Категория' },
+   { key: 'priceDefault', label: 'Цена', mobileLabel: 'Цена', render: (item) => item.priceDefault ? `${item.priceDefault} ₽` : '—' },
+   { key: 'bonusCoinsDefault', label: 'Бонусы', mobileLabel: 'Бонусы', render: (item) => item.bonusCoinsDefault || '—' },
+   { key: 'isActive', label: 'Активен', align: 'center', mobileLabel: 'Статус', render: (item) => item.isActive
          ? '<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30"><svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></span>'
          : '<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></span>' },
    { key: 'positionInCategory', label: 'Позиция', showInMobile: false },

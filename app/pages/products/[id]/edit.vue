@@ -57,7 +57,6 @@ const saveProduct = async () => {
   if (result.success) {
     showSuccess('Товар успешно обновлен')
     validationError.value = null
-    router.push('/products')
   } else if (result.validationError) {
     validationError.value = result.validationError
   }

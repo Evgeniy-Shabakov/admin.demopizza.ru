@@ -134,7 +134,7 @@ export function useProducts() {
         formData.append('imageFile', data.imageFile)
       }
 
-      await api.post(`/products/${id}`, formData, {
+      await api.put(`/products/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
