@@ -63,7 +63,15 @@ export function useProducts() {
     error.value = null
     try {
       const response = await api.get(`/products/${id}`)
-      return response.data.data
+      const product = response.data.data
+      const config = useRuntimeConfig()
+      const apiBaseUrl = config.public.apiBaseUrl.replace('/api/v1', '')
+      
+      if (product.imagePath) {
+        product.imageUrl = product.imagePath.replace('storage/public', apiBaseUrl)
+      }
+      
+      return product
     } catch (e) {
       error.value = getErrorMessage('getProduct')
       showError({ message: getErrorMessage('getProduct'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
@@ -81,7 +89,7 @@ export function useProducts() {
       formData.append('name', data.name)
       formData.append('categoryId', data.categoryId)
       formData.append('priceDefault', data.priceDefault)
-      formData.append('bonusCoinsDefault', data.bonusCoinsDefault)
+      formData.append('bonusCoinsDefault', data.bonusCoinsDefault || 0)
       formData.append('descriptionShort', data.descriptionShort || '')
       formData.append('descriptionFull', data.descriptionFull || '')
       formData.append('positionInCategory', data.positionInCategory ? Number(data.positionInCategory) : null)
@@ -116,7 +124,7 @@ export function useProducts() {
       formData.append('name', data.name)
       formData.append('categoryId', data.categoryId)
       formData.append('priceDefault', data.priceDefault)
-      formData.append('bonusCoinsDefault', data.bonusCoinsDefault)
+      formData.append('bonusCoinsDefault', data.bonusCoinsDefault || 0)
       formData.append('descriptionShort', data.descriptionShort || '')
       formData.append('descriptionFull', data.descriptionFull || '')
       formData.append('positionInCategory', data.positionInCategory ? Number(data.positionInCategory) : null)

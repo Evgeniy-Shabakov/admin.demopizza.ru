@@ -1,5 +1,6 @@
 <script setup>
 import { useCategories } from '~/composables/useCategories'
+import { computed } from 'vue'
 
 defineProps({
   product: Object,
@@ -13,7 +14,7 @@ const form = defineModel({
     name: '',
     categoryId: null,
     priceDefault: null,
-    bonusCoinsDefault: null,
+    bonusCoinsDefault: 0,
     descriptionShort: '',
     descriptionFull: '',
     positionInCategory: null,
@@ -34,6 +35,13 @@ const handleImageChange = (event) => {
     form.value.imageFile = file
   }
 }
+
+const imagePreview = computed(() => {
+  if (form.value.imageFile) {
+    return URL.createObjectURL(form.value.imageFile)
+  }
+  return null
+})
 </script>
 
 <template>
@@ -105,6 +113,70 @@ const handleImageChange = (event) => {
       </div>
     </div>
 
+    <div>
+      <BaseLabel for="product-image">Изображение</BaseLabel>
+      <div v-if="disabled && product">
+        <img 
+          v-if="product.imageUrl" 
+          :src="product.imageUrl" 
+          :alt="product.name"
+          class="w-32 h-32 object-cover rounded-lg"
+        />
+        <p v-else class="text-gray-500">Изображение не загружено</p>
+      </div>
+      <div v-else class="flex items-start gap-4">
+        <div class="w-24 h-24 flex-shrink-0 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden">
+          <img
+            v-if="imagePreview"
+            :src="imagePreview"
+            alt="Превью"
+            class="w-full h-full object-cover"
+          />
+          <img
+            v-else-if="product?.imageUrl"
+            :src="product.imageUrl"
+            :alt="'Текущее'"
+            class="w-full h-full object-cover"
+          />
+          <span v-else class="text-xs text-gray-400 text-center px-1">Нет изображения</span>
+        </div>
+        <div class="flex-1">
+          <input
+            type="file"
+            accept="image/*"
+            @change="handleImageChange"
+            class="block w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-lg file:border-0
+              file:text-sm file:font-semibold
+              file:bg-blue-50 file:text-blue-700
+              hover:file:bg-blue-100
+            "
+          />
+          <p v-if="form.imageFile" class="mt-2 text-sm text-green-600">
+            Выбран файл: {{ form.imageFile.name }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <BaseCheckbox
+        v-if="disabled && product"
+        id="product-active"
+        :model-value="product.isActive"
+        :disabled="disabled"
+        label="Активен"
+      />
+      <BaseCheckbox
+        v-else
+        id="product-active"
+        v-model="form.isActive"
+        :disabled="disabled"
+        label="Активен"
+      />
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <BaseLabel for="product-price" required>Цена</BaseLabel>
@@ -144,6 +216,7 @@ const handleImageChange = (event) => {
           type="number"
           :disabled="disabled"
           min="0"
+          step="1"
           placeholder="0"
         />
       </div>
@@ -162,7 +235,7 @@ const handleImageChange = (event) => {
         id="product-desc-short"
         v-model="form.descriptionShort"
         :disabled="disabled"
-        rows="3"
+        :rows="3"
         maxlength="500"
         placeholder="Краткое описание товара"
       />
@@ -175,14 +248,14 @@ const handleImageChange = (event) => {
         id="product-desc-full"
         :model-value="product.descriptionFull"
         :disabled="disabled"
-        rows="6"
+        :rows="6"
       />
       <BaseTextarea
         v-else
         id="product-desc-full"
         v-model="form.descriptionFull"
         :disabled="disabled"
-        rows="6"
+        :rows="6"
         maxlength="2000"
         placeholder="Полное описание товара"
       />
@@ -208,55 +281,6 @@ const handleImageChange = (event) => {
           placeholder="0"
         />
       </div>
-
-      <div>
-        <BaseLabel for="product-image">Изображение</BaseLabel>
-        <div v-if="disabled && product">
-          <img 
-            v-if="product.imageUrl" 
-            :src="product.imageUrl" 
-            :alt="product.name"
-            class="w-32 h-32 object-cover rounded-lg"
-          />
-          <p v-else class="text-gray-500">Изображение не загружено</p>
-        </div>
-        <div v-else>
-          <input
-            type="file"
-            accept="image/*"
-            @change="handleImageChange"
-            class="block w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-lg file:border-0
-              file:text-sm file:font-semibold
-              file:bg-blue-50 file:text-blue-700
-              hover:file:bg-blue-100
-            "
-          />
-          <p v-if="form.imageFile" class="mt-2 text-sm text-green-600">
-            Выбран файл: {{ form.imageFile.name }}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <BaseCheckbox
-        v-if="disabled && product"
-        id="product-active"
-        :model-value="product.isActive"
-        disabled
-      >
-        Активен
-      </BaseCheckbox>
-      <BaseCheckbox
-        v-else
-        id="product-active"
-        v-model="form.isActive"
-        :disabled="disabled"
-      >
-        Активен
-      </BaseCheckbox>
     </div>
 
     <div v-if="showDetails && product">
