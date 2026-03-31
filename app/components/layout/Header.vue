@@ -22,6 +22,10 @@ const titles = {
    '/restaurants/add': 'Добавить ресторан',
    '/restaurants/:id': 'Просмотр ресторана',
    '/restaurants/:id/edit': 'Редактирование ресторана',
+   '/delivery-zones': 'Зоны доставки',
+   '/delivery-zones/add': 'Добавить зону доставки',
+   '/delivery-zones/:id': 'Просмотр зоны доставки',
+   '/delivery-zones/:id/edit': 'Редактирование зоны доставки',
 }
 
 watch(() => route.path, (path) => {
@@ -112,11 +116,33 @@ watch(() => route.path, (path) => {
            { label: 'Назад', icon: 'back', back: true }
         ]
      } else if (path.startsWith('/restaurants')) {
-        pageTitle.value = titles['/restaurants']
-        headerActions.value = [
-           { to: '/restaurants/add', label: 'Добавить', icon: 'add', primary: true }
-        ]
-     } else {
+         pageTitle.value = titles['/restaurants']
+         headerActions.value = [
+            { to: '/restaurants/add', label: 'Добавить', icon: 'add', primary: true }
+         ]
+      } else if (path === '/delivery-zones/add') {
+         pageTitle.value = titles['/delivery-zones/add']
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true }
+         ]
+      } else if (path.match(/^\/delivery-zones\/\d+$/)) {
+         pageTitle.value = titles['/delivery-zones/:id']
+         const id = route.params.id
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true },
+            { to: `/delivery-zones/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+         ]
+      } else if (path.match(/^\/delivery-zones\/\d+\/edit$/)) {
+         pageTitle.value = titles['/delivery-zones/:id/edit']
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true }
+         ]
+      } else if (path.startsWith('/delivery-zones')) {
+         pageTitle.value = titles['/delivery-zones']
+         headerActions.value = [
+            { to: '/delivery-zones/add', label: 'Добавить', icon: 'add', primary: true }
+         ]
+      } else {
       pageTitle.value = titles['/']
       headerActions.value = []
    }

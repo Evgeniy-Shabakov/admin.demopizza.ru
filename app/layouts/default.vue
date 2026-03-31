@@ -10,6 +10,7 @@ const menuItems = [
   { name: 'Города', path: '/cities', icon: 'city' },
   { name: 'Графики работы', path: '/restaurant-schedules', icon: 'clock' },
   { name: 'Рестораны', path: '/restaurants', icon: 'restaurant' },
+  { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
 ]
 
 onMounted(() => {
