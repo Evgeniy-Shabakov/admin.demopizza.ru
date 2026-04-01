@@ -34,7 +34,7 @@ const isDesktopCollapsed = computed(() => {
 })
 
 const getBadgeSize = (isCollapsed) => {
-   return isCollapsed ? 'xs' : 'md'
+   return isCollapsed ? 'sm' : 'md'
 }
 </script>
 
@@ -205,7 +205,7 @@ const getBadgeSize = (isCollapsed) => {
             <span :class="isCollapsed ? 'lg:hidden' : ''">{{ item.name }}</span>
              <span v-if="item.badge && item.badge > 0"
                    :class="isDesktopCollapsed
-                      ? 'lg:absolute lg:right-0 lg:bottom-0 lg:translate-x-1 lg:translate-y-1'
+                      ? 'lg:absolute lg:right-0 lg:bottom-0 lg:translate-x-1'
                       : 'ml-auto'">
                 <BaseBadge variant="danger"
                            :size="getBadgeSize(isDesktopCollapsed)">
