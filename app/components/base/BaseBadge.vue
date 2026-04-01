@@ -8,7 +8,7 @@ defineProps({
   size: {
     type: String,
     default: 'md',
-    validator: (v) => ['sm', 'md'].includes(v)
+    validator: (v) => ['xs', 'sm', 'md'].includes(v)
   }
 })
 
@@ -21,6 +21,7 @@ const variantClasses = {
 }
 
 const sizeClasses = {
+  xs: 'px-1.5 py-0.5 text-[10px]',
   sm: 'px-2 py-0.5 text-xs',
   md: 'px-2.5 py-1 text-sm'
 }
