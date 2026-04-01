@@ -183,16 +183,23 @@ const getProductImageUrl = (product) => {
                 </svg>
                 {{ formatPhone(order.user.phone) }}
              </div>
+             <div v-if="order.userAddress?.addressAsString" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
+                <svg class="w-3 h-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {{ order.userAddress.addressAsString }}
+             </div>
          </div>
-          <div class="flex flex-col items-end gap-1">
-            <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1', getStatusClass(order.orderStatus)]">
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-               </svg>
-               {{ order.orderStatus }}
-            </span>
-            <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold', getStatusClass(order.orderStatus)]">
-               {{ order.orderStatus }}
+           <div class="flex flex-col items-end gap-1">
+             <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1 justify-center', getStatusClass(order.orderStatus)]">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                {{ order.orderStatus }}
+             </span>
+             <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold text-center', getStatusClass(order.orderStatus)]">
+                {{ order.orderStatus }}
             </span>
             <div class="text-right">
                <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
