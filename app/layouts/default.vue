@@ -21,6 +21,7 @@ const { stopListCount, fetchStopListCount } = useStopList()
 onMounted(async () => {
   initTheme()
   await fetchStopListCount()
+  setInterval(fetchStopListCount, 30000)
 })
 
 watch(stopListCount, (newVal) => {
