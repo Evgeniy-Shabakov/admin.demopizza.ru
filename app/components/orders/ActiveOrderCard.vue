@@ -18,6 +18,15 @@ const getStatusClass = (status) => {
    return classes[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
 }
 
+const formatPhone = (phone) => {
+   if (!phone) return ''
+   const cleaned = phone.replace(/\D/g, '')
+   if (cleaned.length === 11) {
+      return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9)}`
+   }
+   return phone
+}
+
 const formatDate = (dateStr) => {
    if (!dateStr) return '—'
    const date = new Date(dateStr)
@@ -38,10 +47,16 @@ const formatDate = (dateStr) => {
          <div>
             <span class="text-lg font-semibold">{{ order.number }}</span>
             <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }}</span>
+            <div v-if="order.user?.phone" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+               {{ formatPhone(order.user.phone) }}
+            </div>
          </div>
-         <span :class="['px-2 py-1 rounded text-xs font-medium', getStatusClass(order.orderStatus)]">
-            {{ order.orderStatus }}
-         </span>
+         <div class="flex flex-col items-end gap-1">
+            <span :class="['px-2 py-1 rounded text-xs font-medium', getStatusClass(order.orderStatus)]">
+               {{ order.orderStatus }}
+            </span>
+            <span class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentStatus || '—' }}</span>
+         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3 text-sm mb-3">
@@ -49,16 +64,12 @@ const formatDate = (dateStr) => {
             <span class="text-gray-500 dark:text-gray-400">Тип:</span>
             <span class="ml-1">{{ order.orderTypeName || '—' }}</span>
          </div>
-         <div>
-            <span class="text-gray-500 dark:text-gray-400">Оплата:</span>
-            <span class="ml-1">{{ order.paymentType || '—' }}</span>
-         </div>
-         <div>
-            <span class="text-gray-500 dark:text-gray-400">Статус оплаты:</span>
-            <span class="ml-1">{{ order.paymentStatus || '—' }}</span>
-         </div>
-         <div>
-            <span class="text-gray-500 dark:text-gray-400">Создан:</span>
+          <div>
+             <span class="text-gray-500 dark:text-gray-400">Оплата:</span>
+             <span class="ml-1">{{ order.paymentType || '—' }}</span>
+          </div>
+          <div>
+             <span class="text-gray-500 dark:text-gray-400">Создан:</span>
             <span class="ml-1">{{ formatDate(order.createdAt) }}</span>
          </div>
       </div>
