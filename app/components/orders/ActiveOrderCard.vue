@@ -1,12 +1,76 @@
 <script setup>
 import { PAYMENT_STATUS_TYPE } from '~/constants/paymentStatusType'
+import { useToast } from '~/composables/useToast'
 
-defineProps({
+const props = defineProps({
    order: {
       type: Object,
       required: true
    }
 })
+
+const emit = defineEmits(['status-changed', 'view'])
+
+const { showToast } = useToast()
+const { $api } = useNuxtApp()
+
+const isLoadingNext = ref(false)
+const isLoadingPrev = ref(false)
+const isLoadingCancel = ref(false)
+const showDropdown = ref(false)
+
+const nextStatus = async () => {
+   isLoadingNext.value = true
+   try {
+      const response = await $api.patch(`/orders/${props.order.id}/next-status`)
+      const newStatus = response.data.orderStatus || response.data.data?.orderStatus
+      showToast('Статус изменён', 'success')
+      if (newStatus) {
+         props.order.orderStatus = newStatus
+      }
+   } catch (e) {
+      showToast('Ошибка изменения статуса', 'error')
+      console.error(e)
+   } finally {
+      isLoadingNext.value = false
+   }
+}
+
+const prevStatus = async () => {
+   isLoadingPrev.value = true
+   try {
+      const response = await $api.patch(`/orders/${props.order.id}/previous-status`)
+      const newStatus = response.data.orderStatus || response.data.data?.orderStatus
+      showToast('Статус изменён', 'success')
+      if (newStatus) {
+         props.order.orderStatus = newStatus
+      }
+   } catch (e) {
+      showToast('Ошибка изменения статуса', 'error')
+      console.error(e)
+   } finally {
+      isLoadingPrev.value = false
+   }
+}
+
+const cancelOrder = async () => {
+   if (!confirm('Вы уверены, что хотите отменить заказ?')) return
+   isLoadingCancel.value = true
+   try {
+      await $api.patch(`/orders/${props.order.id}`, { orderStatus: 'отменен' })
+      showToast('Заказ отменён', 'success')
+      props.order.orderStatus = 'отменен'
+   } catch (e) {
+      showToast('Ошибка отмены заказа', 'error')
+      console.error(e)
+   } finally {
+      isLoadingCancel.value = false
+   }
+}
+
+const viewOrder = () => {
+   emit('view', props.order)
+}
 
 const getStatusClass = (status) => {
    const classes = {
@@ -155,10 +219,52 @@ const getProductImageUrl = (product) => {
             <span class="text-gray-500 dark:text-gray-400">Купюра для сдачи</span>
             <span class="text-gray-900 dark:text-gray-100">{{ order.banknoteForChange }} ₽</span>
          </div>
-          <div v-if="order.userComment" class="text-sm bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2 mt-1">
-             <span class="">Комментарий клиента:</span>
-             <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
+           <div v-if="order.userComment" class="text-sm bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2 mt-1">
+              <span class="">Комментарий клиента:</span>
+              <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
+           </div>
+       </div>
+
+       <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 flex items-center gap-2">
+          <button 
+             @click="nextStatus" 
+             :disabled="isLoadingNext"
+             class="flex-1 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
+           >
+              {{ isLoadingNext ? '...' : 'Следующий статус' }}
+           </button>
+           <button 
+              @click="viewOrder"
+              class="px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+           >
+              Просмотр
+           </button>
+           <div class="relative">
+              <button 
+                 @click="showDropdown = !showDropdown"
+                 class="px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+               >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+             </button>
+              <div v-if="showDropdown" class="absolute right-0 mt-1 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                 <button 
+                    @click="prevStatus(); showDropdown = false"
+                    :disabled="isLoadingPrev"
+                    class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
+                 >
+                    {{ isLoadingPrev ? '...' : 'Предыдущий статус' }}
+                 </button>
+                 <button 
+                    @click="cancelOrder(); showDropdown = false"
+                    :disabled="isLoadingCancel"
+                    class="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
+                 >
+                    {{ isLoadingCancel ? '...' : 'Отменить заказ' }}
+                 </button>
+              </div>
           </div>
-      </div>
-   </div>
-</template>
+       </div>
+    </div>
+ </template>
