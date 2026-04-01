@@ -208,19 +208,6 @@ const getProductImageUrl = (product) => {
          </div>
       </div>
 
-      <div v-if="order.orderProducts && order.orderProducts.length" class="border-t border-gray-200 dark:border-gray-700 pt-3">
-         <div v-for="item in order.orderProducts" :key="item.productId" class="flex items-center gap-3 py-2">
-            <img v-if="getProductImageUrl(item.product)" :src="getProductImageUrl(item.product)" :alt="item.product.name" class="w-10 h-10 rounded-lg object-cover">
-            <div class="flex-1">
-               <span>{{ item.product?.name }}</span>
-            </div>
-            <div class="text-right text-sm">
-               <span class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ item.quantity }} шт.</span>
-               <div class="text-xs text-gray-500 dark:text-gray-400">({{ item.quantity }} × {{ item.price }}) {{ item.price * item.quantity }} ₽</div>
-            </div>
-         </div>
-      </div>
-
       <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.banknoteForChange || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
          <div v-if="order.tableNumber" class="flex justify-between text-sm">
             <span class="text-gray-500 dark:text-gray-400">Стол</span>
@@ -246,6 +233,19 @@ const getProductImageUrl = (product) => {
               <span class="">Комментарий клиента:</span>
               <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
            </div>
+      </div>
+
+      <div v-if="order.orderProducts && order.orderProducts.length" class="border-t border-gray-200 dark:border-gray-700 pt-3">
+         <div v-for="item in order.orderProducts" :key="item.productId" class="flex items-center gap-3 py-2">
+            <img v-if="getProductImageUrl(item.product)" :src="getProductImageUrl(item.product)" :alt="item.product.name" class="w-10 h-10 rounded-lg object-cover">
+            <div class="flex-1">
+               <span>{{ item.product?.name }}</span>
+            </div>
+            <div class="text-right text-sm">
+               <span class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ item.quantity }} шт.</span>
+               <div class="text-xs text-gray-500 dark:text-gray-400">({{ item.quantity }} × {{ item.price }}) {{ item.price * item.quantity }} ₽</div>
+            </div>
+         </div>
       </div>
 
       <div v-if="order.totalProductsPrice !== undefined || order.totalPrice !== undefined" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
