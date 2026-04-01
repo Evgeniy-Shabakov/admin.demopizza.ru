@@ -2,6 +2,7 @@
 import { PAYMENT_STATUS_TYPE } from '~/constants/paymentStatusType'
 import { ORDER_STATUS } from '~/constants/orderStatus'
 import { useToast } from '~/composables/useToast'
+import { onMounted, onUnmounted } from 'vue'
 import BaseModal from '~/components/base/BaseModal.vue'
 import BaseButton from '~/components/base/BaseButton.vue'
 
@@ -22,6 +23,29 @@ const isLoadingPrev = ref(false)
 const isLoadingCancel = ref(false)
 const showDropdown = ref(false)
 const showCancelModal = ref(false)
+
+const toggleDropdown = () => {
+   showDropdown.value = !showDropdown.value
+}
+
+const closeDropdown = () => {
+   showDropdown.value = false
+}
+
+onMounted(() => {
+   document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+   document.removeEventListener('click', handleClickOutside)
+})
+
+const handleClickOutside = (event) => {
+   const dropdown = event.target.closest('.dropdown-container')
+   if (!dropdown && showDropdown.value) {
+      showDropdown.value = false
+   }
+}
 
 const nextStatus = async () => {
    isLoadingNext.value = true
@@ -146,7 +170,7 @@ const getProductImageUrl = (product) => {
                   </svg>
                   Сервировать
                </span>
-           </div>
+            </div>
         </div>
       <div class="flex items-start justify-between gap-4 mb-3">
          <div>
@@ -156,16 +180,16 @@ const getProductImageUrl = (product) => {
                {{ formatPhone(order.user.phone) }}
             </div>
          </div>
-           <div class="flex flex-col items-end gap-1">
-             <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1', getStatusClass(order.orderStatus)]">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                {{ order.orderStatus }}
-             </span>
-             <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold', getStatusClass(order.orderStatus)]">
-                {{ order.orderStatus }}
-             </span>
+          <div class="flex flex-col items-end gap-1">
+            <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1', getStatusClass(order.orderStatus)]">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+               </svg>
+               {{ order.orderStatus }}
+            </span>
+            <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold', getStatusClass(order.orderStatus)]">
+               {{ order.orderStatus }}
+            </span>
             <div class="text-right">
                <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
                <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
@@ -183,29 +207,6 @@ const getProductImageUrl = (product) => {
                <span class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ item.quantity }} шт.</span>
                <div class="text-xs text-gray-500 dark:text-gray-400">({{ item.quantity }} × {{ item.price }}) {{ item.price * item.quantity }} ₽</div>
             </div>
-         </div>
-      </div>
-
-      <div v-if="order.totalProductsPrice !== undefined || order.totalPrice !== undefined" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
-         <div v-if="order.totalProductsPrice !== undefined" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Товары</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.totalProductsPrice }} ₽</span>
-         </div>
-         <div v-if="order.deliveryPrice !== undefined && order.deliveryPrice > 0" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Доставка</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.deliveryPrice }} ₽</span>
-         </div>
-         <div v-if="order.bonusCoinsPaid !== undefined && order.bonusCoinsPaid > 0" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Оплачено бонусами</span>
-            <span class="text-amber-600 dark:text-amber-400">-{{ order.bonusCoinsPaid }}</span>
-         </div>
-         <div v-if="order.totalPrice !== undefined" class="flex justify-between text-base font-semibold pt-1">
-            <span class="text-gray-900 dark:text-gray-100">Итого</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.totalPrice }} ₽</span>
-         </div>
-         <div v-if="order.bonusCoinsEarned !== undefined && order.bonusCoinsEarned > 0" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Будет начислено бонусов</span>
-            <span class="text-green-600 dark:text-green-400">+{{ order.bonusCoinsEarned }}</span>
          </div>
       </div>
 
@@ -234,9 +235,32 @@ const getProductImageUrl = (product) => {
               <span class="">Комментарий клиента:</span>
               <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
            </div>
-       </div>
+      </div>
 
-       <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 flex items-center gap-2">
+      <div v-if="order.totalProductsPrice !== undefined || order.totalPrice !== undefined" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
+         <div v-if="order.totalProductsPrice !== undefined" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Товары</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.totalProductsPrice }} ₽</span>
+         </div>
+         <div v-if="order.deliveryPrice !== undefined && order.deliveryPrice > 0" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Доставка</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.deliveryPrice }} ₽</span>
+         </div>
+         <div v-if="order.bonusCoinsPaid !== undefined && order.bonusCoinsPaid > 0" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Оплачено бонусами</span>
+            <span class="text-amber-600 dark:text-amber-400">-{{ order.bonusCoinsPaid }}</span>
+         </div>
+         <div v-if="order.totalPrice !== undefined" class="flex justify-between text-base font-semibold pt-1">
+            <span class="text-gray-900 dark:text-gray-100">Итого</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.totalPrice }} ₽</span>
+         </div>
+         <div v-if="order.bonusCoinsEarned !== undefined && order.bonusCoinsEarned > 0" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Будет начислено бонусов</span>
+            <span class="text-green-600 dark:text-green-400">+{{ order.bonusCoinsEarned }}</span>
+         </div>
+      </div>
+
+      <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 flex items-center gap-2">
           <button 
              @click="nextStatus" 
              :disabled="isLoadingNext"
@@ -250,32 +274,32 @@ const getProductImageUrl = (product) => {
            >
               Просмотр
            </button>
-           <div class="relative">
-              <button 
-                 @click="showDropdown = !showDropdown"
-                 class="px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+           <div class="relative dropdown-container">
+               <button 
+                  @click="toggleDropdown"
+                  class="p-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-colors cursor-pointer"
                >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-             </button>
-              <div v-if="showDropdown" class="absolute right-0 mt-1 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
-                 <button 
-                    @click="prevStatus(); showDropdown = false"
-                    :disabled="isLoadingPrev"
-                    class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
-                 >
-                    {{ isLoadingPrev ? '...' : 'Предыдущий статус' }}
-                 </button>
+                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                 </svg>
+              </button>
+               <div v-if="showDropdown" class="absolute right-0 mb-1 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 bottom-full">
                   <button 
-                     @click="showCancelModal = true; showDropdown = false"
-                     :disabled="isLoadingCancel"
-                     class="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
+                     @click="prevStatus(); closeDropdown()"
+                     :disabled="isLoadingPrev"
+                     class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
                   >
-                     {{ isLoadingCancel ? '...' : 'Отменить заказ' }}
+                     {{ isLoadingPrev ? '...' : 'Предыдущий статус' }}
                   </button>
-              </div>
-          </div>
+                   <button 
+                      @click="showCancelModal = true; closeDropdown()"
+                      :disabled="isLoadingCancel"
+                      class="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
+                   >
+                      {{ isLoadingCancel ? '...' : 'Отменить заказ' }}
+                  </button>
+               </div>
+           </div>
         </div>
      </div>
 
