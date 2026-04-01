@@ -60,18 +60,15 @@ const getProductImageUrl = (product) => {
 
 <template>
    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
-      <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-         <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
-            {{ order.orderTypeName }}
-         </span>
-         <div v-if="order.createdAt" class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-            {{ formatDateTime(order.createdAt) }}
-         </div>
-      </div>
+       <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+          <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
+             {{ order.orderTypeName }}
+          </span>
+       </div>
       <div class="flex items-start justify-between gap-4 mb-3">
          <div>
             <span class="text-lg font-semibold">{{ order.number }}</span>
-            <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }}</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }} ({{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }})</span>
             <div v-if="order.user?.phone" class="text-xs text-indigo-600 dark:text-indigo-400 mt-0.5">
                {{ formatPhone(order.user.phone) }}
             </div>
