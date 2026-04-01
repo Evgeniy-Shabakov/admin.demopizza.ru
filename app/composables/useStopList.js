@@ -37,11 +37,12 @@ const getValidationMessage = (e) => {
 
 const getStatusCode = (e) => e.response?.status || null
 
+const stopListCount = ref(0)
+
 export function useStopList() {
   const { error: showError } = useToast()
   const api = useApi()
   const stopListItems = ref([])
-  const stopListCount = ref(0)
   const loading = ref(false)
   const error = ref(null)
 
@@ -89,6 +90,7 @@ export function useStopList() {
     try {
       await api.post('/product-restaurants', data)
       await fetchStopList()
+      await fetchStopListCount()
       return { success: true }
     } catch (e) {
       const validationMsg = getValidationMessage(e)
@@ -106,6 +108,7 @@ export function useStopList() {
     try {
       await api.put(`/product-restaurants/${id}`, data)
       await fetchStopList()
+      await fetchStopListCount()
       return { success: true }
     } catch (e) {
       const validationMsg = getValidationMessage(e)
@@ -122,6 +125,7 @@ export function useStopList() {
     try {
       await api.delete(`/product-restaurants/${id}`)
       stopListItems.value = stopListItems.value.filter(item => item.id !== id)
+      await fetchStopListCount()
       return true
     } catch (e) {
       error.value = getErrorMessage('deleteStopListItem')

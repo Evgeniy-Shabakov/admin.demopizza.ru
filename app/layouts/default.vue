@@ -16,12 +16,17 @@ const menuItems = ref([
   { name: 'Стоп-лист', path: '/stop-list', icon: 'ban', badge: 0 },
 ])
 
+const { stopListCount, fetchStopListCount } = useStopList()
+
 onMounted(async () => {
   initTheme()
-  const { stopListCount, fetchStopListCount } = useStopList()
   await fetchStopListCount()
-  menuItems.value.find(m => m.path === '/stop-list').badge = stopListCount.value
 })
+
+watch(stopListCount, (newVal) => {
+  const item = menuItems.value.find(m => m.path === '/stop-list')
+  if (item) item.badge = newVal
+}, { immediate: true })
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
