@@ -13,6 +13,7 @@ const menuItems = [
   { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
   { name: 'Категории', path: '/categories', icon: 'tag' },
   { name: 'Товары', path: '/products', icon: 'box' },
+  { name: 'Стоп-лист', path: '/stop-list', icon: 'ban' },
 ]
 
 onMounted(() => {
