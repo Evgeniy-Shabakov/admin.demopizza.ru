@@ -36,23 +36,32 @@ const formatPhone = (phone) => {
    return phone
 }
 
-const formatDate = (dateStr) => {
-   if (!dateStr) return '—'
-   const date = new Date(dateStr)
-   if (isNaN(date.getTime())) return '—'
-   return new Intl.DateTimeFormat('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-   }).format(date)
+const formatDateTime = (dateTimeStr) => {
+   if (!dateTimeStr) return ''
+   const parts = dateTimeStr.split(', ')
+   if (parts.length === 2) {
+      const time = parts[1]
+      const dateParts = parts[0].split('.')
+      const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
+      const dateObj = new Date(formattedDate + ' ' + time)
+      if (isNaN(dateObj.getTime())) return dateTimeStr
+      return `${time}, ${new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(dateObj)}`
+   }
+   return dateTimeStr
 }
 </script>
 
 <template>
    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
-      <div class="flex items-start justify-between gap-4 pb-3 mb-3 border-b border-gray-200 dark:border-gray-700">
+      <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+         <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
+            {{ order.orderTypeName }}
+         </span>
+         <div v-if="order.createdAt" class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            {{ formatDateTime(order.createdAt) }}
+         </div>
+      </div>
+      <div class="flex items-start justify-between gap-4 mb-3">
          <div>
             <span class="text-lg font-semibold">{{ order.number }}</span>
             <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }}</span>
@@ -60,26 +69,29 @@ const formatDate = (dateStr) => {
                {{ formatPhone(order.user.phone) }}
             </div>
          </div>
-         <div class="flex flex-col items-end gap-1">
-            <span :class="['px-2 py-1 rounded text-xs font-medium', getStatusClass(order.orderStatus)]">
+          <div class="flex flex-col items-end gap-1">
+            <span :class="['px-3 py-1.5 rounded-lg text-sm font-semibold', getStatusClass(order.orderStatus)]">
                {{ order.orderStatus }}
             </span>
-            <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs">{{ order.paymentStatus || '—' }}</span>
+            <div class="text-right">
+               <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
+               <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
+            </div>
          </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 text-sm py-3 mb-3 border-b border-gray-200 dark:border-gray-700">
-         <div>
-            <span class="text-gray-500 dark:text-gray-400">Тип:</span>
-            <span class="ml-1">{{ order.orderTypeName || '—' }}</span>
+      <div class="grid grid-cols-3 gap-2 text-sm py-3 mb-3 border-b border-gray-200 dark:border-gray-700">
+         <div v-if="order.cityName">
+            <span class="text-gray-500 dark:text-gray-400 text-xs">Город</span>
+            <div class="font-medium">{{ order.cityName }}</div>
          </div>
-          <div>
-             <span class="text-gray-500 dark:text-gray-400">Оплата:</span>
-             <span class="ml-1">{{ order.paymentType || '—' }}</span>
-          </div>
-          <div>
-             <span class="text-gray-500 dark:text-gray-400">Создан:</span>
-            <span class="ml-1">{{ formatDate(order.createdAt) }}</span>
+         <div v-if="order.restaurantName">
+            <span class="text-gray-500 dark:text-gray-400 text-xs">Ресторан</span>
+            <div class="font-medium">{{ order.restaurantName }}</div>
+         </div>
+         <div v-if="order.deliveryZoneName">
+            <span class="text-gray-500 dark:text-gray-400 text-xs">Зона доставки</span>
+            <div class="font-medium">{{ order.deliveryZoneName }}</div>
          </div>
       </div>
 
