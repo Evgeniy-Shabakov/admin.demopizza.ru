@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+const props = defineProps({
    menuItems: Array,
    isOpen: Boolean,
    isCollapsed: Boolean
@@ -12,6 +12,29 @@ const { logout } = useAuth()
 
 const handleMenuClick = () => {
    emit('close')
+}
+
+const windowWidth = ref(0)
+
+onMounted(() => {
+   windowWidth.value = window.innerWidth
+   window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+   window.removeEventListener('resize', handleResize)
+})
+
+const handleResize = () => {
+   windowWidth.value = window.innerWidth
+}
+
+const isDesktopCollapsed = computed(() => {
+   return windowWidth.value >= 1024 && props.isCollapsed
+})
+
+const getBadgeSize = (isCollapsed) => {
+   return isCollapsed ? 'xs' : 'md'
 }
 </script>
 
@@ -180,16 +203,16 @@ const handleMenuClick = () => {
                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span :class="isCollapsed ? 'lg:hidden' : ''">{{ item.name }}</span>
-            <span v-if="item.badge && item.badge > 0"
-                  :class="isCollapsed
-                     ? 'lg:absolute lg:right-0 lg:bottom-0 lg:translate-x-1 lg:translate-y-1'
-                     : 'ml-auto'">
-               <BaseBadge :variant="isCollapsed ? 'danger' : 'danger'"
-                          :size="isCollapsed ? 'xs' : 'md'">
-                  {{ item.badge }}
-               </BaseBadge>
-            </span>
-         </NuxtLink>
+             <span v-if="item.badge && item.badge > 0"
+                   :class="isDesktopCollapsed
+                      ? 'lg:absolute lg:right-0 lg:bottom-0 lg:translate-x-1 lg:translate-y-1'
+                      : 'ml-auto'">
+                <BaseBadge variant="danger"
+                           :size="getBadgeSize(isDesktopCollapsed)">
+                   {{ item.badge }}
+                </BaseBadge>
+             </span>
+          </NuxtLink>
       </nav>
 
       <div
