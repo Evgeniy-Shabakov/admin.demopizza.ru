@@ -1,5 +1,6 @@
 <script setup>
 import { PAYMENT_STATUS_TYPE } from '~/constants/paymentStatusType'
+import { ORDER_STATUS } from '~/constants/orderStatus'
 import { useToast } from '~/composables/useToast'
 
 const props = defineProps({
@@ -73,15 +74,16 @@ const viewOrder = () => {
 }
 
 const getStatusClass = (status) => {
-   const classes = {
-      'создан': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-      'cooking': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-      'ready': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-      'delivering': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-      'completed': 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400',
-      'cancelled': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+   if (status === ORDER_STATUS.CREATED) {
+      return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
    }
-   return classes[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
+   if (status === ORDER_STATUS.COMPLETED) {
+      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+   }
+   if (status === ORDER_STATUS.CANCEL) {
+      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+   }
+   return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'
 }
 
 const getPaymentStatusClass = (status) => {
@@ -151,10 +153,16 @@ const getProductImageUrl = (product) => {
                {{ formatPhone(order.user.phone) }}
             </div>
          </div>
-          <div class="flex flex-col items-end gap-1">
-            <span :class="['px-3 py-1.5 rounded-lg text-sm font-semibold', getStatusClass(order.orderStatus)]">
-               {{ order.orderStatus }}
-            </span>
+           <div class="flex flex-col items-end gap-1">
+             <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1', getStatusClass(order.orderStatus)]">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                {{ order.orderStatus }}
+             </span>
+             <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold', getStatusClass(order.orderStatus)]">
+                {{ order.orderStatus }}
+             </span>
             <div class="text-right">
                <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
                <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
