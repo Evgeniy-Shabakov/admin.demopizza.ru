@@ -60,11 +60,25 @@ const getProductImageUrl = (product) => {
 
 <template>
    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
-       <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-          <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
-             {{ order.orderTypeName }}
-          </span>
-       </div>
+        <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+           <div class="flex items-center justify-center gap-2">
+              <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
+                 {{ order.orderTypeName }}
+              </span>
+              <span v-if="order.packTakeaway" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400">
+                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                 </svg>
+                 Упаковать
+              </span>
+               <span v-else class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                     <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" />
+                  </svg>
+                  Сервировать
+               </span>
+           </div>
+        </div>
       <div class="flex items-start justify-between gap-4 mb-3">
          <div>
             <span class="text-lg font-semibold">{{ order.number }}</span>
@@ -97,37 +111,6 @@ const getProductImageUrl = (product) => {
          </div>
       </div>
 
-      <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.packTakeaway || order.banknoteForChange || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
-         <div v-if="order.tableNumber" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Стол</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.tableNumber }}</span>
-         </div>
-         <div v-if="order.carNumber" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Автомобиль</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.carNumber }}</span>
-         </div>
-         <div v-if="order.leaveAtTheDoor" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Оставить у двери</span>
-            <span class="text-green-600 dark:text-green-400">✓</span>
-         </div>
-         <div v-if="order.dontRingDoorbell" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Не звонить</span>
-            <span class="text-green-600 dark:text-green-400">✓</span>
-         </div>
-         <div v-if="order.packTakeaway" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Упаковать с собой</span>
-            <span class="text-green-600 dark:text-green-400">✓</span>
-         </div>
-         <div v-if="order.banknoteForChange" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Купюра для сдачи</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.banknoteForChange }} ₽</span>
-         </div>
-          <div v-if="order.userComment" class="text-sm bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2 mt-1">
-             <span class="text-amber-800 dark:text-amber-200 font-medium">Комментарий:</span>
-             <div class="text-gray-900 dark:text-gray-100 mt-0.5">{{ order.userComment }}</div>
-          </div>
-      </div>
-
       <div v-if="order.totalProductsPrice !== undefined || order.totalPrice !== undefined" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
          <div v-if="order.totalProductsPrice !== undefined" class="flex justify-between text-sm">
             <span class="text-gray-500 dark:text-gray-400">Товары</span>
@@ -149,6 +132,33 @@ const getProductImageUrl = (product) => {
             <span class="text-gray-500 dark:text-gray-400">Будет начислено бонусов</span>
             <span class="text-green-600 dark:text-green-400">+{{ order.bonusCoinsEarned }}</span>
          </div>
+      </div>
+
+      <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.banknoteForChange || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
+         <div v-if="order.tableNumber" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Стол</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.tableNumber }}</span>
+         </div>
+         <div v-if="order.carNumber" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Автомобиль</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.carNumber }}</span>
+         </div>
+         <div v-if="order.leaveAtTheDoor" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Оставить у двери</span>
+            <span class="text-green-600 dark:text-green-400">✓</span>
+         </div>
+          <div v-if="order.dontRingDoorbell" class="flex justify-between text-sm">
+             <span class="text-gray-500 dark:text-gray-400">Не звонить</span>
+             <span class="text-green-600 dark:text-green-400">✓</span>
+          </div>
+          <div v-if="order.banknoteForChange" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Купюра для сдачи</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.banknoteForChange }} ₽</span>
+         </div>
+          <div v-if="order.userComment" class="text-sm bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2 mt-1">
+             <span class="">Комментарий клиента:</span>
+             <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
+          </div>
       </div>
    </div>
 </template>
