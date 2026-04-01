@@ -99,5 +99,28 @@ const getProductImageUrl = (product) => {
             </div>
          </div>
       </div>
+
+      <div v-if="order.totalProductsPrice !== undefined || order.totalPrice !== undefined" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
+         <div v-if="order.totalProductsPrice !== undefined" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Товары</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.totalProductsPrice }} ₽</span>
+         </div>
+         <div v-if="order.deliveryPrice !== undefined && order.deliveryPrice > 0" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Доставка</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.deliveryPrice }} ₽</span>
+         </div>
+         <div v-if="order.bonusCoinsPaid !== undefined && order.bonusCoinsPaid > 0" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Оплачено бонусами</span>
+            <span class="text-amber-600 dark:text-amber-400">-{{ order.bonusCoinsPaid }}</span>
+         </div>
+         <div v-if="order.totalPrice !== undefined" class="flex justify-between text-base font-semibold pt-1">
+            <span class="text-gray-900 dark:text-gray-100">Итого</span>
+            <span class="text-gray-900 dark:text-gray-100">{{ order.totalPrice }} ₽</span>
+         </div>
+         <div v-if="order.bonusCoinsEarned !== undefined && order.bonusCoinsEarned > 0" class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">Будет начислено бонусов</span>
+            <span class="text-green-600 dark:text-green-400">+{{ order.bonusCoinsEarned }}</span>
+         </div>
+      </div>
    </div>
 </template>
