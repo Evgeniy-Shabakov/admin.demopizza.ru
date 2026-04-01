@@ -13,6 +13,7 @@ const menuItems = ref([
   { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
   { name: 'Категории', path: '/categories', icon: 'tag' },
   { name: 'Товары', path: '/products', icon: 'box' },
+  { name: 'Активные заказы', path: '/active-orders', icon: 'shopping-cart' },
   { name: 'Стоп-лист', path: '/stop-list', icon: 'ban', badge: 0 },
 ])
 
