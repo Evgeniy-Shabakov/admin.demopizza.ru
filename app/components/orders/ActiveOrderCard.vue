@@ -152,7 +152,8 @@ const getProductImageUrl = (product) => {
 </script>
 
 <template>
-   <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
+   <div>
+      <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
         <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
            <div class="flex items-center justify-center gap-2">
               <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
@@ -300,10 +301,10 @@ const getProductImageUrl = (product) => {
                   </button>
                </div>
            </div>
-        </div>
-     </div>
+         </div>
+      </div>
 
-     <BaseModal :show="showCancelModal" @close="showCancelModal = false">
+      <BaseModal :show="showCancelModal" @close="showCancelModal = false">
        <div class="text-center">
          <div class="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center bg-red-100 dark:bg-red-900/30">
            <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,13 +321,14 @@ const getProductImageUrl = (product) => {
          </p>
        </div>
 
-       <div class="flex gap-3">
-         <BaseButton variant="secondary" class="flex-1" @click="showCancelModal = false">
-           Отмена
-         </BaseButton>
-         <BaseButton variant="danger" class="flex-1" :loading="isLoadingCancel" @click="cancelOrder">
-           Отменить
-         </BaseButton>
-       </div>
-     </BaseModal>
-  </template>
+        <div class="flex gap-3">
+          <BaseButton variant="secondary" class="flex-1" @click="showCancelModal = false">
+            Отмена
+          </BaseButton>
+          <BaseButton variant="danger" class="flex-1" :loading="isLoadingCancel" @click="cancelOrder">
+            Отменить
+          </BaseButton>
+        </div>
+      </BaseModal>
+   </div>
+</template>

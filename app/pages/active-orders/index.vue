@@ -21,12 +21,38 @@ onMounted(() => {
          Активные заказы не найдены
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <TransitionGroup 
+         v-else 
+         name="order-list" 
+         tag="div" 
+         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
          <OrdersActiveOrderCard 
             v-for="order in orders" 
             :key="order.id" 
             :order="order" 
          />
-      </div>
+      </TransitionGroup>
    </div>
 </template>
+
+<style scoped>
+.order-list-enter-active,
+.order-list-leave-active {
+   transition: all 1s ease;
+}
+.order-list-enter-from {
+   opacity: 0;
+   transform: translateY(-20px);
+}
+.order-list-leave-to {
+   opacity: 0;
+   transform: scale(0.8) translateX(-20px);
+}
+.order-list-leave-active {
+   position: absolute;
+}
+.order-list-move {
+   transition: transform 1s ease;
+}
+</style>
