@@ -7,7 +7,7 @@ defineProps({
   size: {
     type: String,
     default: 'md',
-    validator: (v) => ['sm', 'md', 'lg', 'xl'].includes(v)
+    validator: (v) => ['sm', 'md', 'lg', 'xl', '2xl', '3xl'].includes(v)
   },
   closable: {
     type: Boolean,
@@ -21,7 +21,9 @@ const sizeClasses = {
   sm: 'max-w-sm',
   md: 'max-w-md',
   lg: 'max-w-lg',
-  xl: 'max-w-xl'
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl'
 }
 
 const close = () => {
@@ -29,7 +31,7 @@ const close = () => {
 }
 
 const handleKeydown = (e) => {
-  if (e.key === 'Escape' && closable) {
+  if (e.key === 'Escape') {
     close()
   }
 }
