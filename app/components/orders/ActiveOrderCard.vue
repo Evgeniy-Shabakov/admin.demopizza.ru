@@ -1,4 +1,6 @@
 <script setup>
+import { PAYMENT_STATUS_TYPE } from '~/constants/paymentStatusType'
+
 defineProps({
    order: {
       type: Object,
@@ -16,6 +18,13 @@ const getStatusClass = (status) => {
       'cancelled': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
    }
    return classes[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
+}
+
+const getPaymentStatusClass = (status) => {
+   if (status === PAYMENT_STATUS_TYPE.NO_PAID) {
+      return 'text-red-600 dark:text-red-400 font-medium'
+   }
+   return 'text-gray-500 dark:text-gray-400'
 }
 
 const formatPhone = (phone) => {
@@ -43,11 +52,11 @@ const formatDate = (dateStr) => {
 
 <template>
    <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
-      <div class="flex items-start justify-between gap-4 mb-3">
+      <div class="flex items-start justify-between gap-4 pb-3 mb-3 border-b border-gray-200 dark:border-gray-700">
          <div>
             <span class="text-lg font-semibold">{{ order.number }}</span>
             <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }}</span>
-            <div v-if="order.user?.phone" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            <div v-if="order.user?.phone" class="text-xs text-indigo-600 dark:text-indigo-400 mt-0.5">
                {{ formatPhone(order.user.phone) }}
             </div>
          </div>
@@ -55,11 +64,11 @@ const formatDate = (dateStr) => {
             <span :class="['px-2 py-1 rounded text-xs font-medium', getStatusClass(order.orderStatus)]">
                {{ order.orderStatus }}
             </span>
-            <span class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentStatus || '—' }}</span>
+            <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs">{{ order.paymentStatus || '—' }}</span>
          </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 text-sm mb-3">
+      <div class="grid grid-cols-2 gap-3 text-sm py-3 mb-3 border-b border-gray-200 dark:border-gray-700">
          <div>
             <span class="text-gray-500 dark:text-gray-400">Тип:</span>
             <span class="ml-1">{{ order.orderTypeName || '—' }}</span>
