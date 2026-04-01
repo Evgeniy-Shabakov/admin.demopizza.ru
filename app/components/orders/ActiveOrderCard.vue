@@ -49,6 +49,13 @@ const formatDateTime = (dateTimeStr) => {
    }
    return dateTimeStr
 }
+
+const getProductImageUrl = (product) => {
+   if (!product?.imagePath) return null
+   const config = useRuntimeConfig()
+   const apiBaseUrl = config.public.apiBaseUrl.replace('/api/v1', '')
+   return product.imagePath.replace('storage/public', apiBaseUrl)
+}
 </script>
 
 <template>
@@ -80,34 +87,16 @@ const formatDateTime = (dateTimeStr) => {
          </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 text-sm py-3 mb-3 border-b border-gray-200 dark:border-gray-700">
-         <div v-if="order.cityName">
-            <span class="text-gray-500 dark:text-gray-400 text-xs">Город</span>
-            <div class="font-medium">{{ order.cityName }}</div>
-         </div>
-         <div v-if="order.restaurantName">
-            <span class="text-gray-500 dark:text-gray-400 text-xs">Ресторан</span>
-            <div class="font-medium">{{ order.restaurantName }}</div>
-         </div>
-         <div v-if="order.deliveryZoneName">
-            <span class="text-gray-500 dark:text-gray-400 text-xs">Зона доставки</span>
-            <div class="font-medium">{{ order.deliveryZoneName }}</div>
-         </div>
-      </div>
-
-      <div class="border-t border-gray-200 dark:border-gray-700 pt-3 flex items-center justify-between">
-         <div class="flex gap-4 text-sm">
-            <div>
-               <span class="text-gray-500 dark:text-gray-400">Товары:</span>
-               <span class="ml-1 font-medium">{{ order.totalProductsPrice }} ₽</span>
+      <div v-if="order.orderProducts && order.orderProducts.length" class="border-t border-gray-200 dark:border-gray-700 pt-3">
+         <div v-for="item in order.orderProducts" :key="item.productId" class="flex items-center gap-3 py-2">
+            <img v-if="getProductImageUrl(item.product)" :src="getProductImageUrl(item.product)" :alt="item.product.name" class="w-10 h-10 rounded-lg object-cover">
+            <div class="flex-1">
+               <span>{{ item.product?.name }}</span>
             </div>
-            <div v-if="order.deliveryPrice">
-               <span class="text-gray-500 dark:text-gray-400">Доставка:</span>
-               <span class="ml-1 font-medium">{{ order.deliveryPrice }} ₽</span>
+            <div class="text-right text-sm">
+               <span class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ item.quantity }} шт.</span>
+               <div class="text-xs text-gray-500 dark:text-gray-400">({{ item.quantity }} × {{ item.price }}) {{ item.price * item.quantity }} ₽</div>
             </div>
-         </div>
-         <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">
-            {{ order.totalPrice }} ₽
          </div>
       </div>
    </div>
