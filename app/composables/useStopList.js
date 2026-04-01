@@ -41,8 +41,18 @@ export function useStopList() {
   const { error: showError } = useToast()
   const api = useApi()
   const stopListItems = ref([])
+  const stopListCount = ref(0)
   const loading = ref(false)
   const error = ref(null)
+
+  const fetchStopListCount = async () => {
+    try {
+      const response = await api.get('/product-restaurants/stop-list-count')
+      stopListCount.value = response.data.data
+    } catch (e) {
+      console.error('Ошибка при получении количества стоп-листа:', e)
+    }
+  }
 
   const fetchStopList = async () => {
     loading.value = true
@@ -122,12 +132,14 @@ export function useStopList() {
 
   return {
     stopListItems,
+    stopListCount,
     loading,
     error,
     fetchStopList,
     getStopListItem,
     createStopListItem,
     updateStopListItem,
-    deleteStopListItem
+    deleteStopListItem,
+    fetchStopListCount
   }
 }

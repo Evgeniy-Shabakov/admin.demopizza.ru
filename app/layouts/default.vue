@@ -4,7 +4,7 @@ const route = useRoute()
 const isSidebarOpen = ref(false)
 const isSidebarCollapsed = ref(false)
 
-const menuItems = [
+const menuItems = ref([
   { name: 'Главная', path: '/', icon: 'home' },
   { name: 'Страны', path: '/countries', icon: 'globe' },
   { name: 'Города', path: '/cities', icon: 'city' },
@@ -13,11 +13,14 @@ const menuItems = [
   { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
   { name: 'Категории', path: '/categories', icon: 'tag' },
   { name: 'Товары', path: '/products', icon: 'box' },
-  { name: 'Стоп-лист', path: '/stop-list', icon: 'ban' },
-]
+  { name: 'Стоп-лист', path: '/stop-list', icon: 'ban', badge: 0 },
+])
 
-onMounted(() => {
+onMounted(async () => {
   initTheme()
+  const { stopListCount, fetchStopListCount } = useStopList()
+  await fetchStopListCount()
+  menuItems.value.find(m => m.path === '/stop-list').badge = stopListCount.value
 })
 
 const toggleSidebar = () => {

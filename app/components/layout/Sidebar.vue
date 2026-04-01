@@ -163,8 +163,13 @@ const handleMenuClick = () => {
                       stroke-width="2"
                       d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
              </svg>
-              <span :class="isCollapsed ? 'lg:hidden' : ''">{{ item.name }}</span>
-           </NuxtLink>
+               <span :class="isCollapsed ? 'lg:hidden' : ''">{{ item.name }}</span>
+                <span v-if="item.badge && item.badge > 0" :class="isCollapsed ? 'lg:hidden' : ''" class="ml-auto">
+                  <BaseBadge variant="danger" size="md">
+                    {{ item.badge }}
+                  </BaseBadge>
+                </span>
+            </NuxtLink>
         </nav>
 
         <div  class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
