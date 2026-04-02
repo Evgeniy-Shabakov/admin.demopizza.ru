@@ -154,7 +154,10 @@ const getProductImageUrl = (product) => {
 <template>
    <div>
       <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
-<div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+         <div v-if="order.city?.name" class="text-center text-[11px] text-gray-500 dark:text-gray-400 mb-2">
+            {{ order.city.name }}{{ order.restaurant?.name ? ` - ${order.restaurant.name}` : '' }}
+         </div>
+         <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between gap-2 w-full">
                <span class="flex-1 inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
                   {{ order.orderTypeName }}
@@ -176,7 +179,7 @@ const getProductImageUrl = (product) => {
                {{ order.orderStatus }}
             </div>
 </div>
-         <div class="flex items-start justify-between gap-4 mb-3">
+          <div class="flex items-start justify-between gap-4 mb-3">
              <div>
                 <span class="text-lg font-semibold">{{ order.number }}</span>
                 <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }} ({{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }})</span>
@@ -186,13 +189,13 @@ const getProductImageUrl = (product) => {
                     </svg>
                     {{ formatPhone(order.user.phone) }}
                  </div>
-                 <div v-if="order.userAddress?.addressAsString" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
-                    <svg class="w-3 h-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {{ order.userAddress.addressAsString }}
-                 </div>
+<div v-if="order.userAddress?.addressAsString" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
+                     <svg class="w-3 h-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                     </svg>
+                     {{ order.userAddress.addressAsString }}<span v-if="order.deliveryZone?.name" class="text-gray-500 dark:text-gray-400"> ({{ order.deliveryZone.name }})</span>
+                  </div>
              </div>
              <div class="flex flex-col items-end gap-1">
                 <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
