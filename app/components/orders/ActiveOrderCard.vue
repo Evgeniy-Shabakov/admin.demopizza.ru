@@ -220,8 +220,8 @@ const getProductImageUrl = (product) => {
             Не звонить в дверь
          </div>
 
-<div v-if="order.userComment" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
-            <span class="text-gray-500 dark:text-gray-400">Комментарий клиента:</span> {{ order.userComment }}
+<div v-if="order.userComment" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1" title="Комментарий клиента">
+            {{ order.userComment }}
          </div>
       </div>
 
