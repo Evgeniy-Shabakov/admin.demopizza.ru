@@ -101,16 +101,16 @@ const viewOrder = () => {
 }
 
 const getStatusClass = (status) => {
-   if (status === ORDER_STATUS.CREATED) {
-      return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
-   }
-   if (status === ORDER_STATUS.COMPLETED) {
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-   }
-   if (status === ORDER_STATUS.CANCEL) {
-      return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-   }
-   return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'
+if (status === ORDER_STATUS.CREATED) {
+       return 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400'
+    }
+    if (status === ORDER_STATUS.COMPLETED) {
+       return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+    }
+    if (status === ORDER_STATUS.CANCEL) {
+       return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+    }
+    return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
 }
 
 const getPaymentStatusClass = (status) => {
@@ -156,7 +156,7 @@ const getProductImageUrl = (product) => {
       <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
         <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
            <div class="flex items-center justify-center gap-2">
-              <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400">
+              <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
                  {{ order.orderTypeName }}
               </span>
               <span v-if="order.packTakeaway" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400">
@@ -192,12 +192,9 @@ const getProductImageUrl = (product) => {
              </div>
          </div>
            <div class="flex flex-col items-end gap-1">
-<span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1 justify-center text-center', getStatusClass(order.orderStatus)]">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                {{ order.orderStatus }}
-             </span>
+<span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold text-center', getStatusClass(order.orderStatus)]">
+                 {{ order.orderStatus }}
+              </span>
              <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold text-center', getStatusClass(order.orderStatus)]">
                 {{ order.orderStatus }}
             </span>
@@ -272,12 +269,9 @@ const getProductImageUrl = (product) => {
       </div>
 
       <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3">
-         <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1 justify-center text-center w-full', getStatusClass(order.orderStatus)]">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                {{ order.orderStatus }}
-             </span>
+<span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex justify-center text-center w-full', getStatusClass(order.orderStatus)]">
+                 {{ order.orderStatus }}
+              </span>
              <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center justify-center', getStatusClass(order.orderStatus)]">
                 {{ order.orderStatus }}
             </span>
