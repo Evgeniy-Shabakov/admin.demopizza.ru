@@ -143,6 +143,20 @@ const formatDateTime = (dateTimeStr) => {
    return dateTimeStr
 }
 
+const formatAddress = (address) => {
+   if (!address) return ''
+   const parts = []
+   if (address.street) parts.push(address.street)
+   if (address.house) parts.push(`д. ${address.house}`)
+   if (address.corps) parts.push(`корп. ${address.corps}`)
+   if (address.flat) parts.push(`кв. ${address.flat}`)
+   if (address.entrance) parts.push(`под. ${address.entrance}`)
+   if (address.floor) parts.push(`эт. ${address.floor}`)
+   if (address.entranceCode) parts.push(`код ${address.entranceCode}`)
+   if (address.comment) parts.push(address.comment)
+   return parts.join(', ')
+}
+
 const getProductImageUrl = (product) => {
    if (!product?.imagePath) return null
    const config = useRuntimeConfig()
@@ -189,12 +203,15 @@ const getProductImageUrl = (product) => {
                     </svg>
                     {{ formatPhone(order.user.phone) }}
                  </div>
-<div v-if="order.userAddress?.addressAsString" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
+<div v-if="formatAddress(order.userAddress)" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
                      <svg class="w-3 h-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                      </svg>
-                     {{ order.userAddress.addressAsString }}<span v-if="order.deliveryZone?.name" class="text-gray-500 dark:text-gray-400"> ({{ order.deliveryZone.name }})</span>
+                     <div>
+                        {{ formatAddress(order.userAddress) }}
+                        <span v-if="order.deliveryZone?.name" class="text-gray-500 dark:text-gray-400"> ({{ order.deliveryZone.name }})</span>
+                     </div>
                   </div>
              </div>
              <div class="flex flex-col items-end gap-1">
