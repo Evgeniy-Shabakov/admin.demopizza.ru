@@ -206,28 +206,23 @@ const getProductImageUrl = (product) => {
          </div>
       </div>
 
-      <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
-         <div v-if="order.tableNumber" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Стол</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.tableNumber }}</span>
+      <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 mb-3 flex flex-wrap gap-2">
+         <div v-if="order.tableNumber" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
+            Стол № {{ order.tableNumber }}
          </div>
-         <div v-if="order.carNumber" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Автомобиль</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.carNumber }}</span>
+         <div v-if="order.carNumber" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
+            {{ order.carNumber }}
          </div>
-         <div v-if="order.leaveAtTheDoor" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Оставить у двери</span>
-            <span class="text-green-600 dark:text-green-400">✓</span>
+         <div v-if="order.leaveAtTheDoor" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
+            Оставить у двери
          </div>
-          <div v-if="order.dontRingDoorbell" class="flex justify-between text-sm">
-             <span class="text-gray-500 dark:text-gray-400">Не звонить</span>
-             <span class="text-green-600 dark:text-green-400">✓</span>
-          </div>
+         <div v-if="order.dontRingDoorbell" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
+            Не звонить в дверь
+         </div>
 
-           <div v-if="order.userComment" class="text-sm bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2 mt-1">
-              <span class="">Комментарий клиента:</span>
-              <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
-           </div>
+<div v-if="order.userComment" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
+            <span class="text-gray-500 dark:text-gray-400">Комментарий клиента:</span> {{ order.userComment }}
+         </div>
       </div>
 
       <div v-if="order.orderProducts && order.orderProducts.length" class="border-t border-gray-200 dark:border-gray-700 pt-3">
