@@ -192,7 +192,7 @@ const getProductImageUrl = (product) => {
              </div>
          </div>
            <div class="flex flex-col items-end gap-1">
-             <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1 justify-center', getStatusClass(order.orderStatus)]">
+<span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1 justify-center text-center', getStatusClass(order.orderStatus)]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
@@ -271,7 +271,18 @@ const getProductImageUrl = (product) => {
          </div>
       </div>
 
-      <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 flex items-center gap-2">
+      <div class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3">
+         <span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-1 justify-center text-center w-full', getStatusClass(order.orderStatus)]">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                {{ order.orderStatus }}
+             </span>
+             <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center justify-center', getStatusClass(order.orderStatus)]">
+                {{ order.orderStatus }}
+            </span>
+
+            <div class="mt-3 flex items-center gap-2 ">
           <button 
              @click="nextStatus" 
              :disabled="isLoadingNext"
@@ -312,6 +323,7 @@ const getProductImageUrl = (product) => {
                </div>
            </div>
          </div>
+      </div>
       </div>
 
       <BaseModal :show="showCancelModal" @close="showCancelModal = false">
