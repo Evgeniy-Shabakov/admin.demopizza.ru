@@ -201,11 +201,12 @@ const getProductImageUrl = (product) => {
             <div class="text-right">
                <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
                <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
+               <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
             </div>
          </div>
       </div>
 
-      <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.banknoteForChange || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
+      <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 space-y-1">
          <div v-if="order.tableNumber" class="flex justify-between text-sm">
             <span class="text-gray-500 dark:text-gray-400">Стол</span>
             <span class="text-gray-900 dark:text-gray-100">{{ order.tableNumber }}</span>
@@ -222,10 +223,7 @@ const getProductImageUrl = (product) => {
              <span class="text-gray-500 dark:text-gray-400">Не звонить</span>
              <span class="text-green-600 dark:text-green-400">✓</span>
           </div>
-          <div v-if="order.banknoteForChange" class="flex justify-between text-sm">
-            <span class="text-gray-500 dark:text-gray-400">Купюра для сдачи</span>
-            <span class="text-gray-900 dark:text-gray-100">{{ order.banknoteForChange }} ₽</span>
-         </div>
+
            <div v-if="order.userComment" class="text-sm bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-2 mt-1">
               <span class="">Комментарий клиента:</span>
               <div class=" text-amber-800 dark:text-amber-200 font-medium mt-0.5 ">{{ order.userComment }}</div>
