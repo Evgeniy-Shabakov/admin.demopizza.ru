@@ -102,15 +102,15 @@ const viewOrder = () => {
 
 const getStatusClass = (status) => {
 if (status === ORDER_STATUS.CREATED) {
-       return 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400'
-    }
-    if (status === ORDER_STATUS.COMPLETED) {
-       return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-    }
-    if (status === ORDER_STATUS.CANCEL) {
-       return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-    }
-    return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+   return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+}
+if (status === ORDER_STATUS.COMPLETED) {
+   return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+}
+if (status === ORDER_STATUS.CANCEL) {
+   return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+}
+return 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400'
 }
 
 const getPaymentStatusClass = (status) => {
