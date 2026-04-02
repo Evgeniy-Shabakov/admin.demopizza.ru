@@ -171,7 +171,7 @@ const getProductImageUrl = (product) => {
          <div class="flex gap-2 items-center justify-between mb-2 mx-1">
             <div>
                <span class="font-semibold">{{ order.number }}</span>
-               <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }} </span>
+               <span class="text-gray-500 dark:text-gray-400 text-sm ml-1">#{{ order.id }} </span>
             </div>
             <span class="text-gray-500 dark:text-gray-400 text-sm ml-2"> {{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }}</span>
             <div v-if="order.city?.name" class="text-[11px] text-gray-500 dark:text-gray-400">
