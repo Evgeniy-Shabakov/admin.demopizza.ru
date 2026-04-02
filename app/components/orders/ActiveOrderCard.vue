@@ -154,57 +154,52 @@ const getProductImageUrl = (product) => {
 <template>
    <div>
       <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
-        <div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-           <div class="flex items-center justify-center gap-2">
-              <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
-                 {{ order.orderTypeName }}
-              </span>
-              <span v-if="order.packTakeaway" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400">
-                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                 </svg>
-                 Упаковать
-              </span>
-               <span v-else class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                     <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" />
-                  </svg>
-                  Сервировать
+<div class="text-center mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between gap-2 w-full">
+               <span class="flex-1 inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-semibold bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400">
+                  {{ order.orderTypeName }}
                </span>
+               <span v-if="order.packTakeaway" class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  Упаковать
+               </span>
+                <span v-else class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z" />
+                   </svg>
+                   Сервировать
+                </span>
             </div>
-        </div>
-      <div class="flex items-start justify-between gap-4 mb-3">
-         <div>
-            <span class="text-lg font-semibold">{{ order.number }}</span>
-            <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }} ({{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }})</span>
-             <div v-if="order.user?.phone" class="text-xs text-blue-600 dark:text-blue-400 mt-0.5 flex items-center gap-1">
-                <svg class="w-3 h-3 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                {{ formatPhone(order.user.phone) }}
-             </div>
-             <div v-if="order.userAddress?.addressAsString" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
-                <svg class="w-3 h-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                {{ order.userAddress.addressAsString }}
-             </div>
-         </div>
-           <div class="flex flex-col items-end gap-1">
-<span v-if="order.orderStatus === ORDER_STATUS.CREATED" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold text-center', getStatusClass(order.orderStatus)]">
-                 {{ order.orderStatus }}
-              </span>
-             <span v-else :class="['px-3 py-1.5 rounded-lg text-sm font-semibold text-center', getStatusClass(order.orderStatus)]">
-                {{ order.orderStatus }}
-            </span>
-            <div class="text-right">
-               <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
-               <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
-               <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
+            <div v-if="order.orderStatus" :class="['px-3 py-1.5 rounded-lg text-sm font-semibold text-center block w-full mt-3', getStatusClass(order.orderStatus)]">
+               {{ order.orderStatus }}
             </div>
-         </div>
-      </div>
+</div>
+         <div class="flex items-start justify-between gap-4 mb-3">
+             <div>
+                <span class="text-lg font-semibold">{{ order.number }}</span>
+                <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">#{{ order.id }} ({{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }})</span>
+                 <div v-if="order.user?.phone" class="text-xs text-blue-600 dark:text-blue-400 mt-0.5 flex items-center gap-1">
+                    <svg class="w-3 h-3 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    {{ formatPhone(order.user.phone) }}
+                 </div>
+                 <div v-if="order.userAddress?.addressAsString" class="text-xs text-green-600 dark:text-green-400 mt-0.5 flex items-center gap-1">
+                    <svg class="w-3 h-3 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {{ order.userAddress.addressAsString }}
+                 </div>
+             </div>
+             <div class="flex flex-col items-end gap-1">
+                <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
+                <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
+                <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
+             </div>
+          </div>
 
       <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 mb-3 flex flex-wrap gap-2">
          <div v-if="order.tableNumber" class="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-2 py-1">
