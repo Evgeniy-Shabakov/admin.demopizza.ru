@@ -214,8 +214,8 @@ const getProductImageUrl = (product) => {
                      </div>
                   </div>
              </div>
-             <div class="flex flex-col items-end gap-1">
-                <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus || '—' }}</span>
+<div class="flex flex-col items-end gap-1 whitespace-nowrap">
+                 <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus }}</span>
                 <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
                 <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
              </div>
