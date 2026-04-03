@@ -2,9 +2,7 @@
 useHead({
    title: 'Активные заказы'
 })
-const { orders, loading, fetchActiveOrders } = useOrders()
-
-fetchActiveOrders()
+const { orders, loading } = useOrders()
 
 </script>
 
