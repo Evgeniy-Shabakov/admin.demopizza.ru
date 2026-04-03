@@ -13,21 +13,30 @@ const menuItems = ref([
   { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
   { name: 'Категории', path: '/categories', icon: 'tag' },
   { name: 'Товары', path: '/products', icon: 'box' },
-  { name: 'Активные заказы', path: '/active-orders', icon: 'shopping-cart' },
+  { name: 'Активные заказы', path: '/active-orders', icon: 'shopping-cart', badge: 0 },
   { name: 'Стоп-лист', path: '/stop-list', icon: 'ban', badge: 0 },
 ])
 
 const { stopListCount, fetchStopListCount } = useStopList()
+const { activeOrdersCount, fetchActiveOrdersCount } = useActiveOrders()
 
 onMounted(async () => {
   initTheme()
   initSidebar()
-  await fetchStopListCount()
-  setInterval(fetchStopListCount, 30000)
+  await Promise.all([fetchStopListCount(), fetchActiveOrdersCount()])
+  setInterval(() => {
+    fetchStopListCount()
+    fetchActiveOrdersCount()
+  }, 30000)
 })
 
 watch(stopListCount, (newVal) => {
   const item = menuItems.value.find(m => m.path === '/stop-list')
+  if (item) item.badge = newVal
+}, { immediate: true })
+
+watch(activeOrdersCount, (newVal) => {
+  const item = menuItems.value.find(m => m.path === '/active-orders')
   if (item) item.badge = newVal
 }, { immediate: true })
 
