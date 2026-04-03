@@ -3,6 +3,7 @@ const route = useRoute()
 const router = useRouter()
 const pageTitle = useState('pageTitle', () => 'Главная')
 const headerActions = useState('headerActions', () => [])
+const { activeOrdersCount } = useActiveOrders()
 
 const titles = {
    '/': 'Главная',
@@ -276,7 +277,14 @@ defineEmits(['toggleSidebar'])
                </svg>
             </NuxtLink>
 
-            <h1 class="text-lg font-semibold">{{ pageTitle }}</h1>
+            <h1 class="text-lg font-semibold flex items-center gap-2">
+               {{ pageTitle }}
+               <BaseBadge v-if="route.path.startsWith('/active-orders') && activeOrdersCount > 0"
+                          variant="danger"
+                          size="md">
+                  {{ activeOrdersCount }}
+               </BaseBadge>
+            </h1>
             
          </div>
 
