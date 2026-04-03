@@ -4,10 +4,18 @@ useHead({
 })
 
 const { orders, loading, fetchActiveOrders } = useOrders()
+let intervalId = null
 
 onMounted(() => {
    fetchActiveOrders()
-   setInterval(fetchActiveOrders, 30000)
+   intervalId = setInterval(fetchActiveOrders, 30000)
+})
+
+onUnmounted(() => {
+   if (intervalId) {
+      clearInterval(intervalId)
+      intervalId = null
+   }
 })
 </script>
 
