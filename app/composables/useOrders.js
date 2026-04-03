@@ -26,7 +26,7 @@ export function useOrders() {
     loadingState.value = true
     errorState.value = null
     try {
-      const response = await api.get('/orders?active=true')
+      const response = await api.get('/orders?active=true&perPage=100')
       ordersState.value = response.data.data
     } catch (e) {
       errorState.value = getErrorMessage('fetchOrders')

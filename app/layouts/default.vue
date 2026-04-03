@@ -20,11 +20,19 @@ const menuItems = ref([
 const { stopListCount, fetchStopListCount } = useStopList()
 const { activeOrdersCount, fetchActiveOrdersCount } = useActiveOrders()
 const { orders, loading, fetchActiveOrders } = useOrders()
+const { success: showToast } = useToast()
+
+const previousOrderIds = ref(new Set())
+const isInitialLoad = ref(true)
 
 onMounted(async () => {
    initTheme()
    initSidebar()
    await Promise.all([fetchStopListCount(), fetchActiveOrdersCount(), fetchActiveOrders()])
+   
+   previousOrderIds.value = new Set(orders.value.map(o => o.id))
+   isInitialLoad.value = false
+   
    setInterval(() => {
       fetchStopListCount()
       fetchActiveOrdersCount()
@@ -41,6 +49,19 @@ watch(activeOrdersCount, (newVal) => {
    const item = menuItems.value.find(m => m.path === '/active-orders')
    if (item) item.badge = newVal
 }, { immediate: true })
+
+watch(orders, (newOrders) => {
+   if (isInitialLoad.value) return
+   
+   const newOrderIds = new Set(newOrders.map(o => o.id))
+   const hasNewOrder = [...newOrderIds].some(id => !previousOrderIds.value.has(id))
+   
+   if (hasNewOrder) {
+      showToast('NEW Новый заказ!')
+   }
+   
+   previousOrderIds.value = newOrderIds
+}, { deep: true })
 
 const toggleSidebar = () => {
    isSidebarOpen.value = !isSidebarOpen.value
