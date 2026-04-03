@@ -3,7 +3,7 @@ defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (v) => ['primary', 'secondary', 'danger', 'ghost'].includes(v)
+    validator: (v) => ['primary', 'secondary', 'danger', 'ghost', 'success'].includes(v)
   },
   size: {
     type: String,
@@ -24,7 +24,8 @@ const variantClasses = {
   primary: 'bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white',
   secondary: 'bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-100',
   danger: 'bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white',
-  ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+  ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300',
+  success: 'bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white'
 }
 
 const sizeClasses = {
