@@ -2,8 +2,10 @@
 useHead({
    title: 'Активные заказы'
 })
+const { orders, loading, fetchActiveOrders } = useOrders()
 
-const { orders, loading } = useOrders()
+fetchActiveOrders()
+
 </script>
 
 <template>
