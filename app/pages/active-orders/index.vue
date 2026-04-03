@@ -3,20 +3,7 @@ useHead({
    title: 'Активные заказы'
 })
 
-const { orders, loading, fetchActiveOrders } = useOrders()
-let intervalId = null
-
-onMounted(() => {
-   fetchActiveOrders()
-   intervalId = setInterval(fetchActiveOrders, 30000)
-})
-
-onUnmounted(() => {
-   if (intervalId) {
-      clearInterval(intervalId)
-      intervalId = null
-   }
-})
+const { orders, loading } = useOrders()
 </script>
 
 <template>

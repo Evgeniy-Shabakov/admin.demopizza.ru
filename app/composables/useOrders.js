@@ -14,31 +14,32 @@ const getErrorDetails = (e) => {
 
 const getStatusCode = (e) => e.response?.status || null
 
+const ordersState = ref([])
+const loadingState = ref(false)
+const errorState = ref(null)
+
 export function useOrders() {
   const { error: showError } = useToast()
   const api = useApi()
-  const orders = ref([])
-  const loading = ref(false)
-  const error = ref(null)
 
   const fetchActiveOrders = async () => {
-    loading.value = true
-    error.value = null
+    loadingState.value = true
+    errorState.value = null
     try {
       const response = await api.get('/orders?active=true')
-      orders.value = response.data.data
+      ordersState.value = response.data.data
     } catch (e) {
-      error.value = getErrorMessage('fetchOrders')
+      errorState.value = getErrorMessage('fetchOrders')
       showError({ message: getErrorMessage('fetchOrders'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
     } finally {
-      loading.value = false
+      loadingState.value = false
     }
   }
 
   return {
-    orders,
-    loading,
-    error,
+    orders: ordersState,
+    loading: loadingState,
+    error: errorState,
     fetchActiveOrders
   }
 }

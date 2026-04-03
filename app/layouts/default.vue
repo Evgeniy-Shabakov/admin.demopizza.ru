@@ -19,14 +19,18 @@ const menuItems = ref([
 
 const { stopListCount, fetchStopListCount } = useStopList()
 const { activeOrdersCount, fetchActiveOrdersCount } = useActiveOrders()
+const { orders, loading, fetchActiveOrders } = useOrders()
 
 onMounted(async () => {
   initTheme()
   initSidebar()
-  await Promise.all([fetchStopListCount(), fetchActiveOrdersCount()])
+  await Promise.all([fetchStopListCount(), fetchActiveOrdersCount(), fetchActiveOrders()])
   setInterval(() => {
     fetchStopListCount()
     fetchActiveOrdersCount()
+    if (route.path === '/active-orders') {
+      fetchActiveOrders()
+    }
   }, 30000)
 })
 
