@@ -145,6 +145,24 @@ const getPaymentStatusClass = (status) => {
    return 'text-gray-500 dark:text-gray-400'
 }
 
+const getPaymentTypeInfo = (type) => {
+   const types = {
+      [PAYMENT_TYPE.CASH]: {
+         class: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+         icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z'
+      },
+      [PAYMENT_TYPE.CARD_OFFLINE]: {
+         class: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
+         icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'
+      },
+      [PAYMENT_TYPE.ONLINE]: {
+         class: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+         icon: 'M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9'
+      }
+   }
+   return types[type] || { class: 'text-gray-500 dark:text-gray-400', icon: '' }
+}
+
 const formatPhone = (phone) => {
    if (!phone) return ''
    const cleaned = phone.replace(/\D/g, '')
@@ -263,7 +281,12 @@ const getProductImageUrl = (product) => {
                    >
                       {{ order.paymentStatus }}
                    </button>
-                  <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
+                  <span v-if="order.paymentType" :class="getPaymentTypeInfo(order.paymentType).class" class="text-xs flex items-center gap-1" :title="`Тип оплаты: ${order.paymentType}`">
+                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="getPaymentTypeInfo(order.paymentType).icon" />
+                     </svg>
+                     {{ order.paymentType }}
+                  </span>
                   <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
                </div>
           </div>
