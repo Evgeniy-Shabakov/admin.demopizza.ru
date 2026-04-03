@@ -174,11 +174,11 @@ const getProductImageUrl = (product) => {
                <span class="text-gray-500 dark:text-gray-400 text-xs ml-1" title="внутренний номер заказа">#{{ order.id }}</span>
             </div>
             <div class="flex-1 text-center">
-               <span class="text-gray-500 dark:text-gray-400 text-sm" title="время создания заказа">{{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }}</span>
+               <span class="text-gray-500 dark:text-gray-400 text-base" title="время создания заказа">{{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }}</span>
             </div>
-            <div v-if="order.city?.name" class="text-[11px] text-gray-500 dark:text-gray-400 text-right">
+            <div v-if="order.city?.name" class="text-[11px] text-gray-500 dark:text-gray-400 text-right leading-tight">
                <div>{{ order.city.name }}</div>
-               <div v-if="order.restaurant?.name">{{ order.restaurant.name }}</div>
+               <div v-if="order.restaurant?.name" class="text-[10px]">{{ order.restaurant.name }}</div>
             </div>
          </div>
          
