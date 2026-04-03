@@ -171,11 +171,14 @@ const getProductImageUrl = (product) => {
          <div class="flex gap-2 items-center justify-between mb-2 mx-1">
             <div>
                <span class="font-semibold">{{ order.number }}</span>
-               <span class="text-gray-500 dark:text-gray-400 text-sm ml-1" title="внутренний номер заказа">#{{ order.id }} </span>
+               <span class="text-gray-500 dark:text-gray-400 text-xs ml-1" title="внутренний номер заказа">#{{ order.id }}</span>
             </div>
-            <span class="text-gray-500 dark:text-gray-400 text-sm ml-2" title="время создания заказа"> {{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }}</span>
-            <div v-if="order.city?.name" class="text-[11px] text-gray-500 dark:text-gray-400">
-               {{ order.city.name }}{{ order.restaurant?.name ? ` - ${order.restaurant.name}` : '' }}
+            <div class="flex-1 text-center">
+               <span class="text-gray-500 dark:text-gray-400 text-sm" title="время создания заказа">{{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }}</span>
+            </div>
+            <div v-if="order.city?.name" class="text-[11px] text-gray-500 dark:text-gray-400 text-right">
+               <div>{{ order.city.name }}</div>
+               <div v-if="order.restaurant?.name">{{ order.restaurant.name }}</div>
             </div>
          </div>
          
