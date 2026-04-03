@@ -26,6 +26,12 @@ const isLoadingPayment = ref(false)
 const showDropdown = ref(false)
 const showCancelModal = ref(false)
 const showPaymentModal = ref(false)
+const showRestaurantModal = ref(false)
+const isLoadingRestaurant = ref(false)
+const cities = ref([])
+const restaurants = ref([])
+const selectedCityId = ref(null)
+const selectedRestaurantId = ref(null)
 
 const canChangePayment = computed(() => {
    return props.order.paymentType === PAYMENT_TYPE.CASH || props.order.paymentType === PAYMENT_TYPE.CARD_OFFLINE
@@ -123,6 +129,69 @@ const updatePaymentStatus = async () => {
 
 const viewOrder = () => {
    emit('view', props.order)
+}
+
+const openRestaurantModal = async () => {
+   closeDropdown()
+   selectedCityId.value = props.order.city?.id || null
+   selectedRestaurantId.value = props.order.restaurant?.id || null
+   
+   try {
+      const response = await $api.get('/cities')
+      cities.value = response.data?.data || []
+      
+      const restaurantsResponse = await $api.get('/restaurants')
+      const allRestaurants = restaurantsResponse.data?.data || []
+      
+      if (selectedCityId.value) {
+         restaurants.value = allRestaurants.filter(r => r.cityId === selectedCityId.value)
+      } else {
+         restaurants.value = allRestaurants
+      }
+   } catch (e) {
+      console.error(e)
+   }
+   
+   showRestaurantModal.value = true
+}
+
+const onCityChange = async () => {
+   selectedRestaurantId.value = null
+   restaurants.value = []
+   
+   if (selectedCityId.value) {
+      try {
+         const response = await $api.get('/restaurants')
+         const allRestaurants = response.data?.data || []
+         restaurants.value = allRestaurants.filter(r => r.cityId === selectedCityId.value)
+      } catch (e) {
+         console.error(e)
+      }
+   }
+}
+
+const updateRestaurant = async () => {
+   isLoadingRestaurant.value = true
+   try {
+      await $api.patch(`/orders/${props.order.id}`, {
+         cityId: selectedCityId.value,
+         restaurantId: selectedRestaurantId.value
+      })
+      
+      const city = cities.value.find(c => c.id === selectedCityId.value)
+      const restaurant = restaurants.value.find(r => r.id === selectedRestaurantId.value)
+      
+      props.order.city = city || props.order.city
+      props.order.restaurant = restaurant || props.order.restaurant
+      
+      showToast('Ресторан изменён', 'success')
+      showRestaurantModal.value = false
+   } catch (e) {
+      showToast('Ошибка изменения ресторана', 'error')
+      console.error(e)
+   } finally {
+      isLoadingRestaurant.value = false
+   }
 }
 
 const getStatusClass = (status) => {
@@ -385,13 +454,19 @@ const getProductImageUrl = (product) => {
                   >
                      {{ isLoadingPrev ? '...' : 'Предыдущий статус' }}
                   </button>
-                   <button 
+<button 
                       @click="showCancelModal = true; closeDropdown()"
                       :disabled="isLoadingCancel"
                       class="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
                    >
                       {{ isLoadingCancel ? '...' : 'Отменить заказ' }}
-                  </button>
+                   </button>
+                   <button 
+                      @click="openRestaurantModal()"
+                      class="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                   >
+                      Изменить ресторан
+                   </button>
                </div>
            </div>
          </div>
@@ -451,6 +526,48 @@ const getProductImageUrl = (product) => {
            </BaseButton>
            <BaseButton :variant="order.paymentStatus === PAYMENT_STATUS_TYPE.PAID ? 'danger' : 'success'" class="flex-1" :loading="isLoadingPayment" @click="updatePaymentStatus">
              {{ order.paymentStatus === PAYMENT_STATUS_TYPE.PAID ? 'Отменить' : 'Подтвердить' }}
+           </BaseButton>
+         </div>
+      </BaseModal>
+
+      <BaseModal :show="showRestaurantModal" @close="showRestaurantModal = false">
+        <div class="text-center">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            Изменить ресторан
+          </h3>
+
+          <div class="space-y-4 mb-6">
+            <div class="text-left">
+               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Город</label>
+               <select 
+                  v-model="selectedCityId" 
+                  @change="onCityChange"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+               >
+                  <option :value="null">Выберите город</option>
+                  <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name }}</option>
+               </select>
+            </div>
+            <div class="text-left">
+               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ресторан</label>
+               <select 
+                  v-model="selectedRestaurantId"
+                  :disabled="!selectedCityId"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+               >
+                  <option :value="null">Выберите ресторан</option>
+                  <option v-for="restaurant in restaurants" :key="restaurant.id" :value="restaurant.id">{{ restaurant.name }}</option>
+               </select>
+            </div>
+          </div>
+        </div>
+
+         <div class="flex gap-3">
+           <BaseButton variant="secondary" class="flex-1" @click="showRestaurantModal = false">
+             Отмена
+           </BaseButton>
+           <BaseButton variant="primary" class="flex-1" :loading="isLoadingRestaurant" :disabled="!selectedCityId || !selectedRestaurantId" @click="updateRestaurant">
+             Сохранить
            </BaseButton>
          </div>
       </BaseModal>
