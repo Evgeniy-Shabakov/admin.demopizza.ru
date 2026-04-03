@@ -1,8 +1,8 @@
 <script setup>
 const { initTheme } = useTheme()
+const { isCollapsed, initSidebar, toggleCollapse } = useSidebar()
 const route = useRoute()
 const isSidebarOpen = ref(false)
-const isSidebarCollapsed = ref(false)
 
 const menuItems = ref([
   { name: 'Главная', path: '/', icon: 'home' },
@@ -21,6 +21,7 @@ const { stopListCount, fetchStopListCount } = useStopList()
 
 onMounted(async () => {
   initTheme()
+  initSidebar()
   await fetchStopListCount()
   setInterval(fetchStopListCount, 30000)
 })
@@ -35,7 +36,7 @@ const toggleSidebar = () => {
 }
 
 const toggleSidebarCollapse = () => {
-  isSidebarCollapsed.value = !isSidebarCollapsed.value
+  toggleCollapse()
 }
 
 const closeSidebar = () => {
@@ -48,7 +49,7 @@ const closeSidebar = () => {
     <LayoutSidebar 
       :menu-items="menuItems" 
       :is-open="isSidebarOpen"
-      :is-collapsed="isSidebarCollapsed"
+      :is-collapsed="isCollapsed"
       @toggle="toggleSidebar"
       @close="closeSidebar"
       @toggle-collapse="toggleSidebarCollapse"
@@ -60,7 +61,7 @@ const closeSidebar = () => {
       @click="closeSidebar"
     ></div>
     
-    <div :class="isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'" class="min-h-screen flex flex-col transition-all duration-300">
+    <div :class="isCollapsed ? 'lg:pl-20' : 'lg:pl-72'" class="min-h-screen flex flex-col transition-all duration-300">
       <LayoutHeader 
         @toggle-sidebar="toggleSidebar"
       />
