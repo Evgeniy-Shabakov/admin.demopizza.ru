@@ -37,6 +37,15 @@ const canChangePayment = computed(() => {
    return props.order.paymentType === PAYMENT_TYPE.CASH || props.order.paymentType === PAYMENT_TYPE.CARD_OFFLINE
 })
 
+const totalItemsCount = computed(() => {
+   if (!props.order.orderProducts) return 0
+   return props.order.orderProducts.reduce((sum, item) => sum + item.quantity, 0)
+})
+
+const positionsCount = computed(() => {
+   return props.order.orderProducts?.length || 0
+})
+
 const toggleDropdown = () => {
    showDropdown.value = !showDropdown.value
 }
@@ -379,8 +388,11 @@ const getProductImageUrl = (product) => {
          </div>
       </div>
 
-      <div v-if="order.orderProducts && order.orderProducts.length" class="border-t border-gray-200 dark:border-gray-700 pt-3">
-         <div v-for="item in order.orderProducts" :key="item.productId" class="flex items-center gap-3 py-2">
+<div v-if="order.orderProducts && order.orderProducts.length" class="border-t border-gray-200 dark:border-gray-700 pt-3">
+          <div class="text-xs text-gray-500 dark:text-gray-400">
+             Позиций: <span class="text-white dark:text-white">{{ positionsCount }}</span> | Товаров: <span class="text-white dark:text-white">{{ totalItemsCount }}</span>
+          </div>
+          <div v-for="item in order.orderProducts" :key="item.productId" class="flex items-center gap-3 py-2">
             <img v-if="getProductImageUrl(item.product)" :src="getProductImageUrl(item.product)" :alt="item.product.name" class="w-10 h-10 rounded-lg object-cover">
             <div class="flex-1">
                <span>{{ item.product?.name }}</span>
