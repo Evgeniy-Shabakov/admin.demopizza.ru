@@ -1,6 +1,7 @@
 <script setup>
 import { PAYMENT_STATUS_TYPE } from '~/constants/paymentStatusType'
 import { ORDER_STATUS } from '~/constants/orderStatus'
+import { PAYMENT_TYPE } from '~/constants/paymentType'
 import { useToast } from '~/composables/useToast'
 import { onMounted, onUnmounted } from 'vue'
 import BaseModal from '~/components/base/BaseModal.vue'
@@ -21,8 +22,13 @@ const { $api } = useNuxtApp()
 const isLoadingNext = ref(false)
 const isLoadingPrev = ref(false)
 const isLoadingCancel = ref(false)
+const isLoadingPayment = ref(false)
 const showDropdown = ref(false)
 const showCancelModal = ref(false)
+
+const canChangePayment = computed(() => {
+   return props.order.paymentType === PAYMENT_TYPE.CASH || props.order.paymentType === PAYMENT_TYPE.CARD_OFFLINE
+})
 
 const toggleDropdown = () => {
    showDropdown.value = !showDropdown.value
@@ -93,6 +99,23 @@ const cancelOrder = async () => {
       console.error(e)
    } finally {
       isLoadingCancel.value = false
+   }
+}
+
+const updatePaymentStatus = async () => {
+   isLoadingPayment.value = true
+   try {
+      const newStatus = props.order.paymentStatus === PAYMENT_STATUS_TYPE.NO_PAID 
+         ? PAYMENT_STATUS_TYPE.PAID 
+         : PAYMENT_STATUS_TYPE.NO_PAID
+      await $api.patch(`/orders/${props.order.id}`, { paymentStatus: newStatus })
+      showToast('Статус оплаты изменён', 'success')
+      props.order.paymentStatus = newStatus
+   } catch (e) {
+      showToast('Ошибка изменения статуса оплаты', 'error')
+      console.error(e)
+   } finally {
+      isLoadingPayment.value = false
    }
 }
 
@@ -224,10 +247,22 @@ const getProductImageUrl = (product) => {
                   </div>
              </div>
 <div class="flex flex-col items-end gap-1 whitespace-nowrap">
-                 <span :class="getPaymentStatusClass(order.paymentStatus)" class="text-xs block">{{ order.paymentStatus }}</span>
-                <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
-                <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
-             </div>
+                   <button 
+                      :disabled="!canChangePayment || isLoadingPayment"
+                      @click="updatePaymentStatus"
+:class="[
+                          'text-xs block rounded px-2 py-0.5 transition-colors',
+                          order.paymentStatus === PAYMENT_STATUS_TYPE.PAID 
+                             ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-300 dark:border-green-700' 
+                             : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-300 dark:border-red-700',
+                          canChangePayment ? 'cursor-pointer' : 'cursor-not-allowed'
+                       ]"
+                   >
+                      {{ order.paymentStatus }}
+                   </button>
+                  <span v-if="order.paymentType" class="text-xs text-gray-500 dark:text-gray-400">{{ order.paymentType }}</span>
+                  <span v-if="order.banknoteForChange" class="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded px-1.5 py-0.5 mt-1 block">Сдача с: {{ order.banknoteForChange }} ₽</span>
+               </div>
           </div>
 
       <div v-if="order.tableNumber || order.carNumber || order.leaveAtTheDoor || order.dontRingDoorbell || order.userComment" class="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3 mb-3 flex flex-wrap gap-2">
