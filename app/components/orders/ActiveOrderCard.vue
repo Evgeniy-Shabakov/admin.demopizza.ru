@@ -281,8 +281,8 @@ const getProductImageUrl = (product) => {
                    >
                       {{ order.paymentStatus }}
                    </button>
-                  <span v-if="order.paymentType" :class="getPaymentTypeInfo(order.paymentType).class" class="text-xs flex items-center gap-1" :title="`Тип оплаты: ${order.paymentType}`">
-                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span v-if="order.paymentType" :class="getPaymentTypeInfo(order.paymentType).class" class="text-xs flex items-center gap-1" :title="`Тип оплаты: ${order.paymentType}`" style="width: 82px; white-space: normal; word-break: break-word">
+                     <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="getPaymentTypeInfo(order.paymentType).icon" />
                      </svg>
                      {{ order.paymentType }}
