@@ -250,6 +250,7 @@ const getProductImageUrl = (product) => {
                    <button 
                       :disabled="!canChangePayment || isLoadingPayment"
                       @click="updatePaymentStatus"
+                      :title="!canChangePayment ? 'Изменить статус оплаты вручную можно только при оплате наличными или картой офлайн' : null"
 :class="[
                           'text-xs block rounded px-2 py-0.5 transition-colors',
                           order.paymentStatus === PAYMENT_STATUS_TYPE.PAID 
