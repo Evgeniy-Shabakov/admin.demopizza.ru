@@ -6,10 +6,6 @@ import { useToast } from '~/composables/useToast'
 import BaseModal from '~/components/base/BaseModal.vue'
 import BaseButton from '~/components/base/BaseButton.vue'
 
-useHead({
-   title: 'Заказ'
-})
-
 const route = useRoute()
 const { $api } = useNuxtApp()
 const { showToast } = useToast()
@@ -250,6 +246,14 @@ const getProductImageUrl = (product) => {
 
 onMounted(() => {
    fetchOrder()
+})
+
+watch(() => order.value, () => {
+   if (order.value) {
+      useHead({
+         title: `Заказ ${order.value.number} | #${order.value.id} | ${order.value.totalPrice} ₽`
+      })
+   }
 })
 </script>
 
