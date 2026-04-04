@@ -3,7 +3,7 @@ const route = useRoute()
 const router = useRouter()
 const pageTitle = useState('pageTitle', () => 'Главная')
 const headerActions = useState('headerActions', () => [])
-const { activeOrdersCount } = useActiveOrders()
+const { activeOrdersCount } = useOrders()
 
 const titles = {
    '/': 'Главная',

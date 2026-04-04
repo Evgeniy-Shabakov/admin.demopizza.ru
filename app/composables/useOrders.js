@@ -40,6 +40,7 @@ export function useOrders() {
     orders: ordersState,
     loading: loadingState,
     error: errorState,
+    activeOrdersCount: computed(() => ordersState.value.length),
     fetchActiveOrders
   }
 }

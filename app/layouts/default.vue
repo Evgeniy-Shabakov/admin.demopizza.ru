@@ -18,8 +18,7 @@ const menuItems = ref([
 ])
 
 const { stopListCount, fetchStopListCount } = useStopList()
-const { activeOrdersCount, fetchActiveOrdersCount } = useActiveOrders()
-const { orders, loading, fetchActiveOrders } = useOrders()
+const { orders, activeOrdersCount, fetchActiveOrders } = useOrders()
 const { success: showToast } = useToast()
 
 const previousOrderIds = ref(new Set())
@@ -28,14 +27,13 @@ const isInitialLoad = ref(true)
 onMounted(async () => {
    initTheme()
    initSidebar()
-   await Promise.all([fetchStopListCount(), fetchActiveOrdersCount(), fetchActiveOrders()])
+   await Promise.all([fetchStopListCount(), fetchActiveOrders()])
    
    previousOrderIds.value = new Set(orders.value.map(o => o.id))
    isInitialLoad.value = false
    
    setInterval(() => {
       fetchStopListCount()
-      fetchActiveOrdersCount()
       fetchActiveOrders()
    }, 30000)
 })
