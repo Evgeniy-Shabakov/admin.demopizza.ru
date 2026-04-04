@@ -23,7 +23,7 @@ const dotClass = computed(() => {
 </script>
 
 <template>
-  <div class="relative flex cursor-help"
+  <div class="fixed top-2 right-2 flex cursor-help"
        title="Состояние соединения с базой данных">
     <div :class="['w-2.5 h-2.5 rounded-full transition-all', statusClass]"></div>
     <div v-if="isRequesting"
