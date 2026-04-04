@@ -23,22 +23,36 @@ const { success: showToast } = useToast()
 
 const previousOrderIds = ref(new Set())
 const isInitialLoad = ref(true)
+const isTabActive = ref(true)
+let ordersInterval = null
+let stopListInterval = null
+
+const handleVisibilityChange = () => {
+   isTabActive.value = !document.hidden
+}
 
 onMounted(async () => {
    initTheme()
    initSidebar()
+   document.addEventListener('visibilitychange', handleVisibilityChange)
    await Promise.all([fetchStopListCount(), fetchActiveOrders()])
    
    previousOrderIds.value = new Set(orders.value.map(o => o.id))
    isInitialLoad.value = false
    
-   setInterval(() => {
-      fetchActiveOrders()
+   ordersInterval = setInterval(() => {
+      if (isTabActive.value) fetchActiveOrders()
    }, 30000)
 
-   setInterval(() => {
-      fetchStopListCount()
+   stopListInterval = setInterval(() => {
+      if (isTabActive.value) fetchStopListCount()
    }, 180000)
+})
+
+onUnmounted(() => {
+   document.removeEventListener('visibilitychange', handleVisibilityChange)
+   if (ordersInterval) clearInterval(ordersInterval)
+   if (stopListInterval) clearInterval(stopListInterval)
 })
 
 watch(stopListCount, (newVal) => {
