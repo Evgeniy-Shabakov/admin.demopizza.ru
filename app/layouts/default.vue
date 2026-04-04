@@ -33,9 +33,12 @@ onMounted(async () => {
    isInitialLoad.value = false
    
    setInterval(() => {
-      fetchStopListCount()
       fetchActiveOrders()
    }, 30000)
+
+   setInterval(() => {
+      fetchStopListCount()
+   }, 180000)
 })
 
 watch(stopListCount, (newVal) => {
