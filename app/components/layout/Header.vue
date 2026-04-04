@@ -139,7 +139,7 @@ watch(() => route.path, (path) => {
           if (path.match(/^\/active-orders\/\d+$/)) {
              pageTitle.value = titles['/active-orders/:id']
              headerActions.value = [
-                { label: 'Назад', icon: 'back', back: true }
+                { to: '/active-orders', label: 'Назад', icon: 'back' }
              ]
           } else {
              pageTitle.value = titles['/active-orders']

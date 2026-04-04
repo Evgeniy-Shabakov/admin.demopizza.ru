@@ -280,8 +280,8 @@ watch(() => order.value, () => {
                <span class="text-gray-500 dark:text-gray-400 text-xl" title="время создания заказа">{{ order.createdAt?.split(', ')[1]?.slice(0, 5) || '' }}</span>
             </div>
             <div v-if="order.city?.name" class="text-base text-gray-500 dark:text-gray-400 text-right">
-               <div class="text-lg font-semibold text-gray-900 dark:text-white">{{ order.city.name }}</div>
-               <div v-if="order.restaurant?.name" class="text-base">{{ order.restaurant.name }}</div>
+               <div v-if="order.restaurant?.name" class="text-lg font-semibold text-gray-900 dark:text-white">{{ order.restaurant.name }}</div>
+               <div>{{ order.city.name }}</div>
             </div>
          </div>
          
