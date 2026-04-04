@@ -443,12 +443,12 @@ const getProductImageUrl = (product) => {
            >
               {{ isLoadingNext ? '...' : 'Следующий статус' }}
            </button>
-           <button 
-              @click="viewOrder"
-              class="px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors cursor-pointer"
-           >
-              Просмотр
-           </button>
+            <NuxtLink 
+               :to="`/active-orders/${order.id}`"
+               class="px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors cursor-pointer text-center"
+            >
+               Просмотр
+            </NuxtLink>
            <div class="relative dropdown-container">
                <button 
                   @click="toggleDropdown"

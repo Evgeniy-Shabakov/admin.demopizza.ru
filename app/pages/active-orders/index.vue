@@ -3,7 +3,11 @@ useHead({
    title: 'Активные заказы'
 })
 const { orders, loading } = useOrders()
+const router = useRouter()
 
+const handleView = (order) => {
+   router.push(`/active-orders/${order.id}`)
+}
 </script>
 
 <template>
@@ -26,6 +30,7 @@ const { orders, loading } = useOrders()
             v-for="order in orders" 
             :key="order.id" 
             :order="order" 
+            @view="handleView"
          />
       </TransitionGroup>
    </div>

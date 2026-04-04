@@ -24,6 +24,7 @@ const titles = {
    '/products/:id': 'Просмотр товара',
    '/products/:id/edit': 'Редактирование товара',
    '/active-orders': 'Активные заказы',
+   '/active-orders/:id': 'Просмотр заказа',
    '/stop-list': 'Стоп-лист',
    '/stop-list/add': 'Добавить в стоп-лист',
    '/stop-list/:id': 'Просмотр записи',
@@ -135,8 +136,15 @@ watch(() => route.path, (path) => {
              { to: '/products/add', label: 'Добавить', icon: 'add', primary: true }
           ]
        } else if (path.startsWith('/active-orders')) {
-          pageTitle.value = titles['/active-orders']
-          headerActions.value = []
+          if (path.match(/^\/active-orders\/\d+$/)) {
+             pageTitle.value = titles['/active-orders/:id']
+             headerActions.value = [
+                { label: 'Назад', icon: 'back', back: true }
+             ]
+          } else {
+             pageTitle.value = titles['/active-orders']
+             headerActions.value = []
+          }
        } else if (path === '/stop-list/add') {
          pageTitle.value = titles['/stop-list/add']
          headerActions.value = [
@@ -279,7 +287,7 @@ defineEmits(['toggleSidebar'])
 
             <h1 class="text-lg font-semibold flex items-center gap-2">
                {{ pageTitle }}
-               <BaseBadge v-if="route.path.startsWith('/active-orders') && activeOrdersCount > 0"
+               <BaseBadge v-if="route.path === '/active-orders' && activeOrdersCount > 0"
                           variant="danger"
                           size="md">
                   {{ activeOrdersCount }}
