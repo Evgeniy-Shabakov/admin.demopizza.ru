@@ -296,8 +296,9 @@ defineEmits(['toggleSidebar'])
             
          </div>
 
-         <div class="flex items-center gap-2">
-            <template v-for="action in headerActions"
+          <div class="flex items-center gap-3">
+             <UiDbStatusIndicator />
+             <template v-for="action in headerActions"
                       :key="action.label">
                <NuxtLink v-if="action.icon === 'add'"
                          :to="action.to"
