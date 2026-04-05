@@ -2,8 +2,10 @@
 useHead({
    title: 'Активные заказы'
 })
-const { orders, loading } = useOrders()
+const { orders, loading, fetchActiveOrders } = useOrders()
 const router = useRouter()
+
+fetchActiveOrders()
 
 const handleView = (order) => {
    router.push(`/active-orders/${order.id}`)
