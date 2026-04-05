@@ -25,6 +25,7 @@ const titles = {
    '/products/:id/edit': 'Редактирование товара',
    '/active-orders': 'Активные заказы',
    '/active-orders/:id': 'Просмотр заказа',
+   '/orders': 'Все заказы',
    '/stop-list': 'Стоп-лист',
    '/stop-list/add': 'Добавить в стоп-лист',
    '/stop-list/:id': 'Просмотр записи',
@@ -136,15 +137,18 @@ watch(() => route.path, (path) => {
              { to: '/products/add', label: 'Добавить', icon: 'add', primary: true }
           ]
        } else if (path.startsWith('/active-orders')) {
-          if (path.match(/^\/active-orders\/\d+$/)) {
-             pageTitle.value = titles['/active-orders/:id']
-             headerActions.value = [
-                { to: '/active-orders', label: 'Назад', icon: 'back' }
-             ]
-          } else {
-             pageTitle.value = titles['/active-orders']
-             headerActions.value = []
-          }
+           if (path.match(/^\/active-orders\/\d+$/)) {
+              pageTitle.value = titles['/active-orders/:id']
+              headerActions.value = [
+                 { to: '/active-orders', label: 'Назад', icon: 'back' }
+              ]
+           } else {
+              pageTitle.value = titles['/active-orders']
+              headerActions.value = []
+           }
+        } else if (path.startsWith('/orders')) {
+           pageTitle.value = titles['/orders']
+           headerActions.value = []
        } else if (path === '/stop-list/add') {
          pageTitle.value = titles['/stop-list/add']
          headerActions.value = [

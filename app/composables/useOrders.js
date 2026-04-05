@@ -1,6 +1,7 @@
 const getErrorMessage = (operation) => {
   const errorMessages = {
     fetchOrders: 'Ошибка при получении заказов',
+    fetchAllOrders: 'Ошибка при получении всех заказов',
   }
   return errorMessages[operation] || 'Произошла ошибка'
 }
@@ -14,13 +15,22 @@ const getErrorDetails = (e) => {
 
 const getStatusCode = (e) => e.response?.status || null
 
-const ordersState = ref([])
-const loadingState = ref(false)
-const errorState = ref(null)
+const ordersState = useState('orders', () => [])
+const loadingState = useState('ordersLoading', () => false)
+const errorState = useState('ordersError', () => null)
 
 export function useOrders() {
   const { error: showError } = useToast()
   const api = useApi()
+
+  const allOrdersState = ref([])
+  const allOrdersLoading = ref(false)
+  const allOrdersPagination = ref({
+    currentPage: 1,
+    perPage: 15,
+    total: 0,
+    lastPage: 1
+  })
 
   const fetchActiveOrders = async () => {
     loadingState.value = true
@@ -36,11 +46,34 @@ export function useOrders() {
     }
   }
 
+  const fetchAllOrders = async (page = 1) => {
+    allOrdersLoading.value = true
+    try {
+      const response = await api.get(`/orders?sort=id,desc&page=${page}&perPage=15`)
+      allOrdersState.value = response.data.data
+      const pagination = response.data.meta?.pagination || response.data.pagination || {}
+      allOrdersPagination.value = {
+        currentPage: pagination.page || 1,
+        perPage: pagination.perPage || 15,
+        total: pagination.total || 0,
+        lastPage: pagination.totalPages || 1
+      }
+    } catch (e) {
+      showError({ message: getErrorMessage('fetchAllOrders'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
+    } finally {
+      allOrdersLoading.value = false
+    }
+  }
+
   return {
     orders: ordersState,
     loading: loadingState,
     error: errorState,
     activeOrdersCount: computed(() => ordersState.value.length),
-    fetchActiveOrders
+    fetchActiveOrders,
+    allOrders: allOrdersState,
+    allOrdersLoading,
+    allOrdersPagination,
+    fetchAllOrders
   }
 }
