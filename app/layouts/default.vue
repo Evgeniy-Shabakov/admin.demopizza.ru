@@ -26,6 +26,7 @@ const isInitialLoad = ref(true)
 const isTabActive = ref(true)
 let ordersInterval = null
 let stopListInterval = null
+let orderCallCount = 0
 
 const handleVisibilityChange = () => {
    isTabActive.value = !document.hidden
@@ -41,7 +42,15 @@ onMounted(async () => {
    isInitialLoad.value = false
    
    ordersInterval = setInterval(() => {
-      if (isTabActive.value) fetchActiveOrders()
+      if (isTabActive.value) {
+         fetchActiveOrders()
+       } else {
+          orderCallCount++
+          if (orderCallCount >= 10) {
+             fetchActiveOrders()
+             orderCallCount = 0
+          }
+       }
    }, 30000)
 
    stopListInterval = setInterval(() => {
