@@ -29,8 +29,12 @@ export function useOrders() {
     currentPage: 1,
     perPage: 15,
     total: 0,
-    lastPage: 1
+    lastPage: 1,
+    hasNextPage: false,
+    hasPrevPage: false
   })
+  
+  const perPageOptions = [15, 30, 50, 100]
 
   const fetchActiveOrders = async () => {
     loadingState.value = true
@@ -46,17 +50,24 @@ export function useOrders() {
     }
   }
 
-  const fetchAllOrders = async (page = 1) => {
+  const fetchAllOrders = async (page = 1, perPage = null) => {
+    if (perPage !== null) {
+      allOrdersPagination.value.perPage = perPage
+      page = 1
+    }
+    const perPageValue = allOrdersPagination.value.perPage
     allOrdersLoading.value = true
     try {
-      const response = await api.get(`/orders?sort=id,desc&page=${page}&perPage=15`)
+      const response = await api.get(`/orders?sort=id,desc&page=${page}&perPage=${perPageValue}`)
       allOrdersState.value = response.data.data
       const pagination = response.data.meta?.pagination || response.data.pagination || {}
       allOrdersPagination.value = {
         currentPage: pagination.page || 1,
         perPage: pagination.perPage || 15,
         total: pagination.total || 0,
-        lastPage: pagination.totalPages || 1
+        lastPage: pagination.totalPages || 1,
+        hasNextPage: pagination.hasNextPage || false,
+        hasPrevPage: pagination.hasPrevPage || false
       }
     } catch (e) {
       showError({ message: getErrorMessage('fetchAllOrders'), details: getErrorDetails(e), statusCode: getStatusCode(e) })
@@ -74,6 +85,7 @@ export function useOrders() {
     allOrders: allOrdersState,
     allOrdersLoading,
     allOrdersPagination,
+    perPageOptions,
     fetchAllOrders
   }
 }
