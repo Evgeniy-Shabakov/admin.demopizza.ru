@@ -14,7 +14,7 @@ const menuItems = ref([
    { name: 'Категории', path: '/categories', icon: 'tag' },
    { name: 'Товары', path: '/products', icon: 'box' },
    { name: 'Активные заказы', path: '/active-orders', icon: 'shopping-cart', badge: 0 },
-   { name: 'Все заказы', path: '/orders', icon: 'shopping-cart' },
+   { name: 'Все заказы', path: '/orders', icon: 'clipboard-list' },
    { name: 'Стоп-лист', path: '/stop-list', icon: 'ban', badge: 0 },
 ])
 
