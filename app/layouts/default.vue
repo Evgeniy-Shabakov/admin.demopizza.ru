@@ -6,6 +6,7 @@ const isSidebarOpen = ref(false)
 
 const menuItems = ref([
    { name: 'Главная', path: '/', icon: 'home' },
+   { name: 'Данные компании', path: '/company', icon: 'briefcase' },
    { name: 'Страны', path: '/countries', icon: 'globe' },
    { name: 'Города', path: '/cities', icon: 'city' },
    { name: 'Графики работы', path: '/restaurant-schedules', icon: 'clock' },
