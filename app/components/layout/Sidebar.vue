@@ -40,13 +40,13 @@ const getBadgeSize = (isCollapsed) => {
 
 <template>
    <aside :class="[
-      'w-72 fixed left-0 top-0 z-40 h-screen bg-white dark:bg-gray-800 border-r border-b border-gray-200 dark:border-gray-700 transition-all duration-300 lg:translate-x-0',
+       'w-72 fixed left-0 top-0 z-40 h-screen bg-white dark:bg-gray-800 border-r border-b border-gray-200 dark:border-gray-700 transition-all duration-300 lg:translate-x-0 flex flex-col',
       isOpen ? 'translate-x-0' : '-translate-x-full',
       isCollapsed ? 'lg:w-20' : ''
    ]">
 
-      <div :class="isCollapsed ? 'lg:justify-center lg:px-0' : 'justify-between lg:px-4'"
-           class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
+       <div :class="isCollapsed ? 'lg:justify-center lg:px-0' : 'justify-between lg:px-4'"
+            class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700 shrink-0">
          <div :class="isCollapsed ? 'lg:hidden' : ''">
             <UiEmployeeData />
          </div>
@@ -78,7 +78,8 @@ const getBadgeSize = (isCollapsed) => {
          </button>
       </div>
 
-      <nav class="p-4 space-y-2">
+      <div class="flex-1 overflow-y-auto">
+         <nav class="p-4 space-y-2">
          <NuxtLink v-for="item in menuItems"
                    :key="item.path"
                    :to="item.path"
@@ -252,11 +253,12 @@ const getBadgeSize = (isCollapsed) => {
                    {{ item.badge }}
                 </BaseBadge>
              </span>
-          </NuxtLink>
+           </NuxtLink>
       </nav>
+       </div>
 
-      <div
-           class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+       <div
+            class="shrink-0 p-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
          <button @click="logout"
                  class="flex items-center gap-2 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer">
             <svg class="w-5 h-5"
