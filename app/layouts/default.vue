@@ -11,6 +11,7 @@ const menuItems = ref([
    { name: 'Графики работы', path: '/restaurant-schedules', icon: 'clock' },
    { name: 'Рестораны', path: '/restaurants', icon: 'restaurant' },
    { name: 'Зоны доставки', path: '/delivery-zones', icon: 'map' },
+   { name: 'Правовые документы', path: '/legal-documents', icon: 'document' },
    { name: 'Категории', path: '/categories', icon: 'tag' },
    { name: 'Товары', path: '/products', icon: 'box' },
    { name: 'Активные заказы', path: '/active-orders', icon: 'shopping-cart', badge: 0 },

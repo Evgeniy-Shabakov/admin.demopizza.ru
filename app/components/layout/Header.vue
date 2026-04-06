@@ -42,6 +42,10 @@ const titles = {
    '/delivery-zones/add': 'Добавить зону доставки',
    '/delivery-zones/:id': 'Просмотр зоны доставки',
    '/delivery-zones/:id/edit': 'Редактирование зоны доставки',
+   '/legal-documents': 'Правовые документы',
+   '/legal-documents/add': 'Добавить правовой документ',
+   '/legal-documents/:id': 'Просмотр правового документа',
+   '/legal-documents/:id/edit': 'Редактирование правового документа',
 }
 
 watch(() => route.path, (path) => {
@@ -236,6 +240,28 @@ watch(() => route.path, (path) => {
          pageTitle.value = titles['/delivery-zones']
          headerActions.value = [
             { to: '/delivery-zones/add', label: 'Добавить', icon: 'add', primary: true }
+         ]
+      } else if (path === '/legal-documents/add') {
+         pageTitle.value = titles['/legal-documents/add']
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true }
+         ]
+      } else if (path.match(/^\/legal-documents\/\d+$/)) {
+         pageTitle.value = titles['/legal-documents/:id']
+         const id = route.params.id
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true },
+            { to: `/legal-documents/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+         ]
+      } else if (path.match(/^\/legal-documents\/\d+\/edit$/)) {
+         pageTitle.value = titles['/legal-documents/:id/edit']
+         headerActions.value = [
+            { label: 'Назад', icon: 'back', back: true }
+         ]
+      } else if (path.startsWith('/legal-documents')) {
+         pageTitle.value = titles['/legal-documents']
+         headerActions.value = [
+            { to: '/legal-documents/add', label: 'Добавить', icon: 'add', primary: true }
          ]
       } else {
       pageTitle.value = titles['/']
