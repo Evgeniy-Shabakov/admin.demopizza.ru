@@ -20,6 +20,18 @@ const props = defineProps({
   },
   viewLinkPrefix: String,
   editLinkPrefix: String,
+  showView: {
+    type: Boolean,
+    default: true
+  },
+  showEdit: {
+    type: Boolean,
+    default: true
+  },
+  showDelete: {
+    type: Boolean,
+    default: true
+  },
   deleteLabel: {
     type: String,
     default: 'элемент'
@@ -132,6 +144,8 @@ const getMobileValue = (item, column) => {
                   <UiActionListButtons
                     :view-link="getViewLink(item)"
                     :edit-link="getEditLink(item)"
+                    :show-edit="showEdit"
+                    :show-delete="showDelete"
                     @delete="confirmDelete(item)"
                   />
                 </span>
@@ -163,6 +177,8 @@ const getMobileValue = (item, column) => {
             <UiActionListButtons
               :view-link="getViewLink(item)"
               :edit-link="getEditLink(item)"
+              :show-edit="showEdit"
+              :show-delete="showDelete"
               small
               @delete="confirmDelete(item)"
             />

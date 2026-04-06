@@ -6,11 +6,16 @@ useHead({
    title: 'Все заказы'
 })
 
+const router = useRouter()
 const { allOrders, allOrdersLoading, allOrdersPagination, perPageOptions, fetchAllOrders } = useOrders()
 
 onMounted(() => {
    fetchAllOrders(1)
 })
+
+const handleRowClick = (id) => {
+   router.push(`/active-orders/${id}`)
+}
 
 const loadPage = (page) => {
    fetchAllOrders(page)
@@ -68,6 +73,7 @@ const columns = [
    { key: 'phone', label: 'Телефон', render: (item) => formatPhone(item.user?.phone), mobileLabel: 'Телефон' },
    { key: 'orderTypeName', label: 'Тип', render: (item) => item.orderTypeName || '—', mobileLabel: 'Тип' },
    { key: 'createdAt', label: 'Создан', showInMobile: false },
+   { key: 'actions', label: 'Действия', sticky: true, showInMobile: false },
 ]
 </script>
 
@@ -75,7 +81,11 @@ const columns = [
    <UiListTable :items="allOrders"
                 :columns="columns"
                 :loading="allOrdersLoading"
-                empty-text="Заказы не найдены" />
+                empty-text="Заказы не найдены"
+                view-link-prefix="/active-orders"
+                :show-edit="false"
+                :show-delete="false"
+                @row-click="handleRowClick" />
 
    <UiPagination 
       :pagination="allOrdersPagination"
