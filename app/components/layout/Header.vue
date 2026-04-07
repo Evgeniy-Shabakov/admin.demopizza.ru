@@ -44,6 +44,10 @@ const titles = {
    '/delivery-zones/add': 'Добавить зону доставки',
    '/delivery-zones/:id': 'Просмотр зоны доставки',
    '/delivery-zones/:id/edit': 'Редактирование зоны доставки',
+   '/employees': 'Сотрудники',
+   '/employees/add': 'Добавить сотрудника',
+   '/employees/:id': 'Просмотр сотрудника',
+   '/employees/:id/edit': 'Редактирование сотрудника',
    '/legal-documents': 'Правовые документы',
    '/legal-documents/add': 'Добавить правовой документ',
    '/legal-documents/:id': 'Просмотр правового документа',
@@ -253,11 +257,33 @@ watch(() => route.path, (path) => {
             { label: 'Назад', icon: 'back', back: true }
          ]
       } else if (path.startsWith('/delivery-zones')) {
-         pageTitle.value = titles['/delivery-zones']
-         headerActions.value = [
-            { to: '/delivery-zones/add', label: 'Добавить', icon: 'add', primary: true }
-         ]
-      } else if (path === '/legal-documents/add') {
+          pageTitle.value = titles['/delivery-zones']
+          headerActions.value = [
+             { to: '/delivery-zones/add', label: 'Добавить', icon: 'add', primary: true }
+          ]
+       } else if (path === '/employees/add') {
+          pageTitle.value = titles['/employees/add']
+          headerActions.value = [
+             { label: 'Назад', icon: 'back', back: true }
+          ]
+       } else if (path.match(/^\/employees\/\d+$/)) {
+          pageTitle.value = titles['/employees/:id']
+          const id = route.params.id
+          headerActions.value = [
+             { label: 'Назад', icon: 'back', back: true },
+             { to: `/employees/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+          ]
+       } else if (path.match(/^\/employees\/\d+\/edit$/)) {
+          pageTitle.value = titles['/employees/:id/edit']
+          headerActions.value = [
+             { label: 'Назад', icon: 'back', back: true }
+          ]
+       } else if (path.startsWith('/employees')) {
+          pageTitle.value = titles['/employees']
+          headerActions.value = [
+             { to: '/employees/add', label: 'Добавить', icon: 'add', primary: true }
+          ]
+       } else if (path === '/legal-documents/add') {
          pageTitle.value = titles['/legal-documents/add']
          headerActions.value = [
             { label: 'Назад', icon: 'back', back: true }
