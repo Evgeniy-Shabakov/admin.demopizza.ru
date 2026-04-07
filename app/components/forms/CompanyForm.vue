@@ -172,7 +172,7 @@ const faviconPreview = computed(() => {
           <p v-else class="text-gray-500">Favicon не загружен</p>
         </div>
         <div v-else class="flex items-start gap-4">
-          <div class="w-16 h-16 flex-shrink-0 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden">
+          <div class="w-16 h-16 shrink-0 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden">
             <img
               v-if="faviconPreview"
               :src="faviconPreview"
@@ -290,7 +290,7 @@ const faviconPreview = computed(() => {
         id="company-bonus"
         :model-value="company.isBonusCoinsEnabled"
         :disabled="disabled"
-        label="Бонусные монеты включены"
+        label="Активировать бонусную программу"
       />
       <BaseCheckbox
         v-else
