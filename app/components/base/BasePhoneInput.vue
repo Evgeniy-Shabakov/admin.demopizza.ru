@@ -26,16 +26,22 @@ const countryCodes = [
   { code: '+7', name: 'KZ', mask: '(999) 999-99-99', alt: true },
 ]
 
-const selectedCountry = ref(countryCodes[0])
-
-watch(() => props.countryCode, (newCode) => {
-  if (newCode) {
-    const found = countryCodes.find(c => c.code === newCode)
-    if (found) {
-      selectedCountry.value = found
-    }
+const selectedCountry = computed(() => {
+  if (props.countryCode) {
+    const found = countryCodes.find(c => c.code === props.countryCode)
+    return found || countryCodes[0]
   }
-}, { immediate: true })
+  return countryCodes[0]
+})
+
+const showMask = computed(() => props.disabled || !props.modelValue)
+
+const displayValue = computed(() => {
+  if (props.disabled || !props.modelValue) {
+    return formatPhone(props.modelValue || '', selectedCountry.value.mask)
+  }
+  return props.modelValue
+})
 
 const formatPhone = (value, mask) => {
   const digits = value.replace(/\D/g, '')
@@ -86,7 +92,7 @@ const onCountryChange = (e) => {
       <input id="phone"
              ref="inputRef"
              type="tel"
-             :value="modelValue"
+             :value="displayValue"
              @input="onInput"
              :placeholder="placeholder"
              :disabled="disabled"
