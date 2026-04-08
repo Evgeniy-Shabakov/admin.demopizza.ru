@@ -13,7 +13,6 @@ const errors = ref({
    phone: '',
    password: ''
 })
-
 const getFullPhone = () => {
    const digits = phone.value.replace(/\D/g, '')
    return '+' + countryCode.value.replace('+', '') + digits
@@ -89,15 +88,13 @@ onMounted(async () => {
             </h1>
 
             <form @submit.prevent="onSubmit">
-               <div class="mb-4">
-                  <BaseLabel for="phone">Номер телефона</BaseLabel>
-                  <div class="w-full">
-                     <UiPhoneInput v-model="phone"
-                                   @update:countryCode="countryCode = $event" />
-                  </div>
-                  <p v-if="errors.phone"
-                     class="text-red-500 text-sm mt-1">{{ errors.phone }}</p>
-               </div>
+               <BasePhoneInput id="phone"
+                                v-model="phone"
+                                label="Номер телефона"
+                                required
+                                :error="errors.phone"
+                                class="mb-4"
+                                @update:countryCode="countryCode = $event" />
 
                <div class="mb-6">
                   <BaseLabel for="password">Пароль</BaseLabel>
