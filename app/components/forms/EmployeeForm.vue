@@ -336,13 +336,6 @@ const handlePasswordBlur = (field) => {
           </svg>
           <span>Добавить роль</span>
         </button>
-
-        <p v-if="validationError && validationError.includes('рол')" class="text-sm text-red-600 dark:text-red-400">
-          Добавьте хотя бы одну роль
-        </p>
-        <p v-else-if="!disabled && form.employeeRoles.length === 0" class="text-sm text-red-600 dark:text-red-400">
-          Добавьте хотя бы одну роль
-        </p>
       </div>
 
       <div v-else class="text-sm text-gray-500 dark:text-gray-400">

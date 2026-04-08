@@ -65,6 +65,7 @@ const handleSaveAndAdd = async () => {
   if (formRef.value?.reportValidity()) {
     const validation = validateForm()
     if (!validation.valid) {
+      validationError.value = validation.message
       return
     }
     await saveEmployee(false)
@@ -74,6 +75,7 @@ const handleSaveAndAdd = async () => {
 const saveEmployee = async (navigateToList = true) => {
   const validation = validateForm()
   if (!validation.valid) {
+    validationError.value = validation.message
     return
   }
   validationError.value = null
