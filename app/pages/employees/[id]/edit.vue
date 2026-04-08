@@ -12,6 +12,7 @@ const { success: showSuccess } = useToast()
 
 const form = ref({
   phone: '',
+  countryCode: '+7',
   email: '',
   firstName: '',
   lastName: '',
@@ -28,25 +29,57 @@ const validationError = ref(null)
 const passwordError = ref(null)
 const employee = ref(null)
 
+const getFullPhone = () => {
+  const digits = form.value.phone.replace(/\D/g, '')
+  return form.value.countryCode.replace('+', '') + digits
+}
+
+const parsePhone = (phone) => {
+  if (!phone) return { phone: '', countryCode: '+7' }
+  const clean = phone.replace(/\D/g, '')
+  if (clean.startsWith('7')) {
+    return { phone: clean.slice(1), countryCode: '+7' }
+  }
+  if (clean.startsWith('375')) {
+    return { phone: clean.slice(3), countryCode: '+375' }
+  }
+  if (clean.startsWith('998')) {
+    return { phone: clean.slice(3), countryCode: '+998' }
+  }
+  if (clean.startsWith('992')) {
+    return { phone: clean.slice(3), countryCode: '+992' }
+  }
+  if (clean.startsWith('996')) {
+    return { phone: clean.slice(3), countryCode: '+996' }
+  }
+  return { phone: clean.slice(1), countryCode: '+7' }
+}
+
 onMounted(async () => {
   await fetchRestaurants()
   employee.value = await getEmployee(employeeId)
+  if (employee.value && employee.value.phone) {
+    const parsed = parsePhone(employee.value.phone)
+    form.value.phone = parsed.phone
+    form.value.countryCode = parsed.countryCode
+  }
   if (employee.value) {
-    form.value = {
-      phone: employee.value.phone || '',
-      email: employee.value.email || '',
-      firstName: employee.value.firstName || '',
-      lastName: employee.value.lastName || '',
-      middleName: employee.value.middleName || '',
-      jobTitle: employee.value.jobTitle || '',
-      isActive: employee.value.isActive ?? true,
-      employeeRoles: employee.value.employeeRoles ? [...employee.value.employeeRoles] : []
-    }
+    form.value.email = employee.value.email || ''
+    form.value.firstName = employee.value.firstName || ''
+    form.value.lastName = employee.value.lastName || ''
+    form.value.middleName = employee.value.middleName || ''
+    form.value.jobTitle = employee.value.jobTitle || ''
+    form.value.isActive = employee.value.isActive ?? true
+    form.value.employeeRoles = employee.value.employeeRoles ? [...employee.value.employeeRoles] : []
   }
 })
 
 const handleUpdateRoles = (roles) => {
   form.value.employeeRoles = roles
+}
+
+const handleUpdateCountryCode = (code) => {
+  form.value.countryCode = code
 }
 
 const handlePasswordError = (error) => {
@@ -87,7 +120,7 @@ const saveEmployee = async () => {
   validationError.value = null
   
   const employeeData = {
-    phone: form.value.phone || null,
+    phone: getFullPhone() || null,
     email: form.value.email || null,
     firstName: form.value.firstName || null,
     lastName: form.value.lastName || null,
@@ -125,6 +158,7 @@ const saveEmployee = async () => {
           :password-error="passwordError"
           @updateEmployeeRoles="handleUpdateRoles"
           @passwordError="handlePasswordError"
+          @update:countryCode="handleUpdateCountryCode"
         />
 
         <div class="flex flex-wrap gap-4 pt-4">

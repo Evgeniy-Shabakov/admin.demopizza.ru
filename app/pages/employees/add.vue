@@ -9,6 +9,7 @@ const { success: showSuccess } = useToast()
 
 const form = ref({
   phone: '',
+  countryCode: '+7',
   email: '',
   firstName: '',
   lastName: '',
@@ -24,12 +25,25 @@ const formRef = ref(null)
 const validationError = ref(null)
 const passwordError = ref(null)
 
+const getFullPhone = () => {
+  const digits = form.value.phone.replace(/\D/g, '')
+  return form.value.countryCode.replace('+', '') + digits
+}
+
 onMounted(async () => {
   await fetchRestaurants()
 })
 
+const handleUpdateCountryCode = (code) => {
+  form.value.countryCode = code
+}
+
 const handleUpdateRoles = (roles) => {
   form.value.employeeRoles = roles
+}
+
+const handleUpdateCountryCode = (code) => {
+  form.value.countryCode = code
 }
 
 const handlePasswordError = (error) => {
@@ -82,7 +96,7 @@ const saveEmployee = async (navigateToList = true) => {
   passwordError.value = null
   
   const employeeData = {
-    phone: form.value.phone || null,
+    phone: getFullPhone() || null,
     email: form.value.email || null,
     firstName: form.value.firstName || null,
     lastName: form.value.lastName || null,
@@ -103,6 +117,7 @@ const saveEmployee = async (navigateToList = true) => {
     } else {
       form.value = {
         phone: '',
+        countryCode: '+7',
         email: '',
         firstName: '',
         lastName: '',
@@ -131,6 +146,7 @@ const saveEmployee = async (navigateToList = true) => {
           :password-error="passwordError"
           @updateEmployeeRoles="handleUpdateRoles"
           @passwordError="handlePasswordError"
+          @update:countryCode="handleUpdateCountryCode"
         />
 
         <div class="flex flex-wrap gap-4 pt-4">

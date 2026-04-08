@@ -10,7 +10,7 @@ const props = defineProps({
   passwordError: String
 })
 
-const emit = defineEmits(['updateEmployeeRoles', 'passwordError'])
+const emit = defineEmits(['updateEmployeeRoles', 'passwordError', 'update:countryCode'])
 
 const form = defineModel({
   default: () => ({
@@ -26,6 +26,18 @@ const form = defineModel({
     passwordConfirmation: ''
   })
 })
+
+const countryCode = ref('+7')
+
+const onCountryChange = (code) => {
+  countryCode.value = code
+  emit('update:countryCode', code)
+}
+
+const getFullPhone = () => {
+  const digits = form.value.phone.replace(/\D/g, '')
+  return countryCode.value.replace('+', '') + digits
+}
 
 const roleOptions = computed(() => {
   return Object.values(ROLE)
@@ -177,22 +189,21 @@ const handlePasswordBlur = (field) => {
     </div>
 
     <div>
-      <BaseLabel for="employee-phone" required>Телефон</BaseLabel>
-      <BaseInput
+      <BasePhoneInput
         v-if="disabled && employee"
         id="employee-phone"
         :model-value="employee.phone"
-        type="tel"
+        label="Телефон"
         disabled
       />
-      <BaseInput
+      <BasePhoneInput
         v-else
         id="employee-phone"
         v-model="form.phone"
-        type="tel"
-        :disabled="disabled"
-        required
-        placeholder="+7 (999) 000-00-00"
+        label="Телефон"
+        :required="true"
+        class="w-full"
+        @update:countryCode="onCountryChange"
       />
     </div>
 
