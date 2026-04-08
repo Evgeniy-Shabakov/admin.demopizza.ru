@@ -1,15 +1,12 @@
 <script setup>
 definePageMeta({ layout: false })
 
-import { IconEye, IconEyeOff } from '~/components/icons'
-
 const { initTheme } = useTheme()
 const { login } = useAuth()
 
 const phone = ref('')
 const countryCode = ref('+7')
 const password = ref('')
-const showPassword = ref(false)
 const loading = ref(false)
 const formError = ref('')
 const errors = ref({
@@ -104,22 +101,12 @@ onMounted(async () => {
 
                <div class="mb-6">
                   <BaseLabel for="password">Пароль</BaseLabel>
-                  <BaseInput
-                     id="password"
-                     v-model="password"
-                     :type="showPassword ? 'text' : 'password'"
-                     placeholder="Введите пароль"
-                     :error="errors.password"
-                  >
-                     <template #append>
-                         <button type="button"
-                                @click="showPassword = !showPassword"
-                                class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
-                           <IconEye v-if="showPassword" class="w-5 h-5" />
-                           <IconEyeOff v-else class="w-5 h-5" />
-                        </button>
-                     </template>
-                  </BaseInput>
+               <BasePasswordInput
+                      id="password"
+                      v-model="password"
+                      placeholder="Введите пароль"
+                      :error="errors.password"
+                   />
                </div>
 
                <BaseButton type="submit"
