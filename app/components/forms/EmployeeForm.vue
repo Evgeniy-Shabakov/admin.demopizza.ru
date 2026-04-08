@@ -85,6 +85,18 @@ const parsedPhone = computed(() => {
   return { countryCode, phone: formatted }
 })
 
+const displayPhone = computed({
+  get() {
+    if (props.employee && !disabled) {
+      return parsedPhone.value?.phone || form.value.phone
+    }
+    return form.value.phone
+  },
+  set(value) {
+    form.value.phone = value.replace(/\D/g, '')
+  }
+})
+
 const onCountryChange = (code) => {
   countryCode.value = code
   emit('update:countryCode', code)
@@ -257,6 +269,7 @@ const handlePasswordBlur = (field) => {
         v-else
         id="employee-phone"
         v-model="form.phone"
+        :country-code="countryCode"
         label="Телефон"
         :required="true"
         class="w-full"
