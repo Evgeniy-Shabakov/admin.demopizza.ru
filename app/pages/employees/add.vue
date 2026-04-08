@@ -15,11 +15,14 @@ const form = ref({
   middleName: '',
   jobTitle: '',
   isActive: true,
-  employeeRoles: []
+  employeeRoles: [],
+  password: '',
+  passwordConfirmation: ''
 })
 
 const formRef = ref(null)
 const validationError = ref(null)
+const passwordError = ref(null)
 
 onMounted(async () => {
   await fetchRestaurants()
@@ -29,15 +32,8 @@ const handleUpdateRoles = (roles) => {
   form.value.employeeRoles = roles
 }
 
-const handleSaveAndAdd = async () => {
-  if (formRef.value?.reportValidity()) {
-    const validation = validateForm()
-    if (!validation.valid) {
-      validationError.value = validation.message
-      return
-    }
-    await saveEmployee(false)
-  }
+const handlePasswordError = (error) => {
+  passwordError.value = error
 }
 
 const validateForm = () => {
@@ -47,16 +43,41 @@ const validateForm = () => {
   if (!form.value.employeeRoles || form.value.employeeRoles.length === 0) {
     return { valid: false, message: 'Добавьте хотя бы одну роль' }
   }
+  passwordError.value = null
+  if (form.value.password || form.value.passwordConfirmation) {
+    if (!form.value.password) {
+      passwordError.value = 'Введите пароль'
+      return { valid: false, message: '' }
+    }
+    if (form.value.password.length < 8) {
+      passwordError.value = 'Пароль должен быть не менее 8 символов'
+      return { valid: false, message: '' }
+    }
+    if (form.value.password !== form.value.passwordConfirmation) {
+      passwordError.value = 'Пароли не совпадают'
+      return { valid: false, message: '' }
+    }
+  }
   return { valid: true }
+}
+
+const handleSaveAndAdd = async () => {
+  if (formRef.value?.reportValidity()) {
+    const validation = validateForm()
+    if (!validation.valid) {
+      return
+    }
+    await saveEmployee(false)
+  }
 }
 
 const saveEmployee = async (navigateToList = true) => {
   const validation = validateForm()
   if (!validation.valid) {
-    validationError.value = validation.message
     return
   }
   validationError.value = null
+  passwordError.value = null
   
   const employeeData = {
     phone: form.value.phone || null,
@@ -66,7 +87,8 @@ const saveEmployee = async (navigateToList = true) => {
     middleName: form.value.middleName || null,
     jobTitle: form.value.jobTitle || null,
     isActive: form.value.isActive ?? true,
-    employeeRoles: form.value.employeeRoles
+    employeeRoles: form.value.employeeRoles,
+    password: form.value.password || null
   }
   
   
@@ -85,7 +107,9 @@ const saveEmployee = async (navigateToList = true) => {
         middleName: '',
         jobTitle: '',
         isActive: true,
-        employeeRoles: []
+        employeeRoles: [],
+        password: '',
+        passwordConfirmation: ''
       }
     }
   } else if (result.validationError) {
@@ -102,7 +126,9 @@ const saveEmployee = async (navigateToList = true) => {
           v-model="form" 
           :restaurants="restaurants" 
           :validation-error="validationError"
+          :password-error="passwordError"
           @updateEmployeeRoles="handleUpdateRoles"
+          @passwordError="handlePasswordError"
         />
 
         <div class="flex flex-wrap gap-4 pt-4">

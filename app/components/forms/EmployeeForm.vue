@@ -6,10 +6,11 @@ const props = defineProps({
   disabled: Boolean,
   showDetails: Boolean,
   restaurants: Array,
-  validationError: String
+  validationError: String,
+  passwordError: String
 })
 
-const emit = defineEmits(['updateEmployeeRoles'])
+const emit = defineEmits(['updateEmployeeRoles', 'passwordError'])
 
 const form = defineModel({
   default: () => ({
@@ -20,7 +21,9 @@ const form = defineModel({
     middleName: '',
     jobTitle: '',
     isActive: true,
-    employeeRoles: []
+    employeeRoles: [],
+    password: '',
+    passwordConfirmation: ''
   })
 })
 
@@ -76,6 +79,30 @@ const getRestaurantName = (restaurantId) => {
 const getSelectValue = (restaurantId) => {
   return restaurantId ?? ''
 }
+
+const validatePassword = () => {
+  let error = ''
+  if (form.value.password && form.value.password.length < 8) {
+    error = 'Пароль должен быть не менее 8 символов'
+  }
+  emit('passwordError', error)
+}
+
+const validatePasswordConfirmation = () => {
+  let error = ''
+  if (form.value.password && form.value.passwordConfirmation && form.value.password !== form.value.passwordConfirmation) {
+    error = 'Пароли не совпадают'
+  }
+  emit('passwordError', error)
+}
+
+const handlePasswordBlur = (field) => {
+  if (field === 'password') {
+    validatePassword()
+  } else if (field === 'passwordConfirmation') {
+    validatePasswordConfirmation()
+  }
+}
 </script>
 
 <template>
@@ -90,7 +117,7 @@ const getSelectValue = (restaurantId) => {
       />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
         <BaseLabel for="employee-lastname">Фамилия</BaseLabel>
         <BaseInput
@@ -106,7 +133,7 @@ const getSelectValue = (restaurantId) => {
           v-model="form.lastName"
           type="text"
           :disabled="disabled"
-          placeholder="Введите фамилию"
+          placeholder="Фамилия"
         />
       </div>
 
@@ -125,28 +152,28 @@ const getSelectValue = (restaurantId) => {
           v-model="form.firstName"
           type="text"
           :disabled="disabled"
-          placeholder="Введите имя"
+          placeholder="Имя"
         />
       </div>
-    </div>
 
-    <div>
-      <BaseLabel for="employee-middlename">Отчество</BaseLabel>
-      <BaseInput
-        v-if="disabled && employee"
-        id="employee-middlename"
-        :model-value="employee.middleName"
-        type="text"
-        disabled
-      />
-      <BaseInput
-        v-else
-        id="employee-middlename"
-        v-model="form.middleName"
-        type="text"
-        :disabled="disabled"
-        placeholder="Введите отчество"
-      />
+      <div>
+        <BaseLabel for="employee-middlename">Отчество</BaseLabel>
+        <BaseInput
+          v-if="disabled && employee"
+          id="employee-middlename"
+          :model-value="employee.middleName"
+          type="text"
+          disabled
+        />
+        <BaseInput
+          v-else
+          id="employee-middlename"
+          v-model="form.middleName"
+          type="text"
+          :disabled="disabled"
+          placeholder="Отчество"
+        />
+      </div>
     </div>
 
     <div>
@@ -185,6 +212,15 @@ const getSelectValue = (restaurantId) => {
         type="email"
         :disabled="disabled"
         placeholder="example@mail.ru"
+      />
+    </div>
+
+    <div v-if="!disabled">
+      <UiSettingPassword
+        v-model:password="form.password"
+        v-model:password-confirmation="form.passwordConfirmation"
+        :error="passwordError"
+        @blur="handlePasswordBlur"
       />
     </div>
 
@@ -270,10 +306,10 @@ const getSelectValue = (restaurantId) => {
                 :value="getSelectValue(role.restaurantId)"
                 @change="updateRoleField(index, 'restaurantId', $event.target.value ? Number($event.target.value) : null)"
                 class="w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent border-gray-300 dark:border-gray-600"
-                :disabled="!restaurantsLoaded"
+                :disabled="!props.restaurants || props.restaurants.length === 0"
               >
                 <option :value="''">Все рестораны</option>
-                <option v-if="restaurantsLoaded" v-for="restaurant in restaurants" :key="restaurant.id" :value="restaurant.id">
+                <option v-if="props.restaurants && props.restaurants.length" v-for="restaurant in props.restaurants" :key="restaurant.id" :value="restaurant.id">
                   {{ restaurant.name }}
                 </option>
               </select>
@@ -302,6 +338,9 @@ const getSelectValue = (restaurantId) => {
         </button>
 
         <p v-if="validationError && validationError.includes('рол')" class="text-sm text-red-600 dark:text-red-400">
+          Добавьте хотя бы одну роль
+        </p>
+        <p v-else-if="!disabled && form.employeeRoles.length === 0" class="text-sm text-red-600 dark:text-red-400">
           Добавьте хотя бы одну роль
         </p>
       </div>

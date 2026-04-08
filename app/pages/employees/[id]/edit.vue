@@ -5,7 +5,6 @@ useHead({
 
 const route = useRoute()
 const employeeId = route.params.id
-const router = useRouter()
 
 const { getEmployee, updateEmployee, loading } = useEmployees()
 const { fetchRestaurants, restaurants } = useRestaurants()
@@ -19,11 +18,14 @@ const form = ref({
   middleName: '',
   jobTitle: '',
   isActive: true,
-  employeeRoles: []
+  employeeRoles: [],
+  password: '',
+  passwordConfirmation: ''
 })
 
 const formRef = ref(null)
 const validationError = ref(null)
+const passwordError = ref(null)
 const employee = ref(null)
 
 onMounted(async () => {
@@ -47,12 +49,31 @@ const handleUpdateRoles = (roles) => {
   form.value.employeeRoles = roles
 }
 
+const handlePasswordError = (error) => {
+  passwordError.value = error
+}
+
 const validateForm = () => {
   if (!form.value.phone) {
     return { valid: false, message: 'Введите телефон' }
   }
   if (!form.value.employeeRoles || form.value.employeeRoles.length === 0) {
     return { valid: false, message: 'Добавьте хотя бы одну роль' }
+  }
+  passwordError.value = null
+  if (form.value.password || form.value.passwordConfirmation) {
+    if (!form.value.password) {
+      passwordError.value = 'Введите пароль'
+      return { valid: false, message: '' }
+    }
+    if (form.value.password.length < 8) {
+      passwordError.value = 'Пароль должен быть не менее 8 символов'
+      return { valid: false, message: '' }
+    }
+    if (form.value.password !== form.value.passwordConfirmation) {
+      passwordError.value = 'Пароли не совпадают'
+      return { valid: false, message: '' }
+    }
   }
   return { valid: true }
 }
@@ -76,11 +97,16 @@ const saveEmployee = async () => {
     employeeRoles: form.value.employeeRoles
   }
   
+  if (form.value.password) {
+    employeeData.password = form.value.password
+  }
+  
   const result = await updateEmployee(employeeId, employeeData)
   if (result.success) {
     showSuccess('Сотрудник успешно обновлён')
     validationError.value = null
-    router.push(`/employees/${employeeId}`)
+    form.value.password = ''
+    form.value.passwordConfirmation = ''
   } else if (result.validationError) {
     validationError.value = result.validationError
   }
@@ -96,7 +122,9 @@ const saveEmployee = async () => {
           :employee="employee"
           :restaurants="restaurants" 
           :validation-error="validationError"
+          :password-error="passwordError"
           @updateEmployeeRoles="handleUpdateRoles"
+          @passwordError="handlePasswordError"
         />
 
         <div class="flex flex-wrap gap-4 pt-4">

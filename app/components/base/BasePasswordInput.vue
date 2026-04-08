@@ -3,7 +3,7 @@ import { IconEye, IconEyeOff } from '~/components/icons'
 
 const modelValue = defineModel()
 
-defineProps({
+const props = defineProps({
   placeholder: String,
   disabled: Boolean,
   readonly: Boolean,
@@ -17,6 +17,8 @@ defineProps({
     default: 'md'
   }
 })
+
+const emit = defineEmits(['update:modelValue', 'blur'])
 
 const showPassword = ref(false)
 </script>
@@ -43,7 +45,8 @@ const showPassword = ref(false)
           disabled || readonly ? 'bg-gray-100 dark:bg-gray-600 cursor-not-allowed' : '',
           'pr-10'
         ]"
-        @input="modelValue = $event.target.value"
+        @input="emit('update:modelValue', $event.target.value)"
+        @blur="emit('blur')"
       />
       <div class="absolute inset-y-0 right-0 flex items-center pr-3">
         <button type="button"
