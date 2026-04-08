@@ -14,6 +14,7 @@ const form = ref({
   lastName: '',
   middleName: '',
   jobTitle: '',
+  isActive: true,
   employeeRoles: []
 })
 
@@ -64,6 +65,7 @@ const saveEmployee = async (navigateToList = true) => {
     lastName: form.value.lastName || null,
     middleName: form.value.middleName || null,
     jobTitle: form.value.jobTitle || null,
+    isActive: form.value.isActive ?? true,
     employeeRoles: form.value.employeeRoles
   }
   
@@ -82,6 +84,7 @@ const saveEmployee = async (navigateToList = true) => {
         lastName: '',
         middleName: '',
         jobTitle: '',
+        isActive: true,
         employeeRoles: []
       }
     }

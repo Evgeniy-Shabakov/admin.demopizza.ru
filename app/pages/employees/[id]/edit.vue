@@ -18,6 +18,7 @@ const form = ref({
   lastName: '',
   middleName: '',
   jobTitle: '',
+  isActive: true,
   employeeRoles: []
 })
 
@@ -36,6 +37,7 @@ onMounted(async () => {
       lastName: employee.value.lastName || '',
       middleName: employee.value.middleName || '',
       jobTitle: employee.value.jobTitle || '',
+      isActive: employee.value.isActive ?? true,
       employeeRoles: employee.value.employeeRoles ? [...employee.value.employeeRoles] : []
     }
   }
@@ -70,6 +72,7 @@ const saveEmployee = async () => {
     lastName: form.value.lastName || null,
     middleName: form.value.middleName || null,
     jobTitle: form.value.jobTitle || null,
+    isActive: form.value.isActive,
     employeeRoles: form.value.employeeRoles
   }
   

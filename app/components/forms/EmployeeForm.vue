@@ -19,6 +19,7 @@ const form = defineModel({
     lastName: '',
     middleName: '',
     jobTitle: '',
+    isActive: true,
     employeeRoles: []
   })
 })
@@ -36,6 +37,8 @@ const roleOptions = computed(() => {
 const displayRoles = computed(() => {
   return roleOptions.value.filter(role => role.name !== 'Владелец')
 })
+
+const restaurantsLoaded = computed(() => props.restaurants && props.restaurants.length > 0)
 
 const addRole = () => {
   form.value.employeeRoles.push({
@@ -68,6 +71,10 @@ const getRestaurantName = (restaurantId) => {
   if (!restaurantId) return 'Все рестораны'
   const restaurant = props.restaurants?.find(r => r.id === restaurantId)
   return restaurant?.name || '—'
+}
+
+const getSelectValue = (restaurantId) => {
+  return restaurantId ?? ''
 }
 </script>
 
@@ -200,6 +207,15 @@ const getRestaurantName = (restaurantId) => {
       />
     </div>
 
+    <div v-if="!disabled || (disabled && employee)" class="flex items-center gap-3">
+      <BaseCheckbox
+        :model-value="disabled && employee ? employee.isActive : form.isActive"
+        :disabled="disabled"
+        @update:model-value="form.isActive = $event"
+      />
+      <span class="text-sm text-gray-700 dark:text-gray-300">Активен</span>
+    </div>
+
     <div>
       <BaseLabel>Роли</BaseLabel>
       <div class="text-sm text-gray-500 dark:text-gray-400 mb-3">
@@ -251,12 +267,13 @@ const getRestaurantName = (restaurantId) => {
             </div>
             <div>
               <select
-                :value="role.restaurantId"
+                :value="getSelectValue(role.restaurantId)"
                 @change="updateRoleField(index, 'restaurantId', $event.target.value ? Number($event.target.value) : null)"
                 class="w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent border-gray-300 dark:border-gray-600"
+                :disabled="!restaurantsLoaded"
               >
-                <option :value="null">Все рестораны</option>
-                <option v-for="restaurant in restaurants" :key="restaurant.id" :value="restaurant.id">
+                <option :value="''">Все рестораны</option>
+                <option v-if="restaurantsLoaded" v-for="restaurant in restaurants" :key="restaurant.id" :value="restaurant.id">
                   {{ restaurant.name }}
                 </option>
               </select>
