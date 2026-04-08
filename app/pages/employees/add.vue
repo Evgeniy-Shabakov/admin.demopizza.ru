@@ -27,7 +27,7 @@ const passwordError = ref(null)
 
 const getFullPhone = () => {
   const digits = form.value.phone.replace(/\D/g, '')
-  return form.value.countryCode.replace('+', '') + digits
+  return '+' + form.value.countryCode.replace('+', '') + digits
 }
 
 onMounted(async () => {
@@ -40,10 +40,6 @@ const handleUpdateCountryCode = (code) => {
 
 const handleUpdateRoles = (roles) => {
   form.value.employeeRoles = roles
-}
-
-const handleUpdateCountryCode = (code) => {
-  form.value.countryCode = code
 }
 
 const handlePasswordError = (error) => {

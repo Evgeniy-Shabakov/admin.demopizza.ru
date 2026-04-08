@@ -31,7 +31,7 @@ const employee = ref(null)
 
 const getFullPhone = () => {
   const digits = form.value.phone.replace(/\D/g, '')
-  return form.value.countryCode.replace('+', '') + digits
+  return '+' + form.value.countryCode.replace('+', '') + digits
 }
 
 const parsePhone = (phone) => {
