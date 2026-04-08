@@ -29,6 +29,19 @@ const form = defineModel({
 
 const countryCode = ref('+7')
 
+const parsedPhone = computed(() => {
+  if (!props.employee?.phone) return null
+  const phone = props.employee.phone
+  const clean = phone.replace(/\D/g, '')
+  
+  if (clean.startsWith('375')) return { countryCode: '+375', phone: clean.slice(3) }
+  if (clean.startsWith('998')) return { countryCode: '+998', phone: clean.slice(3) }
+  if (clean.startsWith('992')) return { countryCode: '+992', phone: clean.slice(3) }
+  if (clean.startsWith('996')) return { countryCode: '+996', phone: clean.slice(3) }
+  if (clean.startsWith('7') && clean.length > 1) return { countryCode: '+7', phone: clean.slice(1) }
+  return { countryCode: '+7', phone: clean }
+})
+
 const onCountryChange = (code) => {
   countryCode.value = code
   emit('update:countryCode', code)
@@ -192,7 +205,8 @@ const handlePasswordBlur = (field) => {
       <BasePhoneInput
         v-if="disabled && employee"
         id="employee-phone"
-        :model-value="employee.phone"
+        :model-value="parsedPhone.phone"
+        :country-code="parsedPhone.countryCode"
         label="Телефон"
         disabled
       />
