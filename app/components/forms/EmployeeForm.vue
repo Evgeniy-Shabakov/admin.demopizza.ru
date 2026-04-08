@@ -29,17 +29,60 @@ const form = defineModel({
 
 const countryCode = ref('+7')
 
+const countryCodes = [
+  { code: '+7', name: 'RU', mask: '(999) 999-99-99' },
+  { code: '+375', name: 'BY', mask: '(99) 999-99-99' },
+  { code: '+998', name: 'UZ', mask: '(99) 999-99-99' },
+  { code: '+992', name: 'TJ', mask: '999-999-999' },
+  { code: '+996', name: 'KG', mask: '(999) 999-999' },
+]
+
+const formatPhone = (value, mask) => {
+  const digits = value.replace(/\D/g, '')
+  let formatted = ''
+  let digitIndex = 0
+
+  for (let i = 0; i < mask.length && digitIndex < digits.length; i++) {
+    if (mask[i] === '9') {
+      formatted += digits[digitIndex]
+      digitIndex++
+    } else {
+      formatted += mask[i]
+    }
+  }
+
+  return formatted
+}
+
 const parsedPhone = computed(() => {
   if (!props.employee?.phone) return null
   const phone = props.employee.phone
   const clean = phone.replace(/\D/g, '')
   
-  if (clean.startsWith('375')) return { countryCode: '+375', phone: clean.slice(3) }
-  if (clean.startsWith('998')) return { countryCode: '+998', phone: clean.slice(3) }
-  if (clean.startsWith('992')) return { countryCode: '+992', phone: clean.slice(3) }
-  if (clean.startsWith('996')) return { countryCode: '+996', phone: clean.slice(3) }
-  if (clean.startsWith('7') && clean.length > 1) return { countryCode: '+7', phone: clean.slice(1) }
-  return { countryCode: '+7', phone: clean }
+  let countryCode = '+7'
+  let digits = clean
+  
+  if (clean.startsWith('375')) {
+    countryCode = '+375'
+    digits = clean.slice(3)
+  } else if (clean.startsWith('998')) {
+    countryCode = '+998'
+    digits = clean.slice(3)
+  } else if (clean.startsWith('992')) {
+    countryCode = '+992'
+    digits = clean.slice(3)
+  } else if (clean.startsWith('996')) {
+    countryCode = '+996'
+    digits = clean.slice(3)
+  } else if (clean.startsWith('7') && clean.length > 1) {
+    countryCode = '+7'
+    digits = clean.slice(1)
+  }
+  
+  const country = countryCodes.find(c => c.code === countryCode) || countryCodes[0]
+  const formatted = formatPhone(digits, country.mask)
+  
+  return { countryCode, phone: formatted }
 })
 
 const onCountryChange = (code) => {
