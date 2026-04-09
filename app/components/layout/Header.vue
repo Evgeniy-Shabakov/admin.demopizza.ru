@@ -7,6 +7,7 @@ const { activeOrdersCount } = useOrders()
 
 const titles = {
    '/': 'Главная',
+   '/profile': 'Личный кабинет',
    '/company': 'Данные компании',
    '/company/edit': 'Редактирование данных компании',
    '/countries': 'Страны',
@@ -62,6 +63,11 @@ watch(() => route.path, (path) => {
    if (path === '/') {
       pageTitle.value = titles['/']
       headerActions.value = []
+    } else if (path === '/profile') {
+      pageTitle.value = titles['/profile']
+      headerActions.value = [
+        { label: 'Назад', icon: 'back', back: true }
+      ]
     } else if (path === '/company') {
       pageTitle.value = titles['/company']
       headerActions.value = [

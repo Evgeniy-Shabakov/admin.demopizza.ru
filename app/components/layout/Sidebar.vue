@@ -47,9 +47,13 @@ const getBadgeSize = (isCollapsed) => {
 
        <div :class="isCollapsed ? 'lg:justify-center lg:px-0' : 'justify-between lg:px-4'"
             class="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700 shrink-0">
-         <div :class="isCollapsed ? 'lg:hidden' : ''">
-            <UiEmployeeData />
-         </div>
+<div :class="isCollapsed ? 'lg:hidden' : ''">
+             <NuxtLink to="/profile"
+                      @click="handleMenuClick"
+                      class="block py-2 -mx-2 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+               <UiEmployeeData />
+             </NuxtLink>
+          </div>
          <button @click="emit('toggle-collapse')"
                  :class="isCollapsed ? 'lg:w-full lg:justify-center' : ''"
                  class="hidden lg:flex p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
