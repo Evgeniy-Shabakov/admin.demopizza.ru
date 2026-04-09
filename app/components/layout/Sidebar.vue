@@ -335,7 +335,7 @@ const isGroupActive = (group) => {
                         @click="handleMenuClick"
                         :class="[
                           'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer',
-                          isCollapsed ? 'lg:justify-center lg:px-2' : 'lg:pl-10',
+                          isCollapsed ? 'lg:justify-center lg:px-2' : 'lg:pl-6',
                           route.path === item.path || (item.path !== '/admin' && route.path.startsWith(item.path + '/'))
                              ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
                              : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
