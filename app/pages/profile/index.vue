@@ -47,6 +47,15 @@ const validatePasswordConfirmation = () => {
   }
 }
 
+const getErrorDetails = (e) => {
+  const status = e.response?.status
+  const data = e.response?.data
+  if (!data && !status) return null
+  return data ? JSON.stringify(data, null, 2) : null
+}
+
+const getStatusCode = (e) => e.response?.status || null
+
 const savePassword = async () => {
   if (!oldPassword.value) {
     passwordError.value = 'Введите старый пароль'
@@ -68,16 +77,16 @@ const savePassword = async () => {
   const api = useApi()
   try {
     loading.value = true
-    await api.put(`/employees/${authEmployee.value.id}`, {
-      oldPassword: oldPassword.value,
-      password: password.value
+    await api.patch(`/employees/${authEmployee.value.id}/change-password`, {
+      password: oldPassword.value,
+      newPassword: password.value
     })
     showSuccess('Пароль успешно изменён')
     oldPassword.value = ''
     password.value = ''
     passwordConfirmation.value = ''
   } catch (e) {
-    showError({ message: 'Ошибка при смене пароля' })
+    showError({ message: 'Ошибка при смене пароля', details: getErrorDetails(e), statusCode: getStatusCode(e) })
   } finally {
     loading.value = false
   }
