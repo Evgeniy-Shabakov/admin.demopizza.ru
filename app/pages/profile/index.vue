@@ -7,9 +7,81 @@ useHead({
 
 const { employee: authEmployee, fetchCurrentUser } = useAuthState()
 const { fetchRestaurants, restaurants } = useRestaurants()
+const { success: showSuccess, error: showError } = useToast()
 
 const employee = ref(null)
 const loading = ref(true)
+
+const password = ref('')
+const passwordConfirmation = ref('')
+const oldPassword = ref('')
+const passwordError = ref('')
+
+const updateOldPassword = (value) => {
+  oldPassword.value = value
+}
+
+const updatePassword = (value) => {
+  password.value = value
+  validatePassword()
+}
+
+const updatePasswordConfirmation = (value) => {
+  passwordConfirmation.value = value
+  validatePasswordConfirmation()
+}
+
+const validatePassword = () => {
+  passwordError.value = ''
+  if (password.value && password.value.length < 8) {
+    passwordError.value = 'Пароль должен быть не менее 8 символов'
+  } else if (password.value && passwordConfirmation.value && password.value !== passwordConfirmation.value) {
+    passwordError.value = 'Пароли не совпадают'
+  }
+}
+
+const validatePasswordConfirmation = () => {
+  passwordError.value = ''
+  if (password.value && passwordConfirmation.value && password.value !== passwordConfirmation.value) {
+    passwordError.value = 'Пароли не совпадают'
+  }
+}
+
+const savePassword = async () => {
+  if (!oldPassword.value) {
+    passwordError.value = 'Введите старый пароль'
+    return
+  }
+  if (!password.value || !passwordConfirmation.value) {
+    passwordError.value = 'Введите пароль и подтверждение'
+    return
+  }
+  if (password.value.length < 8) {
+    passwordError.value = 'Пароль должен быть не менее 8 символов'
+    return
+  }
+  if (password.value !== passwordConfirmation.value) {
+    passwordError.value = 'Пароли не совпадают'
+    return
+  }
+
+  const api = useApi()
+  try {
+    loading.value = true
+    await api.put(`/employees/${authEmployee.value.id}`, {
+      oldPassword: oldPassword.value,
+      password: password.value
+    })
+    showSuccess('Пароль успешно изменён')
+    oldPassword.value = ''
+    password.value = ''
+    passwordConfirmation.value = ''
+  } catch (e) {
+    showError({ message: 'Ошибка при смене пароля' })
+  } finally {
+    loading.value = false
+  }
+}
 
 const formatPhone = (phone) => {
   if (!phone) return ''
@@ -118,7 +190,24 @@ onMounted(async () => {
           </div>
         </div>
 
+        <UiSettingPassword
+          class="mt-6"
+          :old-password="oldPassword"
+          :password="password"
+          :password-confirmation="passwordConfirmation"
+          :error="passwordError"
+          @update:old-password="updateOldPassword"
+          @update:password="updatePassword"
+          @update:password-confirmation="updatePasswordConfirmation"
+          @blur="validatePasswordConfirmation"
+        />
+
         <div class="flex gap-4 pt-4">
+          <button @click="savePassword"
+                  :disabled="loading"
+                  class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg transition-colors cursor-pointer">
+            Сохранить пароль
+          </button>
           <NuxtLink to="/employees" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors cursor-pointer">
             Назад
           </NuxtLink>
