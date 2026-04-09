@@ -1,7 +1,7 @@
 <script setup>
-import { IconEye, IconEyeOff } from '~/components/icons'
+import { IconEye, IconEyeOff, IconCopy, IconRefresh, IconCheck } from '~/components/icons'
 
-defineProps({
+const props = defineProps({
   password: {
     type: String,
     default: ''
@@ -20,6 +20,29 @@ const emit = defineEmits(['update:password', 'update:passwordConfirmation', 'blu
 
 const showPassword = ref(false)
 const showPasswordConfirmation = ref(false)
+const copySuccess = ref(false)
+
+const generatePassword = () => {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
+  let password = ''
+  for (let i = 0; i < 8; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  emit('update:password', password)
+  emit('update:passwordConfirmation', password)
+}
+
+const copyToClipboard = async () => {
+  try {
+    await navigator.clipboard.writeText(props.password)
+    copySuccess.value = true
+    setTimeout(() => {
+      copySuccess.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy:', err)
+  }
+}
 
 const validatePassword = () => {
   emit('blur', 'password')
@@ -42,12 +65,19 @@ const validatePasswordConfirmation = () => {
             :type="showPassword ? 'text' : 'password'"
             :value="password"
             placeholder="Введите пароль"
-            class="w-full rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent px-4 py-2 pr-10"
+            class="w-full rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent px-4 py-2 pr-28"
             :class="error && !passwordConfirmation ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100 placeholder-red-400/70' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500'"
             @input="emit('update:password', $event.target.value)"
             @blur="validatePassword"
           />
-          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 gap-1">
+            <button type="button" @click="generatePassword" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer focus:outline-none" title="Сгенерировать пароль">
+              <IconRefresh class="w-5 h-5" />
+            </button>
+            <button type="button" @click="copyToClipboard" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer focus:outline-none" title="Копировать пароль">
+              <IconCopy v-if="!copySuccess" class="w-5 h-5" />
+              <IconCheck v-else class="w-5 h-5 text-green-500" />
+            </button>
             <button type="button" @click="showPassword = !showPassword" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer focus:outline-none">
               <IconEye v-if="showPassword" class="w-5 h-5" />
               <IconEyeOff v-else class="w-5 h-5" />
