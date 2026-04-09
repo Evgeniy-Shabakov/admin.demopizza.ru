@@ -10,6 +10,8 @@ const props = defineProps({
   passwordError: String
 })
 
+const { employee: currentEmployee } = useAuthState()
+
 const emit = defineEmits(['updateEmployeeRoles', 'passwordError', 'update:countryCode'])
 
 const form = defineModel({
@@ -107,9 +109,21 @@ const getFullPhone = () => {
   return countryCode.value.replace('+', '') + digits
 }
 
+const isCurrentUserSuperAdmin = computed(() => {
+  return currentEmployee.value?.employeeRoles?.some(role => {
+    const roleData = Object.values(ROLE).find(r => r.ID === role.roleId)
+    return roleData?.NAME === 'super-admin'
+  })
+})
+
 const roleOptions = computed(() => {
+  const excludeRoles = ['super-admin']
+  if (!isCurrentUserSuperAdmin.value) {
+    excludeRoles.push('Владелец')
+  }
+  
   return Object.values(ROLE)
-    .filter(role => role.NAME !== 'super-admin')
+    .filter(role => !excludeRoles.includes(role.NAME))
     .map(role => ({
       id: role.ID,
       name: role.NAME,
@@ -117,9 +131,7 @@ const roleOptions = computed(() => {
     }))
 })
 
-const displayRoles = computed(() => {
-  return roleOptions.value.filter(role => role.name !== 'Владелец')
-})
+const displayRoles = computed(() => roleOptions.value)
 
 const restaurantsLoaded = computed(() => props.restaurants && props.restaurants.length > 0)
 
@@ -377,7 +389,7 @@ const handlePasswordBlur = (field) => {
                 class="w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent border-gray-300 dark:border-gray-600"
               >
                 <option :value="null" disabled>Выберите роль</option>
-                <option v-for="roleOpt in roleOptions" :key="roleOpt.id" :value="roleOpt.id">
+                <option v-for="roleOpt in displayRoles" :key="roleOpt.id" :value="roleOpt.id">
                   {{ roleOpt.name }}
                 </option>
               </select>
