@@ -28,6 +28,16 @@ const form = defineModel({
       />
     </div>
 
+    <div v-if="showDetails && promocode">
+      <BaseLabel for="promocode-code">Промокод</BaseLabel>
+      <BaseInput
+        id="promocode-code"
+        :model-value="promocode?.code"
+        type="text"
+        disabled
+      />
+    </div>
+
     <div v-if="!isEdit">
       <BaseLabel for="promocode-bonus-coins" required>Бонусные монеты</BaseLabel>
       <BaseInput
@@ -95,6 +105,36 @@ const form = defineModel({
           {{ promocode.isActive ? 'Активен' : 'Неактивен' }}
         </span>
       </div>
+    </div>
+
+    <div v-if="showDetails && promocode && promocode.employee">
+      <BaseLabel for="promocode-employee">Сотрудник</BaseLabel>
+      <BaseInput
+        id="promocode-employee"
+        :model-value="[promocode.employee.firstName, promocode.employee.lastName].filter(Boolean).join(' ') || promocode.employee.phone || '—'"
+        type="text"
+        disabled
+      />
+    </div>
+
+    <div v-if="showDetails && promocode && promocode.user">
+      <BaseLabel for="promocode-user">Применил</BaseLabel>
+      <BaseInput
+        id="promocode-user"
+        :model-value="promocode.user.phone"
+        type="text"
+        disabled
+      />
+    </div>
+
+    <div v-if="showDetails && promocode && promocode.usedAt">
+      <BaseLabel for="promocode-used-at">Когда применил</BaseLabel>
+      <BaseInput
+        id="promocode-used-at"
+        :model-value="new Date(promocode.usedAt).toLocaleString('ru-RU')"
+        type="text"
+        disabled
+      />
     </div>
 
     <div v-if="showDetails && promocode">

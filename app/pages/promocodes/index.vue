@@ -38,7 +38,7 @@ const columns = [
        ? '<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30"><svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></span>'
        : '<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></span>'
   },
-  { key: 'employee', label: 'Сотрудник', mobileLabel: 'Сотрудник', render: (item) => {
+  { key: 'employee', label: 'Создал', mobileLabel: 'Создал', render: (item) => {
     if (!item.employee) return '—'
     const name = [item.employee.firstName, item.employee.lastName].filter(Boolean).join(' ')
     if (!name && !item.employee.phone) return '—'
