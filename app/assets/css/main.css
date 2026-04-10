@@ -13,6 +13,10 @@
     transition: background-color 0.3s, color 0.3s;
   }
 
+  button:hover {
+    cursor: pointer;
+  }
+
   :root {
     --color-primary: 99 102 241;
     --color-primary-hover: 79 70 229;
