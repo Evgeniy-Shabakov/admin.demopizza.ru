@@ -154,7 +154,7 @@ const getMobileValue = (item, column) => {
                 :class="[
                   column.key === 'description' ? 'whitespace-normal' : 'whitespace-nowrap',
                   'px-4 py-4 text-sm select-text',
-                  column.bold ? 'font-medium' : 'text-gray-500 dark:text-gray-400',
+                  column.white ? 'text-white' : (column.bold ? 'font-medium' : 'text-gray-500 dark:text-gray-400'),
                   column.align === 'center' ? 'text-center' : '',
                   column.align === 'right' ? 'text-right' : '',
                   column.sticky ? 'sticky right-0 bg-white dark:bg-gray-800' : ''
@@ -188,11 +188,11 @@ const getMobileValue = (item, column) => {
           <div class="p-4" @click="handleRowClick(item.id)">
             <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">ID: {{ item.id }}</p>
             <template v-for="column in columns.filter(c => c.showInMobile !== false)" :key="column.key">
-              <p v-if="column.mobileLabel" class="text-xs text-gray-500 dark:text-gray-400">
-                {{ column.mobileLabel }}: <span v-html="getMobileValue(item, column)"></span>
+              <p v-if="column.mobileLabel" class="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1">
+                {{ column.mobileLabel }}: <span :class="column.white ? 'text-white' : 'text-gray-700 dark:text-gray-300'" v-html="getMobileValue(item, column)"></span>
               </p>
-              <p v-else-if="!column.key.startsWith('actions') && !column.key.startsWith('id')" class="text-xs text-gray-500 dark:text-gray-400">
-                {{ column.label }}: <span v-html="getMobileValue(item, column)"></span>
+              <p v-else-if="!column.key.startsWith('actions') && !column.key.startsWith('id')" class="text-xs text-gray-500 dark:text-gray-400 font-semibold mb-1">
+                {{ column.label }}: <span :class="column.white ? 'text-white' : 'text-gray-700 dark:text-gray-300'" v-html="getMobileValue(item, column)"></span>
               </p>
             </template>
           </div>

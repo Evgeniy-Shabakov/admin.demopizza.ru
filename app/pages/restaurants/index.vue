@@ -49,7 +49,7 @@ const getServiceTypes = (item) => {
 
 const columns = [
    { key: 'id', label: 'ID' },
-   { key: 'name', label: 'Название', bold: true },
+   { key: 'name', label: 'Название', white: true, mobileLabel: 'Название' },
    {
       key: 'isActive',
       label: 'Активен',

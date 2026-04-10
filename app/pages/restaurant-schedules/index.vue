@@ -58,7 +58,7 @@ const getDayScheduleMobile = (schedule, dayKey) => {
 
 const columns = [
   { key: 'id', label: 'ID' },
-  { key: 'name', label: 'Название', bold: true },
+  { key: 'name', label: 'Название', white: true, mobileLabel: 'Название' },
   ...days.map(day => ({
     key: day.key,
     label: day.label,

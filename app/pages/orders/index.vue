@@ -64,7 +64,7 @@ const getPaymentStatusClass = (status) => {
 
 const columns = [
    { key: 'id', label: 'ID' },
-   { key: 'number', label: 'Номер' },
+   { key: 'number', label: 'Номер', white: true, mobileLabel: 'Номер' },
    { key: 'orderStatus', label: 'Статус', render: (item) => `<span class="inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusClass(item.orderStatus)}">${item.orderStatus || '—'}</span>`, mobileLabel: 'Статус' },
    { key: 'paymentStatus', label: 'Оплата', render: (item) => `<span class="inline-flex px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusClass(item.paymentStatus)}">${item.paymentStatus || '—'}</span>`, mobileLabel: 'Оплата' },
    { key: 'totalPrice', label: 'Сумма', render: (item) => formatPrice(item.totalPrice || item.totalPr), align: 'right', mobileLabel: 'Сумма' },

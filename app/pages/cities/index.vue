@@ -31,7 +31,7 @@ const getCountryName = (countryId) => {
 
 const columns = [
   { key: 'id', label: 'ID' },
-  { key: 'name', label: 'Название', bold: true },
+  { key: 'name', label: 'Название', white: true, mobileLabel: 'Название' },
   { key: 'country', label: 'Страна', render: (item) => getCountryName(item.countryId), mobileLabel: 'Страна' },
   { 
     key: 'map', 

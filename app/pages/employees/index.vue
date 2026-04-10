@@ -43,9 +43,9 @@ const getEmployeeRoles = (employeeRoles) => {
 
 const columns = [
    { key: 'id', label: 'ID' },
-   { key: 'lastName', label: 'Фамилия', bold: true },
-   { key: 'firstName', label: 'Имя', bold: true },
-   { key: 'phone', label: 'Телефон', mobileLabel: 'Тел.' },
+   { key: 'lastName', label: 'Фамилия' },
+   { key: 'firstName', label: 'Имя' },
+   { key: 'phone', label: 'Телефон', white: true, mobileLabel: 'Тел.' },
    { key: 'email', label: 'Email', showInMobile: false },
    { key: 'jobTitle', label: 'Должность', showInMobile: false },
    { key: 'isActive', label: 'Активен', align: 'center', mobileLabel: 'Статус', render: (item) => item.isActive
