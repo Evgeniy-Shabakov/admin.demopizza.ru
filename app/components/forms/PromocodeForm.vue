@@ -83,9 +83,8 @@ const form = defineModel({
       <BaseLabel for="promocode-is-active">Активен</BaseLabel>
       <div class="flex items-center gap-3 mt-2">
         <BaseCheckbox
-          :model-value="promocode ? promocode.isActive : form.isActive"
+          v-model="form.isActive"
           :disabled="disabled"
-          @update:model-value="form.isActive = $event"
         />
         <span class="text-sm text-gray-700 dark:text-gray-300">
           {{ form.isActive ? 'Активен' : 'Неактивен' }}

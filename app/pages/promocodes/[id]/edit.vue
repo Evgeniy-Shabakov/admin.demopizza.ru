@@ -31,7 +31,6 @@ const savePromocode = async () => {
   })
   if (result.success) {
     showSuccess('Промокод успешно обновлен')
-    navigateTo(`/promocodes/${promocodeId}`)
   } else if (result.validationError) {
     validationError.value = result.validationError
   }
@@ -43,7 +42,8 @@ const savePromocode = async () => {
     <BaseCard>
       <form ref="formRef" @submit.prevent="savePromocode" class="space-y-6">
         <FormsPromocodeForm 
-          :promocode="promocode || form"
+          v-model="form"
+          :promocode="promocode"
           :validation-error="validationError"
           :is-edit="true"
         />
