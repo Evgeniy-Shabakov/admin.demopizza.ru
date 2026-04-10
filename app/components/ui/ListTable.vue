@@ -1,5 +1,6 @@
 <script setup>
 import { IconCheck, IconX, IconWarning } from '~/components/icons'
+import { useToast } from '~/composables/useToast'
 
 const props = defineProps({
   items: {
@@ -20,6 +21,7 @@ const props = defineProps({
   },
   viewLinkPrefix: String,
   editLinkPrefix: String,
+  copyColumnKey: String,
   showView: {
     type: Boolean,
     default: true
@@ -38,14 +40,32 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['row-click', 'delete'])
+const emit = defineEmits(['row-click', 'delete', 'copy-cell'])
 
 const router = useRouter()
+const { success: showSuccess } = useToast()
 const showDeleteModal = ref(false)
 const itemToDelete = ref(null)
 
 const handleRowClick = (id) => {
+  if (props.viewLinkPrefix) {
+    router.push(`${props.viewLinkPrefix}/${id}`)
+    return
+  }
   emit('row-click', id)
+}
+
+const handleCellClick = (event, item, column) => {
+  if (props.copyColumnKey && column.key === props.copyColumnKey) {
+    event.stopPropagation()
+    const value = item[props.copyColumnKey]
+    if (value) {
+      navigator.clipboard.writeText(value)
+      showSuccess('Скопировано')
+    }
+    return
+  }
+  handleRowClick(item.id)
 }
 
 const confirmDelete = (item) => {
@@ -132,15 +152,18 @@ const getMobileValue = (item, column) => {
                 v-for="column in columns" 
                 :key="column.key"
                 :class="[
-                  'px-4 py-4 whitespace-nowrap text-sm select-text',
+                  column.key === 'description' ? 'whitespace-normal' : 'whitespace-nowrap',
+                  'px-4 py-4 text-sm select-text',
                   column.bold ? 'font-medium' : 'text-gray-500 dark:text-gray-400',
                   column.align === 'center' ? 'text-center' : '',
                   column.align === 'right' ? 'text-right' : '',
                   column.sticky ? 'sticky right-0 bg-white dark:bg-gray-800' : ''
                 ]"
+                :title="column.title"
+                @click.stop="handleCellClick($event, item, column)"
               >
                 <component :is="column.component" v-if="column.component" :item="item" />
-                <span v-else-if="column.key === 'actions'">
+                <span v-else-if="column.key === 'actions'" @click.stop>
                   <UiActionListButtons
                     :view-link="getViewLink(item)"
                     :edit-link="getEditLink(item)"

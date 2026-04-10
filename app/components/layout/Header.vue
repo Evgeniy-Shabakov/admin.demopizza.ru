@@ -33,6 +33,10 @@ const titles = {
    '/stop-list/add': 'Добавить в стоп-лист',
    '/stop-list/:id': 'Просмотр записи',
    '/stop-list/:id/edit': 'Редактирование записи',
+   '/promocodes': 'Промокоды',
+   '/promocodes/add': 'Добавить промокод',
+   '/promocodes/:id': 'Просмотр промокода',
+   '/promocodes/:id/edit': 'Редактирование промокода',
    '/restaurant-schedules': 'Графики работы',
    '/restaurant-schedules/add': 'Добавить график',
    '/restaurant-schedules/:id': 'Просмотр графика',
@@ -196,12 +200,34 @@ watch(() => route.path, (path) => {
          headerActions.value = [
             { label: 'Назад', icon: 'back', back: true }
          ]
-      } else if (path.startsWith('/stop-list')) {
-         pageTitle.value = titles['/stop-list']
-         headerActions.value = [
-            { to: '/stop-list/add', label: 'Добавить', icon: 'add', primary: true }
-         ]
-      } else if (path === '/restaurant-schedules/add') {
+       } else if (path.startsWith('/stop-list')) {
+          pageTitle.value = titles['/stop-list']
+          headerActions.value = [
+             { to: '/stop-list/add', label: 'Добавить', icon: 'add', primary: true }
+          ]
+       } else if (path === '/promocodes/add') {
+          pageTitle.value = titles['/promocodes/add']
+          headerActions.value = [
+             { label: 'Назад', icon: 'back', back: true }
+          ]
+       } else if (path.match(/^\/promocodes\/\d+$/)) {
+          pageTitle.value = titles['/promocodes/:id']
+          const id = route.params.id
+          headerActions.value = [
+             { label: 'Назад', icon: 'back', back: true },
+             { to: `/promocodes/${id}/edit`, label: 'Редактировать', icon: 'edit' }
+          ]
+       } else if (path.match(/^\/promocodes\/\d+\/edit$/)) {
+          pageTitle.value = titles['/promocodes/:id/edit']
+          headerActions.value = [
+             { label: 'Назад', icon: 'back', back: true }
+          ]
+       } else if (path.startsWith('/promocodes')) {
+          pageTitle.value = titles['/promocodes']
+          headerActions.value = [
+             { to: '/promocodes/add', label: 'Добавить', icon: 'add', primary: true }
+          ]
+       } else if (path === '/restaurant-schedules/add') {
        pageTitle.value = titles['/restaurant-schedules/add']
        headerActions.value = [
           { label: 'Назад', icon: 'back', back: true }

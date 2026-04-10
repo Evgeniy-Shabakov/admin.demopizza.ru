@@ -20,6 +20,7 @@ const menuItems = ref([
    { name: 'Активные заказы', path: '/active-orders', icon: 'shopping-cart', badge: 0 },
    { name: 'Все заказы', path: '/orders', icon: 'clipboard-list' },
    { name: 'Стоп-лист', path: '/stop-list', icon: 'ban', badge: 0 },
+   { name: 'Промокоды', path: '/promocodes', icon: 'ticket' },
 ])
 
 const { stopListCount, fetchStopListCount } = useStopList()
