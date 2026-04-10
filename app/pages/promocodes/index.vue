@@ -5,16 +5,23 @@ useHead({
 
 const { promocodes, loading, pagination, perPageOptions, fetchPromocodes } = usePromocodes()
 
+const activeFilter = ref('all')
+
 onMounted(() => {
   fetchPromocodes(1)
 })
 
 const loadPage = (page) => {
-  fetchPromocodes(page)
+  fetchPromocodes(page, null, activeFilter.value)
 }
 
 const changePerPage = (perPage) => {
-  fetchPromocodes(1, perPage)
+  fetchPromocodes(1, perPage, activeFilter.value)
+}
+
+const setFilter = (filter) => {
+  activeFilter.value = filter
+  fetchPromocodes(1, null, filter)
 }
 
 const columns = [
@@ -52,6 +59,26 @@ const columns = [
 </script>
 
 <template>
+  <div class="flex gap-2 mb-4">
+    <button 
+      v-for="filter in [
+        { value: 'all', label: 'Все' },
+        { value: 'active', label: 'Активные' },
+        { value: 'used', label: 'Примененные' }
+      ]" 
+      :key="filter.value"
+      @click="setFilter(filter.value)"
+      :class="[
+        'px-4 py-2 rounded-lg font-medium transition-colors',
+        activeFilter === filter.value 
+          ? 'bg-indigo-600 text-white' 
+          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+      ]"
+    >
+      {{ filter.label }}
+    </button>
+  </div>
+
   <UiListTable :items="promocodes"
                :columns="columns"
                :loading="loading"

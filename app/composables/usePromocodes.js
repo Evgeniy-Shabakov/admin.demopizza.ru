@@ -55,7 +55,7 @@ export function usePromocodes() {
   
   const perPageOptions = [15, 30, 50, 100]
 
-  const fetchPromocodes = async (page = 1, perPage = null) => {
+  const fetchPromocodes = async (page = 1, perPage = null, filter = null) => {
     if (perPage !== null) {
       pagination.value.perPage = perPage
       page = 1
@@ -63,8 +63,11 @@ export function usePromocodes() {
     const perPageValue = pagination.value.perPage
     loading.value = true
     error.value = null
+    let filterParams = ''
+    if (filter === 'active') filterParams = '&isActive=true'
+    else if (filter === 'used') filterParams = '&usedAt=true'
     try {
-      const response = await api.get(`/promocodes?sort=id,desc&page=${page}&perPage=${perPageValue}`)
+      const response = await api.get(`/promocodes?sort=id,desc&page=${page}&perPage=${perPageValue}${filterParams}`)
       promocodes.value = response.data.data
       const pag = response.data.meta?.pagination || response.data.pagination || {}
       pagination.value = {
