@@ -116,7 +116,7 @@ const isGroupActive = (group) => {
          </button>
       </div>
       
-      <UiCitySwitcher />
+      <UiCitySwitcher :class="isCollapsed ? 'lg:hidden' : ''" />
       <div class="flex-1 overflow-y-auto">
          <nav class="p-4 space-y-2">
             <template v-for="item in menuGroups.standalone"
