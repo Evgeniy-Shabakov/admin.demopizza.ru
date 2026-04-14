@@ -36,11 +36,16 @@ export function useOrders() {
   
   const perPageOptions = [15, 30, 50, 100]
 
-  const fetchActiveOrders = async () => {
+  const fetchActiveOrders = async (cityId = null, restaurantId = null) => {
     loadingState.value = true
     errorState.value = null
     try {
-      const response = await api.get('/orders?active=true&perPage=100')
+      const params = new URLSearchParams()
+      params.append('active', 'true')
+      params.append('perPage', '100')
+      if (cityId) params.append('cityId', cityId)
+      if (restaurantId) params.append('restaurantId', restaurantId)
+      const response = await api.get(`/orders?${params.toString()}`)
       ordersState.value = response.data.data
     } catch (e) {
       errorState.value = getErrorMessage('fetchOrders')

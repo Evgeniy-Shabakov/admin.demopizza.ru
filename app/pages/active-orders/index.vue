@@ -3,9 +3,10 @@ useHead({
    title: 'Активные заказы'
 })
 const { orders, loading, fetchActiveOrders } = useOrders()
+const { currentCityId, currentRestaurantId } = useGlobalCityRestaurant()
 const router = useRouter()
 
-fetchActiveOrders()
+fetchActiveOrders(currentCityId.value, currentRestaurantId.value)
 
 const handleView = (order) => {
    router.push(`/active-orders/${order.id}`)

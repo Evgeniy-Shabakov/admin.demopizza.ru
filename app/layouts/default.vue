@@ -1,7 +1,7 @@
 <script setup>
 const { initTheme } = useTheme()
 const { isCollapsed, initSidebar, toggleCollapse } = useSidebar()
-useGlobalCityRestaurant()
+const { currentCityId, currentRestaurantId } = useGlobalCityRestaurant()
 const route = useRoute()
 const isSidebarOpen = ref(false)
 
@@ -43,21 +43,22 @@ onMounted(async () => {
    initTheme()
    initSidebar()
    document.addEventListener('visibilitychange', handleVisibilityChange)
-   await Promise.all([fetchStopListCount(), fetchActiveOrders()])
-   
+   await Promise.all([fetchStopListCount(), fetchActiveOrders(currentCityId.value, currentRestaurantId.value)])
+
    previousOrderIds.value = new Set(orders.value.map(o => o.id))
    isInitialLoad.value = false
-   
+
    ordersInterval = setInterval(() => {
+      const params = [currentCityId.value, currentRestaurantId.value]
       if (isTabActive.value) {
-         fetchActiveOrders()
-       } else {
-          orderCallCount++
-          if (orderCallCount >= 10) {
-             fetchActiveOrders()
-             orderCallCount = 0
-          }
-       }
+         fetchActiveOrders(...params)
+      } else {
+         orderCallCount++
+         if (orderCallCount >= 10) {
+            fetchActiveOrders(...params)
+            orderCallCount = 0
+         }
+      }
    }, 30000)
 
    stopListInterval = setInterval(() => {
@@ -83,14 +84,14 @@ watch(activeOrdersCount, (newVal) => {
 
 watch(orders, (newOrders) => {
    if (isInitialLoad.value) return
-   
+
    const newOrderIds = new Set(newOrders.map(o => o.id))
    const hasNewOrder = [...newOrderIds].some(id => !previousOrderIds.value.has(id))
-   
+
    if (hasNewOrder) {
       showToast('NEW Новый заказ!')
    }
-   
+
    previousOrderIds.value = newOrderIds
 }, { deep: true })
 
