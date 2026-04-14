@@ -1,6 +1,7 @@
 <script setup>
 const { initTheme } = useTheme()
 const { isCollapsed, initSidebar, toggleCollapse } = useSidebar()
+useGlobalCityRestaurant()
 const route = useRoute()
 const isSidebarOpen = ref(false)
 

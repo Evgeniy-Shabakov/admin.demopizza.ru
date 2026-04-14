@@ -30,6 +30,8 @@ const selectedRestaurant = ref(null)
 onMounted(() => {
    selectedCity.value = currentCityId.value
    selectedRestaurant.value = currentRestaurantId.value
+   fetchCities()
+   fetchRestaurants()
 })
 
 const openModal = () => {
