@@ -43,7 +43,7 @@ onMounted(async () => {
    initTheme()
    initSidebar()
    document.addEventListener('visibilitychange', handleVisibilityChange)
-   await Promise.all([fetchStopListCount(), fetchActiveOrders(currentCityId.value, currentRestaurantId.value)])
+   await Promise.all([fetchStopListCount(currentRestaurantId.value), fetchActiveOrders(currentCityId.value, currentRestaurantId.value)])
 
    previousOrderIds.value = new Set(orders.value.map(o => o.id))
    isInitialLoad.value = false
@@ -62,8 +62,8 @@ onMounted(async () => {
    }, 30000)
 
    stopListInterval = setInterval(() => {
-      if (isTabActive.value) fetchStopListCount()
-   }, 180000)
+       if (isTabActive.value) fetchStopListCount(currentRestaurantId.value)
+    }, 180000)
 })
 
 onUnmounted(() => {

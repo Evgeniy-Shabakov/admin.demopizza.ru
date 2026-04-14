@@ -46,9 +46,13 @@ export function useStopList() {
   const loading = ref(false)
   const error = ref(null)
 
-  const fetchStopListCount = async () => {
+  const fetchStopListCount = async (restaurantId = null) => {
     try {
-      const response = await api.get('/product-restaurants/stop-list-count')
+      const params = {}
+      if (restaurantId) {
+        params.restaurantId = restaurantId
+      }
+      const response = await api.get('/product-restaurants/stop-list-count', { params })
       stopListCount.value = response.data.data
     } catch (e) {
       console.error('Ошибка при получении количества стоп-листа:', e)
