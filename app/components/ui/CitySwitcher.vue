@@ -1,6 +1,7 @@
 <script setup>
 import BaseModal from '~/components/base/BaseModal.vue'
 import BaseLabel from '~/components/base/BaseLabel.vue'
+import BaseButton from '~/components/base/BaseButton.vue'
 
 const { cities, fetchCities } = useCities()
 const { restaurants, fetchRestaurants } = useRestaurants()
@@ -95,14 +96,12 @@ const saveSelection = () => {
          </div>
 
          <div class="flex gap-3 mt-6">
-            <button @click="closeModal"
-                    class="flex-1 px-4 py-2 text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
+            <BaseButton variant="secondary" class="flex-1" @click="closeModal">
                Отмена
-            </button>
-            <button @click="saveSelection"
-                    class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+            </BaseButton>
+            <BaseButton variant="primary" class="flex-1" @click="saveSelection">
                Сохранить
-            </button>
+            </BaseButton>
          </div>
       </BaseModal>
    </div>
