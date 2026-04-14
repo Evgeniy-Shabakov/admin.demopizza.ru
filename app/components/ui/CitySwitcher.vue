@@ -3,6 +3,10 @@ import BaseModal from '~/components/base/BaseModal.vue'
 import BaseLabel from '~/components/base/BaseLabel.vue'
 import BaseButton from '~/components/base/BaseButton.vue'
 
+defineOptions({
+   inheritAttrs: false
+})
+
 const { cities, fetchCities } = useCities()
 const { restaurants, fetchRestaurants } = useRestaurants()
 const { currentCityId, currentRestaurantId, setCity, setRestaurant } = useGlobalCityRestaurant()
@@ -54,8 +58,9 @@ const saveSelection = () => {
 
 <template>
    <div class="px-4 flex items-center gap-2 cursor-pointer hover:opacity-80"
+         :class="$attrs.class"
          @click="openModal">
-      <svg class="w-4 h-4 text-gray-500 dark:text-gray-400"
+      <svg class="w-3 h-3 text-gray-500 dark:text-gray-400"
            fill="none"
            stroke="currentColor"
            viewBox="0 0 24 24">
