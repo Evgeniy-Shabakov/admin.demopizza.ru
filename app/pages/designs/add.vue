@@ -9,8 +9,13 @@ const { success: showSuccess } = useToast()
 const form = ref({
   name: '',
   isActive: false,
-  primaryColor: '#000000',
-  secondaryColor: '#ffffff'
+  backgroundPageMainColor: '#f3f4f6',
+  backgroundPageElementsColor: '#ffffff',
+  brandColor: '#ff6b35',
+  textColorMain: '#000000',
+  textColorOnBrandColor: '#ffffff',
+  textColorAccent: '#008000',
+  bottomNavColor: '#a6a6a6'
 })
 
 const formRef = ref(null)
@@ -28,8 +33,13 @@ const saveDesign = async (navigateToList = false) => {
     name: form.value.name,
     isActive: form.value.isActive,
     settings: {
-      primaryColor: form.value.primaryColor,
-      secondaryColor: form.value.secondaryColor
+      backgroundPageMainColor: form.value.backgroundPageMainColor,
+      backgroundPageElementsColor: form.value.backgroundPageElementsColor,
+      brandColor: form.value.brandColor,
+      textColorMain: form.value.textColorMain,
+      textColorOnBrandColor: form.value.textColorOnBrandColor,
+      textColorAccent: form.value.textColorAccent,
+      bottomNavColor: form.value.bottomNavColor
     }
   })
   if (result.success) {
@@ -40,8 +50,13 @@ const saveDesign = async (navigateToList = false) => {
     } else {
       form.value.name = ''
       form.value.isActive = false
-      form.value.primaryColor = '#000000'
-      form.value.secondaryColor = '#ffffff'
+      form.value.backgroundPageMainColor = '#f3f4f6'
+      form.value.backgroundPageElementsColor = '#ffffff'
+      form.value.brandColor = '#ff6b35'
+      form.value.textColorMain = '#000000'
+      form.value.textColorOnBrandColor = '#ffffff'
+      form.value.textColorAccent = '#008000'
+      form.value.bottomNavColor = '#a6a6a6'
     }
   } else if (result.validationError) {
     validationError.value = result.validationError

@@ -39,12 +39,32 @@ const columns = [
     label: 'Цвета',
     render: (item) => `<div class="flex flex-col gap-1">
       <div class="flex items-center gap-1">
-        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.primaryColor || '#000000'}"></div>
-        <span class="text-xs">${item.settings?.primaryColor || '-'}</span>
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.backgroundPageMainColor || '#ffffff'}"></div>
+        <span class="text-xs">${item.settings?.backgroundPageMainColor || '-'}</span>
       </div>
       <div class="flex items-center gap-1">
-        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.secondaryColor || '#ffffff'}"></div>
-        <span class="text-xs">${item.settings?.secondaryColor || '-'}</span>
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.backgroundPageElementsColor || '#f3f4f6'}"></div>
+        <span class="text-xs">${item.settings?.backgroundPageElementsColor || '-'}</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.brandColor || '#3b82f6'}"></div>
+        <span class="text-xs">${item.settings?.brandColor || '-'}</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.textColorMain || '#1f2937'}"></div>
+        <span class="text-xs">${item.settings?.textColorMain || '-'}</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.textColorOnBrandColor || '#ffffff'}"></div>
+        <span class="text-xs">${item.settings?.textColorOnBrandColor || '-'}</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.textColorAccent || '#8b5cf6'}"></div>
+        <span class="text-xs">${item.settings?.textColorAccent || '-'}</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="w-4 h-4 rounded border" style="background-color: ${item.settings?.bottomNavColor || '#ffffff'}"></div>
+        <span class="text-xs">${item.settings?.bottomNavColor || '-'}</span>
       </div>
     </div>`
   },

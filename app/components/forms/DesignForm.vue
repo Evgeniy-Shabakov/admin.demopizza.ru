@@ -10,10 +10,25 @@ const form = defineModel({
   default: () => ({
     name: '',
     isActive: false,
-    primaryColor: '#000000',
-    secondaryColor: '#ffffff'
+    backgroundPageMainColor: '#f3f4f6',
+    backgroundPageElementsColor: '#ffffff',
+    brandColor: '#ff6b35',
+    textColorMain: '#000000',
+    textColorOnBrandColor: '#ffffff',
+    textColorAccent: '#008000',
+    bottomNavColor: '#a6a6a6'
   })
 })
+
+const colorFields = [
+  { key: 'backgroundPageMainColor', label: 'Цвет фона страницы', placeholder: '#f3f4f6' },
+  { key: 'backgroundPageElementsColor', label: 'Цвет фона элементов', placeholder: '#ffffff' },
+  { key: 'brandColor', label: 'Брендовый цвет', placeholder: '#ff6b35' },
+  { key: 'textColorMain', label: 'Основной цвет текста', placeholder: '#000000' },
+  { key: 'textColorOnBrandColor', label: 'Цвет текста на брендовом', placeholder: '#ffffff' },
+  { key: 'textColorAccent', label: 'Акцентный цвет текста', placeholder: '#008000' },
+  { key: 'bottomNavColor', label: 'Цвет нижней навигации', placeholder: '#a6a6a6' }
+]
 </script>
 
 <template>
@@ -50,67 +65,34 @@ const form = defineModel({
       />
     </div>
 
-    <div>
-      <BaseLabel for="design-primary-color">Основной цвет</BaseLabel>
+    <div v-for="field in colorFields" :key="field.key">
+      <BaseLabel :for="`design-${field.key}`">{{ field.label }}</BaseLabel>
       <div class="flex gap-4 items-center">
         <input
           v-if="!disabled"
           type="color"
-          id="design-primary-color"
-          v-model="form.primaryColor"
+          :id="`design-${field.key}`"
+          v-model="form[field.key]"
           class="h-10 w-20 rounded cursor-pointer"
         />
         <div
           v-else
           class="h-10 w-20 rounded border"
-          :style="{ backgroundColor: design?.settings?.primaryColor || '#000000' }"
+          :style="{ backgroundColor: design?.settings?.[field.key] || field.placeholder }"
         ></div>
         <BaseInput
           v-if="disabled && design"
-          :model-value="design.settings?.primaryColor"
+          :model-value="design.settings?.[field.key]"
           type="text"
           disabled
           class="flex-1"
         />
         <BaseInput
           v-else
-          v-model="form.primaryColor"
+          v-model="form[field.key]"
           type="text"
           :disabled="disabled"
-          placeholder="#000000"
-          class="flex-1"
-        />
-      </div>
-    </div>
-
-    <div>
-      <BaseLabel for="design-secondary-color">Вторичный цвет</BaseLabel>
-      <div class="flex gap-4 items-center">
-        <input
-          v-if="!disabled"
-          type="color"
-          id="design-secondary-color"
-          v-model="form.secondaryColor"
-          class="h-10 w-20 rounded cursor-pointer"
-        />
-        <div
-          v-else
-          class="h-10 w-20 rounded border"
-          :style="{ backgroundColor: design?.settings?.secondaryColor || '#ffffff' }"
-        ></div>
-        <BaseInput
-          v-if="disabled && design"
-          :model-value="design.settings?.secondaryColor"
-          type="text"
-          disabled
-          class="flex-1"
-        />
-        <BaseInput
-          v-else
-          v-model="form.secondaryColor"
-          type="text"
-          :disabled="disabled"
-          placeholder="#ffffff"
+          :placeholder="field.placeholder"
           class="flex-1"
         />
       </div>

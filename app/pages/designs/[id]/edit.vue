@@ -11,8 +11,13 @@ const { success: showSuccess } = useToast()
 const form = ref({
   name: '',
   isActive: false,
-  primaryColor: '#000000',
-  secondaryColor: '#ffffff'
+  backgroundPageMainColor: '#f3f4f6',
+  backgroundPageElementsColor: '#ffffff',
+  brandColor: '#ff6b35',
+  textColorMain: '#000000',
+  textColorOnBrandColor: '#ffffff',
+  textColorAccent: '#008000',
+  bottomNavColor: '#a6a6a6'
 })
 
 const design = ref(null)
@@ -23,8 +28,13 @@ onMounted(async () => {
   if (design.value) {
     form.value.name = design.value.name
     form.value.isActive = design.value.isActive
-    form.value.primaryColor = design.value.settings?.primaryColor || '#000000'
-    form.value.secondaryColor = design.value.settings?.secondaryColor || '#ffffff'
+    form.value.backgroundPageMainColor = design.value.settings?.backgroundPageMainColor || '#f3f4f6'
+    form.value.backgroundPageElementsColor = design.value.settings?.backgroundPageElementsColor || '#ffffff'
+    form.value.brandColor = design.value.settings?.brandColor || '#ff6b35'
+    form.value.textColorMain = design.value.settings?.textColorMain || '#000000'
+    form.value.textColorOnBrandColor = design.value.settings?.textColorOnBrandColor || '#ffffff'
+    form.value.textColorAccent = design.value.settings?.textColorAccent || '#008000'
+    form.value.bottomNavColor = design.value.settings?.bottomNavColor || '#a6a6a6'
   }
 })
 
@@ -34,8 +44,13 @@ const saveDesign = async () => {
     name: form.value.name,
     isActive: form.value.isActive,
     settings: {
-      primaryColor: form.value.primaryColor,
-      secondaryColor: form.value.secondaryColor
+      backgroundPageMainColor: form.value.backgroundPageMainColor,
+      backgroundPageElementsColor: form.value.backgroundPageElementsColor,
+      brandColor: form.value.brandColor,
+      textColorMain: form.value.textColorMain,
+      textColorOnBrandColor: form.value.textColorOnBrandColor,
+      textColorAccent: form.value.textColorAccent,
+      bottomNavColor: form.value.bottomNavColor
     }
   })
   if (result.success) {
