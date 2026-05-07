@@ -109,17 +109,19 @@ const toggleDay = (dayKey) => {
                    </span>
                 </div>
                 <div class="mt-2 flex items-center gap-2">
-                   <BaseInput :model-value="disabled && schedule ? formatTime(schedule[`${day.key}OpenTime`]) : form[`${day.key}OpenTime`]"
-                              type="time"
-                              :disabled="disabled"
-                              size="sm"
-                              class="w-24" />
-                   <span class="text-gray-400 text-xs">—</span>
-                   <BaseInput :model-value="disabled && schedule ? formatTime(schedule[`${day.key}CloseTime`]) : form[`${day.key}CloseTime`]"
-                              type="time"
-                              :disabled="disabled"
-                              size="sm"
-                              class="w-24" />
+                    <BaseInput :model-value="disabled && schedule ? formatTime(schedule[`${day.key}OpenTime`]) : form[`${day.key}OpenTime`]"
+                               type="time"
+                               :disabled="disabled"
+                               size="sm"
+                               class="w-24"
+                               @update:model-value="form[`${day.key}OpenTime`] = $event" />
+                    <span class="text-gray-400 text-xs">—</span>
+                    <BaseInput :model-value="disabled && schedule ? formatTime(schedule[`${day.key}CloseTime`]) : form[`${day.key}CloseTime`]"
+                               type="time"
+                               :disabled="disabled"
+                               size="sm"
+                               class="w-24"
+                               @update:model-value="form[`${day.key}CloseTime`] = $event" />
                 </div>
              </div>
           </div>
