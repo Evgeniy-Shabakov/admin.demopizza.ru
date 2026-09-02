@@ -1,0 +1,14 @@
+name: ${PROJECT_NAME}-admin
+
+services:
+  admin-service:
+    build: .
+    image: ${PROJECT_NAME}-admin-image:latest
+    container_name: ${PROJECT_NAME}-admin-container
+    restart: unless-stopped
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true

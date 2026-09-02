@@ -1,0 +1,122 @@
+<script setup>
+definePageMeta({ layout: false })
+
+const { initTheme } = useTheme()
+const { login } = useAuth()
+
+const phone = ref('')
+const countryCode = ref('+7')
+const password = ref('')
+const loading = ref(false)
+const formError = ref('')
+const errors = ref({
+   phone: '',
+   password: ''
+})
+const getFullPhone = () => {
+   const digits = phone.value.replace(/\D/g, '')
+   return '+' + countryCode.value.replace('+', '') + digits
+}
+
+const validate = () => {
+   formError.value = ''
+   errors.value.phone = ''
+   errors.value.password = ''
+
+   const digits = phone.value.replace(/\D/g, '')
+   if (digits.length < 9) {
+      errors.value.phone = 'Введите номер телефона'
+   }
+
+   if (password.value.length < 8) {
+      errors.value.password = 'Пароль должен быть не менее 8 символов'
+   }
+
+   return !errors.value.phone && !errors.value.password
+}
+
+const onSubmit = async () => {
+   if (!validate()) return
+
+   loading.value = true
+   formError.value = ''
+   const result = await login(getFullPhone(), password.value)
+   loading.value = false
+
+   if (result.success) {
+     await navigateTo('/')
+   } else if (result.error) {
+     formError.value = result.error.message
+   }
+}
+
+onMounted(async () => {
+   initTheme()
+   
+   if (import.meta.client) {
+      const token = useCookie('employeeAccessToken')
+      const refreshToken = useCookie('employeeRefreshToken')
+      if (token.value || refreshToken.value) {
+         try {
+            const api = useApi()
+            const response = await api.get('/auth/jwt-payload/employee')
+            const { setAuthenticated, setEmployee } = useAuthState()
+            const jwtPayload = response.data.data.jwtPayload
+            const employee = {
+               id: jwtPayload.id,
+               phone: jwtPayload.phone,
+               employeeRoles: jwtPayload.employeeRoles
+            }
+            setEmployee(employee)
+            setAuthenticated(true)
+            await navigateTo('/')
+            return
+         } catch (e) {
+            console.error('Token validation failed:', e)
+         }
+      }
+   }
+})
+</script>
+
+<template>
+   <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <div class="w-full max-w-md">
+         <BaseCard class="p-8">
+            <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
+               Вход в систему
+            </h1>
+
+            <form @submit.prevent="onSubmit">
+               <BasePhoneInput id="phone"
+                                v-model="phone"
+                                label="Номер телефона"
+                                required
+                                :error="errors.phone"
+                                class="mb-4"
+                                @update:countryCode="countryCode = $event" />
+
+               <div class="mb-6">
+                  <BaseLabel for="password">Пароль</BaseLabel>
+                <BasePasswordInput
+                       id="password"
+                       v-model="password"
+                       placeholder="Введите пароль"
+                       :error="errors.password"
+                       autocomplete="off"
+                    />
+               </div>
+
+               <BaseButton type="submit"
+                           :loading="loading"
+                           class="w-full">
+                  {{ loading ? 'Вход...' : 'Войти' }}
+               </BaseButton>
+
+               <p v-if="formError"
+                  class="text-red-500 text-sm mt-4 text-center">{{ formError }}</p>
+            </form>
+         </BaseCard>
+      </div>
+   </div>
+</template>
