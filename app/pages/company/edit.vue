@@ -29,6 +29,10 @@ onMounted(async () => {
          tagline: company.value.tagline || '',
          phoneForOrders: company.value.phoneForOrders || '',
          isBonusCoinsEnabled: company.value.options?.isBonusCoinsEnabled,
+         paymentTypeSetting: company.value.options?.paymentTypeSetting || {
+            enabledPaymentTypeIds: [],
+            paymentTypeIdByDefault: null
+         },
 
          inn: company.value.legalData?.inn,
          ogrnip: company.value.legalData?.ogrnip,
@@ -46,7 +50,8 @@ const saveCompany = async () => {
       tagline: form.value.tagline,
       phoneForOrders: form.value.phoneForOrders,
       options: {
-         isBonusCoinsEnabled: form.value.isBonusCoinsEnabled
+         isBonusCoinsEnabled: form.value.isBonusCoinsEnabled,
+         paymentTypeSetting: form.value.paymentTypeSetting
       },
       legalData: {
          inn: form.value.inn || '',
