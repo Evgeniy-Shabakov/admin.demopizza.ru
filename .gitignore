@@ -1,5 +1,7 @@
 manifest.webmanifest
 
+deploy/
+
 # Nuxt dev/build outputs
 .output
 .data
@@ -24,5 +26,3 @@ logs
 .env
 .env.*
 !.env.example
-
-docker-compose.override.yml
