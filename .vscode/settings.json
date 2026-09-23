@@ -1,9 +1,0 @@
-{
-   "files.exclude": {
-      "**/node_modules/": true,
-      "**/.nuxt/": true,
-      "**/package-lock.json": true,
-      // "**/.gitignore": true,
-      "**/tailwind.config.js": true,
-   }
-}
