@@ -33,8 +33,7 @@ const refreshTokenWithRetry = async (api) => {
 }
 
 export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig()
-  const API_BASE_URL = config.public.apiBaseUrl
+  const API_BASE_URL = useApiBaseUrl()
   const { setConnected, pulse } = useConnectionStatus()
 
   const api = axios.create({

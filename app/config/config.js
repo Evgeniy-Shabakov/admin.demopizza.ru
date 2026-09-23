@@ -1,6 +1,5 @@
 export const useConfig = () => {
-  const config = useRuntimeConfig()
   return {
-    API_BASE_URL: config.public.apiBaseUrl
+    API_BASE_URL: useApiBaseUrl()
   }
 }

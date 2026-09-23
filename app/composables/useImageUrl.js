@@ -1,6 +1,5 @@
 export const useImageUrl = () => {
-  const config = useRuntimeConfig()
-  const base = new URL(config.public.apiBaseUrl).origin
+  const base = useServerOrigin()
 
   const getImageUrl = (imagePath) => {
     if (!imagePath || typeof imagePath !== 'string') return null

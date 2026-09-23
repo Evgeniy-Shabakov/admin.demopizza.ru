@@ -1,6 +1,4 @@
 <script setup>
-import { useRuntimeConfig } from '#app'
-
 useHead({
    title: 'Правовые документы'
 })

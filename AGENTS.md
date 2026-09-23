@@ -86,7 +86,7 @@ app/
 ### API/Network
 - Use the `useApi()` composable for HTTP requests
 - API instance is configured via plugin at `app/plugins/api.js`
-- Use runtime config for environment variables: `useRuntimeConfig().public.apiBaseUrl`
+- API base URL is derived from `window.location` via `useApiBaseUrl()` (localhost → `http://localhost:5000`, `admin.<домен>` → `https://api.<домен>`)
 
 ### Error Handling
 - Use `try/catch` blocks for async operations
@@ -137,7 +137,7 @@ onMounted(async () => {
 ```
 
 ## Environment Variables
-- `API_BASE_URL` - Base URL for API (configured in runtimeConfig.public)
+- `PROJECT_NAME` - project name used by docker-compose
 
 ## Development Notes
 - This is an admin panel SPA (client-side only)
