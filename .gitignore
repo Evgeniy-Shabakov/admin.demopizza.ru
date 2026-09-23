@@ -1,5 +1,7 @@
 deploy/
 
+.vscode/settings.json
+
 # Nuxt dev/build outputs
 .output
 .data
